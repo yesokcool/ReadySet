@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		958D3EB827F6887A009DF6C9 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958D3EB727F6887A009DF6C9 /* AspectVGrid.swift */; };
 		95A2FB6D27F37D820036EFD6 /* SetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A2FB6C27F37D820036EFD6 /* SetApp.swift */; };
 		95A2FB6F27F37D820036EFD6 /* ShapeSetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A2FB6E27F37D820036EFD6 /* ShapeSetView.swift */; };
 		95A2FB7127F37D830036EFD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95A2FB7027F37D830036EFD6 /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		958D3EB727F6887A009DF6C9 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AspectVGrid.swift; path = Set/AspectVGrid.swift; sourceTree = "<group>"; };
 		95A2FB6927F37D820036EFD6 /* Set.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Set.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95A2FB6C27F37D820036EFD6 /* SetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetApp.swift; sourceTree = "<group>"; };
 		95A2FB6E27F37D820036EFD6 /* ShapeSetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeSetView.swift; sourceTree = "<group>"; };
@@ -39,6 +41,7 @@
 		95A2FB6027F37D820036EFD6 = {
 			isa = PBXGroup;
 			children = (
+				958D3EB727F6887A009DF6C9 /* AspectVGrid.swift */,
 				95A2FB6B27F37D820036EFD6 /* Set */,
 				95A2FB6A27F37D820036EFD6 /* Products */,
 			);
@@ -146,6 +149,7 @@
 				95A2FB7D27F37DEA0036EFD6 /* ShapeSetGame.swift in Sources */,
 				95A2FB6F27F37D820036EFD6 /* ShapeSetView.swift in Sources */,
 				95A2FB7B27F37DD70036EFD6 /* SetGame.swift in Sources */,
+				958D3EB827F6887A009DF6C9 /* AspectVGrid.swift in Sources */,
 				95A2FB6D27F37D820036EFD6 /* SetApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

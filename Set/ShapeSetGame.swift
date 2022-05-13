@@ -7,10 +7,10 @@ import Foundation
 
 struct ShapeSetGame {
     
-    private let count: Trait
-    private let shape: Trait
-    private let shading: Trait
-    private let color: Trait
+    init() {
+        var game = SetGame(traits: 4, setsOf: 3)
+    }
+    
     
     
 }
