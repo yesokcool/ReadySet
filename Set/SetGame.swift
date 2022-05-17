@@ -15,20 +15,36 @@ struct SetGame {
     private var chosenCards: [Int] = []
     private(set) var setsMade: [[Int]] = []
     
-    func isSet(_ cards: [Int]) -> Bool {
-        if cards.count > numberOfCardsInASet || cards.count < 1 {
-            return false
-        }
-        let traits = deck[cards[0]].traits
-        for trait in traits {
-            if !traitAllSameOrAllDifferent(cards, with: trait) {
-                return false
-            }
-        }
-        return true
+    // todo might not need setsMade variable
+    
+    init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
+        self.numberOfTraits = numberOfTraits
+        self.numberOfTraitTypes = numberOfTraitTypes
+        self.deckSize = Int(pow(Double(numberOfTraitTypes), Double(numberOfTraits)))
+        self.numberOfCardsInASet = numberOfCardsInASet
+        createDeck(currentTrait: 0)
     }
     
-    // todo might not need setsMade variable
+    // todo actual id
+    // todo it being void and using return, dunno if great style
+    
+    // Recursively iterate through a multi-dimensional array of unknown size.
+    private mutating func createDeck(currentTrait dimension: Int) {
+        if deck.count > deckSize {
+            return
+        }
+        if dimension >= numberOfTraits {
+            deck.append(CustomShapeCard(isSelected: false, isPartOfMismatch: false,
+                        isPartOfSet: false, traits: result, id: 1000 + dimension))
+            return
+        }
+        for i in 0..<numberOfTraitTypes {
+            result.append(Trait(dimension, i))
+            createDeck(currentTrait: dimension + 1)
+            result.removeLast()
+        }
+        return
+    }
     
     mutating func choose(_ card: CustomShapeCard) {
         if let chosenIndex = deck.firstIndex(of: card), !deck[chosenIndex].isPartOfSet {
@@ -62,33 +78,17 @@ struct SetGame {
         return false
     }
     
-    init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
-        self.numberOfTraits = numberOfTraits
-        self.numberOfTraitTypes = numberOfTraitTypes
-        self.deckSize = Int(pow(Double(numberOfTraitTypes), Double(numberOfTraits)))
-        self.numberOfCardsInASet = numberOfCardsInASet
-        createDeck(currentTrait: 0)
-    }
-
-    // todo actual id
-    // todo it being void and using return, dunno if great style
-    
-    // Recursively iterate through a multi-dimensional array of unknown size.
-    private mutating func createDeck(currentTrait dimension: Int) {
-        if deck.count > deckSize {
-            return
+    func isSet(_ cards: [Int]) -> Bool {
+        if cards.count > numberOfCardsInASet || cards.count < 1 {
+            return false
         }
-        if dimension >= numberOfTraits {
-            deck.append(CustomShapeCard(isSelected: false, isPartOfMismatch: false,
-                        isPartOfSet: false, traits: result, id: 1000 + dimension))
-            return
+        let traits = deck[cards[0]].traits
+        for trait in traits {
+            if !traitAllSameOrAllDifferent(cards, with: trait) {
+                return false
+            }
         }
-        for i in 0..<numberOfTraitTypes {
-            result.append(Trait(dimension, i))
-            createDeck(currentTrait: dimension + 1)
-            result.removeLast()
-        }
-        return
+        return true
     }
     
     public func printDeck() {
