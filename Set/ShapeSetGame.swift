@@ -9,7 +9,7 @@ struct ShapeSetGame {
     
     init() {
         var game = SetGame(numberOfTraits: 4, numberOfTraitTypes: 3, setsOf: 3)
-        game.printDeck()
+        
     }
 
     

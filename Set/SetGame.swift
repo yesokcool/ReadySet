@@ -3,20 +3,17 @@
 //  Created on 3/29/22.
 //
 
-// todo make sure every trait is in same index in every card, that is rule for a game...
-// also every card must be unique...
-// sets must be more than 1...
-
 import Foundation
 
 struct SetGame {
     private(set) var deck: [CustomShapeCard] = []
-    //private var hand: [CustomShapeCard]
     private let numberOfCardsInASet: Int
     private let deckSize: Int
     private var result: [Trait] = []
     private let numberOfTraitTypes: Int
     private let numberOfTraits: Int
+    private var chosenCards: [CustomShapeCard] = []
+    private(set) var setsMade: [[CustomShapeCard]] = []
     
     func isSet(_ cards: [CustomShapeCard]) -> Bool {
         if cards.count > numberOfCardsInASet || cards.count < 1 {
@@ -29,6 +26,29 @@ struct SetGame {
             }
         }
         return true
+    }
+    
+    // todo might not need setsMade variable
+    
+    mutating func choose(_ card: CustomShapeCard) {
+        if let chosenIndex = deck.firstIndex(of: card), !deck[chosenIndex].isPartOfSet {
+            if deck[chosenIndex].isSelected {
+                deck[chosenIndex].isSelected = false
+            }
+            else {
+                chosenCards.append(card)
+                deck[chosenIndex].isSelected = true
+                if chosenCards.count >= numberOfCardsInASet {
+                    if isSet(chosenCards) {
+                        setsMade.append(chosenCards)
+                        for c in chosenCards {
+                            deck[deck.firstIndex(of: c)!].isPartOfSet = true
+                        }
+                    }
+                chosenCards = []
+                }
+            }
+        }
     }
     
     // Check if an array of cards all have the same or different certain trait, or not.
@@ -48,30 +68,18 @@ struct SetGame {
         self.numberOfCardsInASet = numberOfCardsInASet
         createDeck(currentTrait: 0)
     }
-    
-    // TO-DO: Make createCardContent return a combination of traits (and probably add another param
-    //         so it can keep track of where it is and doesn't make duplicate sets of traits?). Then
-    //          we'll be able to make a deck of cards where each card has a unique set of traits.
-    //          Then test it out and see if it works. Then continue working on it.
-    
-    //init(traits numberOfTraits: Int, setsOf numberOfTraitTypes: Int, _ createCardContent: (Int, Int, Int) -> [Trait]) {
-        //self.numberOfCardsInASet = numberOfTraitTypes
-        // Populate game deck.
-        // Iterating will get every combination of traits, but we also need every combination of cards.
-        /* var tempDeck: [CustomShapeCard] = []
-        for i in 1...Int(pow(Double(numberOfTraitTypes), Double(numberOfTraits))) {
-            tempDeck.append(CustomShapeCard(traits:createCardContent(i, numberOfTraits, numberOfCardsInASet), id:(i*1000)))
-        }
-        deck = tempDeck*/
-    //}
 
+    // todo actual id
+    // todo it being void and using return, dunno if great style
+    
     // Recursively iterate through a multi-dimensional array of unknown size.
     private mutating func createDeck(currentTrait dimension: Int) {
         if deck.count > deckSize {
             return
         }
         if dimension >= numberOfTraits {
-            deck.append(CustomShapeCard(isSelected: false, isPartOfMismatch: false, isPartOfSet: false, traits: result, id: 1000 + dimension))
+            deck.append(CustomShapeCard(isSelected: false, isPartOfMismatch: false,
+                        isPartOfSet: false, traits: result, id: 1000 + dimension))
             return
         }
         for i in 0..<numberOfTraitTypes {
@@ -98,8 +106,7 @@ struct SetGame {
     }
 }
 
-// Traits must always be in the same index for every card?
-struct CustomShapeCard: Identifiable {
+struct CustomShapeCard: Identifiable, Equatable {
     var isSelected = false
     var isPartOfMismatch = false
     var isPartOfSet = false
@@ -118,6 +125,4 @@ struct Trait: Equatable, CustomStringConvertible {
         self.index = trait
         self.type = type
     }
-    
-    
 }
