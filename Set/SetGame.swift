@@ -12,14 +12,14 @@ struct SetGame {
     private var result: [Trait] = []
     private let numberOfTraitTypes: Int
     private let numberOfTraits: Int
-    private var chosenCards: [CustomShapeCard] = []
-    private(set) var setsMade: [[CustomShapeCard]] = []
+    private var chosenCards: [Int] = []
+    private(set) var setsMade: [[Int]] = []
     
-    func isSet(_ cards: [CustomShapeCard]) -> Bool {
+    func isSet(_ cards: [Int]) -> Bool {
         if cards.count > numberOfCardsInASet || cards.count < 1 {
             return false
         }
-        let traits = cards[0].traits
+        let traits = deck[cards[0]].traits
         for trait in traits {
             if !traitAllSameOrAllDifferent(cards, with: trait) {
                 return false
@@ -36,13 +36,14 @@ struct SetGame {
                 deck[chosenIndex].isSelected = false
             }
             else {
-                chosenCards.append(card)
+                print("Choosing \(card)!")
                 deck[chosenIndex].isSelected = true
+                chosenCards.append(chosenIndex)
                 if chosenCards.count >= numberOfCardsInASet {
                     if isSet(chosenCards) {
                         setsMade.append(chosenCards)
                         for c in chosenCards {
-                            deck[deck.firstIndex(of: c)!].isPartOfSet = true
+                            deck[c].isPartOfSet = true
                         }
                     }
                 chosenCards = []
@@ -52,10 +53,10 @@ struct SetGame {
     }
     
     // Check if an array of cards all have the same or different certain trait, or not.
-    private func traitAllSameOrAllDifferent(_ cards: [CustomShapeCard], with trait: Trait) -> Bool {
+    private func traitAllSameOrAllDifferent(_ cards: [Int], with trait: Trait) -> Bool {
         if cards.count < 2 { return true }
         // Check if the rest of the cards all have that same trait or all have a different trait.
-        if cards.allSatisfy({ $0.traits[trait.index] == trait || $0.traits[trait.index] != trait }) {
+        if cards.allSatisfy({ deck[$0].traits[trait.index] == trait || deck[$0].traits[trait.index] != trait }) {
             return true
         }
         return false
