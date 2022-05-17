@@ -47,7 +47,8 @@ struct SetGame {
     }
     
     mutating func choose(_ card: CustomShapeCard) {
-        if let chosenIndex = deck.firstIndex(of: card), !deck[chosenIndex].isPartOfSet {
+        if let chosenIndex = deck.firstIndex(of: card),
+            !deck[chosenIndex].isPartOfSet {
             if deck[chosenIndex].isSelected {
                 deck[chosenIndex].isSelected = false
             }
@@ -68,41 +69,45 @@ struct SetGame {
         }
     }
     
-    // Check if an array of cards all have the same or different certain trait, or not.
-    private func traitAllSameOrAllDifferent(_ cards: [Int], with trait: Trait) -> Bool {
-        if cards.count < 2 { return true }
-        // Check if the rest of the cards all have that same trait or all have a different trait.
-        if cards.allSatisfy({ deck[$0].traits[trait.index] == trait || deck[$0].traits[trait.index] != trait }) {
-            return true
-        }
-        return false
-    }
-    
-    func isSet(_ cards: [Int]) -> Bool {
-        if cards.count > numberOfCardsInASet || cards.count < 1 {
+    private func isSet(_ setOfCards: [Int]) -> Bool {
+        if setOfCards.count > numberOfCardsInASet
+            || setOfCards.count < 1 {
             return false
         }
-        let traits = deck[cards[0]].traits
-        for trait in traits {
-            if !traitAllSameOrAllDifferent(cards, with: trait) {
+        let traits = deck[setOfCards[0]].traits
+        for (traitIndex, _) in traits.enumerated() {
+            if !traitAllSameOrAllDifferent(setOfCards, with: traitIndex) {
                 return false
             }
         }
         return true
     }
     
+    // Check if an array of cards all have the same or different selected trait, or not.
+    private func traitAllSameOrAllDifferent(_ setOfCardIndicies: [Int], with selectedTrait: Int) -> Bool {
+        if setOfCardIndicies.count < 2 { return true }
+        
+        var set: [Int] = []
+        for i in setOfCardIndicies {
+            set.append(deck[i].traits[selectedTrait].type)
+        }
+        
+        return Set(set).count == 1 || Set(set).count == set.count
+    }
+    
     public func printDeck() {
         var cardCount = 0
-        var traitCount = 0
+        //var traitCount = 0
         for i in 0..<deckSize {
-            cardCount += 1
             print("\n")
             print("Card Count: \(cardCount)")
             for j in 0..<numberOfTraits {
-                traitCount += 1
                 let s = String(describing: deck[i].traits[j])
-                print("Trait Count: \(traitCount) Trait: \(s)")
+                print("Trait: \(s)")
+                //print("Trait Count: \(traitCount) Trait: \(s)")
+                //traitCount += 1
             }
+            cardCount += 1
         }
     }
 }
@@ -116,14 +121,12 @@ struct CustomShapeCard: Identifiable, Equatable {
 }
 
 struct Trait: Equatable, CustomStringConvertible {
-    let index: Int
     let type: Int
     var description: String {
-        return "\(index),\(type)"
+        return "\(type)"
     }
     
     init(_ trait: Int, _ type: Int) {
-        self.index = trait
         self.type = type
     }
 }
