@@ -10,9 +10,13 @@
 import Foundation
 
 struct SetGame {
-    private let deck: [CustomShapeCard]
+    private(set) var deck: [CustomShapeCard] = []
     //private var hand: [CustomShapeCard]
     private let numberOfCardsInASet: Int
+    private let deckSize: Int
+    private var result: [Trait] = []
+    private let numberOfTraitTypes: Int
+    private let numberOfTraits: Int
     
     func isSet(_ cards: [CustomShapeCard]) -> Bool {
         if cards.count > numberOfCardsInASet || cards.count < 1 {
@@ -20,7 +24,9 @@ struct SetGame {
         }
         let traits = cards[0].traits
         for trait in traits {
-            if !traitAllSameOrAllDifferent(cards, with: trait) { return false }
+            if !traitAllSameOrAllDifferent(cards, with: trait) {
+                return false
+            }
         }
         return true
     }
@@ -28,16 +34,19 @@ struct SetGame {
     // Check if an array of cards all have the same or different certain trait, or not.
     private func traitAllSameOrAllDifferent(_ cards: [CustomShapeCard], with trait: Trait) -> Bool {
         if cards.count < 2 { return true }
-        // Take the first card and find the index where the trait occurs.
-        if let indexOfSelectedTrait = cards[0].traits.firstIndex(where: { $0.trait == trait.trait }) {
-            let firstTrait = cards[0].traits[indexOfSelectedTrait]
-            // Check if the rest of the cards all have that same trait or all have a different trait.
-            if cards.dropFirst().allSatisfy({ $0.traits[indexOfSelectedTrait] == firstTrait ||
-                $0.traits[indexOfSelectedTrait] != firstTrait}) {
-                return true
-            }
+        // Check if the rest of the cards all have that same trait or all have a different trait.
+        if cards.allSatisfy({ $0.traits[trait.index] == trait || $0.traits[trait.index] != trait }) {
+            return true
         }
         return false
+    }
+    
+    init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
+        self.numberOfTraits = numberOfTraits
+        self.numberOfTraitTypes = numberOfTraitTypes
+        self.deckSize = Int(pow(Double(numberOfTraitTypes), Double(numberOfTraits)))
+        self.numberOfCardsInASet = numberOfCardsInASet
+        createDeck(currentTrait: 0)
     }
     
     // TO-DO: Make createCardContent return a combination of traits (and probably add another param
@@ -45,15 +54,47 @@ struct SetGame {
     //          we'll be able to make a deck of cards where each card has a unique set of traits.
     //          Then test it out and see if it works. Then continue working on it.
     
-    init(traits numberOfTraits: Int, setsOf numberOfTraitTypes: Int, _ createCardContent: (Int, Int) -> [Trait]) {
-        self.numberOfCardsInASet = numberOfTraitTypes
+    //init(traits numberOfTraits: Int, setsOf numberOfTraitTypes: Int, _ createCardContent: (Int, Int, Int) -> [Trait]) {
+        //self.numberOfCardsInASet = numberOfTraitTypes
         // Populate game deck.
-        // Iterating with i and j will get every combination of traits, but we need every combination of cards.
-        var tempDeck: [CustomShapeCard] = []
+        // Iterating will get every combination of traits, but we also need every combination of cards.
+        /* var tempDeck: [CustomShapeCard] = []
         for i in 1...Int(pow(Double(numberOfTraitTypes), Double(numberOfTraits))) {
-            tempDeck.append(CustomShapeCard(traits:createCardContent(numberOfTraits, numberOfCardsInASet), id:(i*1000)))
+            tempDeck.append(CustomShapeCard(traits:createCardContent(i, numberOfTraits, numberOfCardsInASet), id:(i*1000)))
         }
-        deck = tempDeck
+        deck = tempDeck*/
+    //}
+
+    // Recursively iterate through a multi-dimensional array of unknown size.
+    private mutating func createDeck(currentTrait dimension: Int) {
+        if deck.count > deckSize {
+            return
+        }
+        if dimension >= numberOfTraits {
+            deck.append(CustomShapeCard(isSelected: false, isPartOfMismatch: false, isPartOfSet: false, traits: result, id: 1000 + dimension))
+            return
+        }
+        for i in 0..<numberOfTraitTypes {
+            result.append(Trait(dimension, i))
+            createDeck(currentTrait: dimension + 1)
+            result.removeLast()
+        }
+        return
+    }
+    
+    public func printDeck() {
+        var cardCount = 0
+        var traitCount = 0
+        for i in 0..<deckSize {
+            cardCount += 1
+            print("\n")
+            print("Card Count: \(cardCount)")
+            for j in 0..<numberOfTraitTypes {
+                traitCount += 1
+                let s = String(describing: deck[i].traits[j])
+                print("Trait Count: \(traitCount) Trait: \(s)")
+            }
+        }
     }
 }
 
@@ -66,12 +107,17 @@ struct CustomShapeCard: Identifiable {
     let id: Int
 }
 
-struct Trait: Equatable {
-    let trait: Int
+struct Trait: Equatable, CustomStringConvertible {
+    let index: Int
     let type: Int
+    var description: String {
+        return "\(index),\(type)"
+    }
     
     init(_ trait: Int, _ type: Int) {
-        self.trait = trait
+        self.index = trait
         self.type = type
     }
+    
+    
 }

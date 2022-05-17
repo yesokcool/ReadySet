@@ -8,9 +8,9 @@ import Foundation
 struct ShapeSetGame {
     
     init() {
-        var game = SetGame(traits: 4, setsOf: 3)
+        var game = SetGame(numberOfTraits: 4, numberOfTraitTypes: 3, setsOf: 3)
+        game.printDeck()
     }
-    
-    
+
     
 }

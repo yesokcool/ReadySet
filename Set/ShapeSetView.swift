@@ -14,6 +14,7 @@ struct ShapeSetView: View {
                     CardView()
                     CardView()
                     CardView()
+                    var game = ShapeSetGame()
                 }
             }
         }
