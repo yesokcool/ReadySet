@@ -97,7 +97,7 @@ struct SetGame {
             cardCount += 1
             print("\n")
             print("Card Count: \(cardCount)")
-            for j in 0..<numberOfTraitTypes {
+            for j in 0..<numberOfTraits {
                 traitCount += 1
                 let s = String(describing: deck[i].traits[j])
                 print("Trait Count: \(traitCount) Trait: \(s)")
