@@ -57,6 +57,12 @@ struct SetGame {
         }
     }
     
+    mutating func newGame() {
+        deck = []
+        cardsInPlay = []
+        createDeck(currentTrait: 0)
+    }
+    
     mutating func choose(_ card: CustomShapeCard) {
         if let chosenIndex = deck.firstIndex(of: card),
             !deck[chosenIndex].isPartOfSet {
