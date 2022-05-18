@@ -18,6 +18,8 @@ struct ShapeSetGame {
         game.choose(game.deck[4])
         game.choose(game.deck[6])
         print(game.setsMade)
+        game.dealThree()
+        print(game.cardsInPlay)
 
     }
 

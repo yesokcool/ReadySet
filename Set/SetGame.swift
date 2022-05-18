@@ -7,6 +7,7 @@ import Foundation
 
 struct SetGame {
     private(set) var deck: [CustomShapeCard] = []
+    private(set) var cardsInPlay: [CustomShapeCard] = []
     private let numberOfCardsInASet: Int
     private let deckSize: Int
     private var result: [Trait] = []
@@ -23,6 +24,7 @@ struct SetGame {
         self.deckSize = Int(pow(Double(numberOfTraitTypes), Double(numberOfTraits)))
         self.numberOfCardsInASet = numberOfCardsInASet
         createDeck(currentTrait: 0)
+        deck.shuffle()
     }
     
     // todo actual id
@@ -44,6 +46,15 @@ struct SetGame {
             result.removeLast()
         }
         return
+    }
+    
+    // todo could be deal x instead, perhaps
+    
+    // Deals 3 cards from the shuffled deck.
+    mutating func dealThree() {
+        for _ in 0..<3 {
+            cardsInPlay.append(deck.removeFirst())
+        }
     }
     
     mutating func choose(_ card: CustomShapeCard) {
