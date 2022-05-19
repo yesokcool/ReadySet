@@ -8,6 +8,11 @@
 import Foundation
 
 struct ShapeSetGame {
+    typealias Card = SetGame.CustomShapeCard
+    
+    @Published private var theme: Theme<String>
+    @Published private var model: MatchGame<String>
+    @Published private var themes: [Theme<String>]
     
     init() {
         var game = SetGame(numberOfTraits: 4, numberOfTraitTypes: 3, setsOf: 3)
@@ -22,8 +27,9 @@ struct ShapeSetGame {
         print(game.setsMade)
         game.dealThree()
         print(game.cardsInPlay)
-
     }
+    
+    
 
     
 }

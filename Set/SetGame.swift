@@ -140,23 +140,24 @@ struct SetGame {
             cardCount += 1
         }
     }
-}
-
-struct CustomShapeCard: Identifiable, Equatable {
-    var isSelected = false
-    var isPartOfMismatch = false
-    var isPartOfSet = false
-    let traits: [Trait]
-    let id: Int
-}
-
-struct Trait: Equatable, CustomStringConvertible {
-    let type: Int
-    var description: String {
-        return "\(type)"
+    
+    struct CustomShapeCard: Identifiable, Equatable {
+        var isSelected = false
+        var isPartOfMismatch = false
+        var isPartOfSet = false
+        let traits: [Trait]
+        let id: Int
     }
     
-    init(_ trait: Int, _ type: Int) {
-        self.type = type
+    struct Trait: Equatable, CustomStringConvertible {
+        let type: Int
+        var description: String {
+            return "\(type)"
+        }
+        
+        init(_ trait: Int, _ type: Int) {
+            self.type = type
+        }
     }
+
 }
