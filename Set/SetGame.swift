@@ -53,7 +53,9 @@ struct SetGame {
     // Deals 3 cards from the shuffled deck.
     mutating func dealThree() {
         for _ in 0..<3 {
-            cardsInPlay.append(deck.removeFirst())
+            if deck.count > 0 {
+                cardsInPlay.append(deck.removeFirst())
+            }
         }
     }
     
@@ -78,6 +80,8 @@ struct SetGame {
                         setsMade.append(chosenCards)
                         for c in chosenCards {
                             deck[c].isPartOfSet = true
+                            // todo we'll see if removing from deck is okay
+                            deck.remove(at: c)
                         }
                     }
                 chosenCards = []
@@ -97,7 +101,11 @@ struct SetGame {
                 return false
             }
         }
-        dealThree()
+        
+        if !deck.isEmpty {
+            dealThree()
+        }
+            
         return true
     }
     
@@ -115,15 +123,12 @@ struct SetGame {
     
     public func printDeck() {
         var cardCount = 0
-        //var traitCount = 0
         for i in 0..<deckSize {
             print("\n")
             print("Card Count: \(cardCount)")
             for j in 0..<numberOfTraits {
                 let s = String(describing: deck[i].traits[j])
                 print("Trait: \(s)")
-                //print("Trait Count: \(traitCount) Trait: \(s)")
-                //traitCount += 1
             }
             cardCount += 1
         }
