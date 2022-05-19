@@ -3,6 +3,8 @@
 //  Created on 3/29/22.
 //
 
+// todo make many traits or shapes, randomize which ones are chosen each new game
+
 import Foundation
 
 struct ShapeSetGame {

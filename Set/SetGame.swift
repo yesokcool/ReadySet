@@ -69,7 +69,7 @@ struct SetGame {
             if deck[chosenIndex].isSelected {
                 deck[chosenIndex].isSelected = false
             }
-            else {
+            else if (!deck[chosenIndex].isPartOfSet) {
                 print("Choosing \(card)!")
                 deck[chosenIndex].isSelected = true
                 chosenCards.append(chosenIndex)
@@ -86,7 +86,7 @@ struct SetGame {
         }
     }
     
-    private func isSet(_ setOfCards: [Int]) -> Bool {
+    private mutating func isSet(_ setOfCards: [Int]) -> Bool {
         if setOfCards.count > numberOfCardsInASet
             || setOfCards.count < 1 {
             return false
@@ -97,6 +97,7 @@ struct SetGame {
                 return false
             }
         }
+        dealThree()
         return true
     }
     
