@@ -33,13 +33,11 @@ struct SetGame {
     // Recursively iterate through a multi-dimensional array of unknown size.
     private mutating func createDeck(currentTrait dimension: Int) {
         if deck.count > deckSize {
-            result = []
             return
         }
         if dimension >= numberOfTraits {
             deck.append(CustomShapeCard(isSelected: false, isPartOfMismatch: false,
                         isPartOfSet: false, traits: result, id: 1000 + dimension))
-            result = []
             return
         }
         for i in 0..<numberOfTraitTypes {
@@ -47,7 +45,6 @@ struct SetGame {
             createDeck(currentTrait: dimension + 1)
             result.removeLast()
         }
-        result = []
         return
     }
     
@@ -68,6 +65,7 @@ struct SetGame {
     
     mutating func newGame() {
         deck = []
+        result = []
         cardsInPlay = []
         setsMade = []
         chosenCards = []
