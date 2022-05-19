@@ -51,12 +51,16 @@ struct SetGame {
     // todo could be deal x instead, perhaps
     
     // Deals 3 cards from the shuffled deck.
-    mutating func dealThree() {
+    mutating func dealThree() -> Bool {
         for _ in 0..<3 {
             if deck.count > 0 {
                 cardsInPlay.append(deck.removeFirst())
             }
+            else {
+                return false
+            }
         }
+        return true
     }
     
     mutating func newGame() {
