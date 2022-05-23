@@ -112,7 +112,7 @@ struct SetGame {
         if !deck.isEmpty {
             dealThree()
         }
-            
+
         return true
     }
     

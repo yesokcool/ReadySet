@@ -7,29 +7,24 @@
 
 import Foundation
 
-struct ShapeSetGame {
+class ShapeSetGame: ObservableObject {
     typealias Card = SetGame.CustomShapeCard
     
-    @Published private var theme: Theme<String>
-    @Published private var model: MatchGame<String>
-    @Published private var themes: [Theme<String>]
+    private var game: SetGame
     
-    init() {
-        var game = SetGame(numberOfTraits: 4, numberOfTraitTypes: 3, setsOf: 3)
-        game.printDeck()
-        game.choose(game.deck[0])
-        game.choose(game.deck[1])
-        game.choose(game.deck[2])
-        print(game.setsMade)
-        game.choose(game.deck[3])
-        game.choose(game.deck[4])
-        game.choose(game.deck[6])
-        print(game.setsMade)
-        game.dealThree()
-        print(game.cardsInPlay)
+    init(_ one:Int, _ two:Int, _ three:Int) {
+        game = SetGame(numberOfTraits: one, numberOfTraitTypes: two, setsOf: three)
     }
     
+    //@Published private var theme: Theme<String>
+    //@Published private var model: MatchGame<String>
+    //@Published private var themes: [Theme<String>]
     
-
+    func getCardsInPlay() -> [Card] {
+        return game.cardsInPlay
+    }
     
+    func choose(_ card: Card) {
+        game.choose(card)
+    }
 }
