@@ -148,16 +148,4 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         let traits: [CardContent]
         let id: Int
     }
-    
-    /*struct Trait: Equatable, CustomStringConvertible {
-        let type: Int
-        var description: String {
-            return "\(type)"
-        }
-        
-        init(_ trait: Int, _ type: Int) {
-            self.type = type
-        }
-    }*/
-
 }

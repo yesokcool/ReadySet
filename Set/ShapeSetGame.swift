@@ -8,9 +8,9 @@
 import Foundation
 
 class ShapeSetGame: ObservableObject {
-    typealias Card = SetGame.CustomShapeCard
+    typealias Card = SetGame<Trait>.CustomShapeCard
     
-    private var game: SetGame
+    private var game: SetGame<Trait>
     
     init(_ one:Int, _ two:Int, _ three:Int) {
         game = SetGame(numberOfTraits: one, numberOfTraitTypes: two, setsOf: three)
@@ -26,5 +26,16 @@ class ShapeSetGame: ObservableObject {
     
     func choose(_ card: Card) {
         game.choose(card)
+    }
+    
+    struct Trait: Equatable, Traitable {
+        let type: Int
+        /*var description: String {
+            return "\(type)"
+        }*/
+        
+        init(_ trait: Int, _ type: Int) {
+            self.type = type
+        }
     }
 }

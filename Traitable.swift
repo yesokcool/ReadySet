@@ -6,8 +6,7 @@
 import Foundation
 
 protocol Traitable {
-    var index: Int { get set }
-    var type: Int { get set }
+    var type: Int { get }
     
     init(_ index: Int, _ type: Int)
 }
