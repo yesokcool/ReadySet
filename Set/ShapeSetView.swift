@@ -32,9 +32,7 @@ struct CardView: View {
             let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
                 .fill()
                 .foregroundColor(.white)
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(lineWidth:5)
-                .foregroundColor(.gray)
+            
         }
         .aspectRatio(2/3.5, contentMode: .fit)
         .padding(10)

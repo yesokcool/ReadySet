@@ -5,12 +5,12 @@
 
 import Foundation
 
-struct SetGame {
+struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     private(set) var deck: [CustomShapeCard] = []
     private(set) var cardsInPlay: [CustomShapeCard] = []
     private let numberOfCardsInASet: Int
     private let deckSize: Int
-    private var result: [Trait] = []
+    private var result: [CardContent] = []
     private let numberOfTraitTypes: Int
     private let numberOfTraits: Int
     private var chosenCards: [Int] = []
@@ -41,7 +41,7 @@ struct SetGame {
             return
         }
         for i in 0..<numberOfTraitTypes {
-            result.append(Trait(dimension, i))
+            result.append(CardContent(dimension, i))
             createDeck(currentTrait: dimension + 1)
             result.removeLast()
         }
@@ -128,7 +128,7 @@ struct SetGame {
         return Set(set).count == 1 || Set(set).count == set.count
     }
     
-    public func printDeck() {
+    /*public func printDeck() {
         var cardCount = 0
         for i in 0..<deckSize {
             print("\n")
@@ -139,17 +139,17 @@ struct SetGame {
             }
             cardCount += 1
         }
-    }
+    }*/
     
     struct CustomShapeCard: Identifiable, Equatable {
         var isSelected = false
         var isPartOfMismatch = false
         var isPartOfSet = false
-        let traits: [Trait]
+        let traits: [CardContent]
         let id: Int
     }
     
-    struct Trait: Equatable, CustomStringConvertible {
+    /*struct Trait: Equatable, CustomStringConvertible {
         let type: Int
         var description: String {
             return "\(type)"
@@ -158,6 +158,6 @@ struct SetGame {
         init(_ trait: Int, _ type: Int) {
             self.type = type
         }
-    }
+    }*/
 
 }
