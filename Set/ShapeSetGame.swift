@@ -11,7 +11,7 @@ import SwiftUI
 class ShapeSetGame: ObservableObject {
     typealias Card = SetGame<Trait>.CustomShapeCard
     
-    private var game: SetGame<Trait>
+    @Published private var game: SetGame<Trait>
     
     init(_ one:Int, _ two:Int, _ three:Int) {
         game = SetGame(numberOfTraits: one, numberOfTraitTypes: two, setsOf: three)

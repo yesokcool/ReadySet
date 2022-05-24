@@ -10,12 +10,20 @@ struct ShapeSetView: View {
     
     var body: some View {
             VStack {
+                VStack {
+                    Text("Set")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                }
+                
                 AspectVGrid(items: game.getDeck(), aspectRatio: 2/3) { card in
-                    CardView(card: card).padding(4).onTapGesture {
+                    CardView(card: card)
+                        .padding(4)
+                        .onTapGesture {
                         game.choose(card)
                     }
                 }
-            }
+            }.foregroundColor(.red)
     }
 }
 
@@ -23,21 +31,26 @@ struct CardView: View {
     let card: ShapeSetGame.Card
     
     var body: some View {
-        ZStack {
-            ForEach(0..<card.traits[2].type) { _ in
-                switch card.traits[0].type {
-                case 0:
-                    let shape = RoundedRectangle(cornerRadius: 10)
-                    shape.fill().foregroundColor(getColor(card.traits[3].type))
-                case 1:
-                    let shape = Circle()
-                    shape.fill().foregroundColor(getColor(card.traits[3].type))
-                case 2:
-                    let shape = Ellipse()
-                    shape.fill().foregroundColor(getColor(card.traits[3].type))
-                default:
-                    let shape = Circle()
-                    shape.fill().foregroundColor(getColor(card.traits[3].type))
+        GeometryReader { geometry in
+            ZStack {
+                let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
+                shape.fill().foregroundColor(.white)
+                shape.stroke(lineWidth: DrawingConstants.lineWidth)
+                ForEach(0..<card.traits[2].type) { _ in
+                    switch card.traits[0].type {
+                    case 0:
+                        let rect = RoundedRectangle(cornerRadius: 10)
+                        rect.fill().foregroundColor(getColor(card.traits[3].type)).padding(5.0)
+                    case 1:
+                        let circle = Circle()
+                        circle.fill().foregroundColor(getColor(card.traits[3].type)).padding(5.0)
+                    case 2:
+                        let ellipse = Ellipse()
+                        ellipse.fill().foregroundColor(getColor(card.traits[3].type)).padding(5.0)
+                    default:
+                        let circle = Circle()
+                        circle.fill().foregroundColor(getColor(card.traits[3].type)).padding(5.0)
+                    }
                 }
             }
         }
@@ -57,7 +70,6 @@ struct CardView: View {
     private struct DrawingConstants {
         static let cornerRadius: CGFloat = 10
         static let lineWidth: CGFloat = 3
-        static let frontScale: CGFloat = 0.7
     }
 }
 
