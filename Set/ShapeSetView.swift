@@ -9,18 +9,13 @@ struct ShapeSetView: View {
     @ObservedObject var game: ShapeSetGame
     
     var body: some View {
-        ScrollView {
             VStack {
-                LazyVGrid(columns: [GridItem(), GridItem(), GridItem()]) {
-                    
-                }
-                AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
+                AspectVGrid(items: game.getDeck(), aspectRatio: 2/3) { card in
                     CardView(card: card).padding(4).onTapGesture {
                         game.choose(card)
                     }
                 }
             }
-        }
     }
 }
 
@@ -29,13 +24,34 @@ struct CardView: View {
     
     var body: some View {
         ZStack {
-            let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
-                .fill()
-                .foregroundColor(.white)
-            
+            ForEach(0..<card.traits[2].type) { _ in
+                switch card.traits[0].type {
+                case 0:
+                    let shape = RoundedRectangle(cornerRadius: 10)
+                    shape.fill().foregroundColor(getColor(card.traits[3].type))
+                case 1:
+                    let shape = Circle()
+                    shape.fill().foregroundColor(getColor(card.traits[3].type))
+                case 2:
+                    let shape = Ellipse()
+                    shape.fill().foregroundColor(getColor(card.traits[3].type))
+                default:
+                    let shape = Circle()
+                    shape.fill().foregroundColor(getColor(card.traits[3].type))
+                }
+            }
         }
-        .aspectRatio(2/3.5, contentMode: .fit)
-        .padding(10)
+    }
+    
+    func getColor(_ color: Int) -> Color {
+        switch color {
+            case 0:
+                return .blue
+            case 1:
+                return .red
+            default:
+                return .green
+        }
     }
     
     private struct DrawingConstants {

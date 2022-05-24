@@ -6,6 +6,7 @@
 // todo make many traits or shapes, randomize which ones are chosen each new game
 
 import Foundation
+import SwiftUI
 
 class ShapeSetGame: ObservableObject {
     typealias Card = SetGame<Trait>.CustomShapeCard
@@ -22,6 +23,10 @@ class ShapeSetGame: ObservableObject {
     
     func getCardsInPlay() -> [Card] {
         return game.cardsInPlay
+    }
+    
+    func getDeck() -> [Card] {
+        return game.deck
     }
     
     func choose(_ card: Card) {
