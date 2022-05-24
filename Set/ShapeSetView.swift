@@ -34,27 +34,55 @@ struct CardView: View {
         GeometryReader { geometry in
             ZStack {
                 let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
-                shape.fill().foregroundColor(.white)
-                shape.stroke(lineWidth: DrawingConstants.lineWidth)
-                ForEach(0..<card.traits[2].type) { _ in
-                    switch card.traits[0].type {
-                    case 0:
-                        RoundedRectangle(cornerRadius:10)
-                            .fill()
-                            .foregroundColor(getColor(card.traits[3].type))
-                            .padding(5.0)
-                    case 1:
-                        Circle()
-                            .fill()
-                            .foregroundColor(getColor(card.traits[3].type))
-                            .padding(5.0)
-                    default:
-                        Ellipse()
-                            .fill()
-                            .foregroundColor(getColor(card.traits[3].type))
-                            .padding(5.0)
+                shape
+                    .fill()
+                    .foregroundColor(.white)
+                shape
+                    .stroke(lineWidth: DrawingConstants.lineWidth)
+                VStack {
+                    ForEach(0..<card.traits[1].type + 1) { _ in
+                        switch card.traits[0].type {
+                        case 0:
+                            if card.traits[2].type == 1 {
+                                RoundedRectangle(cornerRadius:DrawingConstants.cornerRadius)
+                                    .stroke(lineWidth: DrawingConstants.lineWidth)
+                                    .foregroundColor(getColor(card.traits[3].type))
+                            }
+                            else {
+                                RoundedRectangle(cornerRadius:DrawingConstants.cornerRadius)
+                                    .fill()
+                                    .foregroundColor(getColor(card.traits[3].type))
+                                    .opacity(getOpacity(card.traits[2].type))
+                            }
+                        case 1:
+                            if card.traits[2].type == 1 {
+                                Circle()
+                                    .stroke(lineWidth: DrawingConstants.lineWidth)
+                                    .foregroundColor(getColor(card.traits[3].type))
+                            }
+                            else {
+                                Circle()
+                                    .fill()
+                                    .foregroundColor(getColor(card.traits[3].type))
+                                    .opacity(getOpacity(card.traits[2].type))
+                            }
+                                
+                        default:
+                            if card.traits[2].type == 1 {
+                                Ellipse()
+                                    .stroke(lineWidth: DrawingConstants.lineWidth)
+                                    .foregroundColor(getColor(card.traits[3].type))
+                            }
+                            else {
+                                Ellipse()
+                                    .fill()
+                                    .foregroundColor(getColor(card.traits[3].type))
+                                    .opacity(getOpacity(card.traits[2].type))
+                            }
+                        }
                     }
                 }
+                .padding(5.0)
             }
         }
     }
@@ -67,6 +95,17 @@ struct CardView: View {
                 return .red
             default:
                 return .green
+        }
+    }
+    
+    func getOpacity(_ opacity: Int) -> Double {
+        switch opacity {
+            case 0:
+                return 1.0
+            case 1:
+                return 0.5
+            default:
+                return 1.0
         }
     }
     
