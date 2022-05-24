@@ -15,6 +15,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     private let numberOfTraits: Int
     private var chosenCards: [Int] = []
     private(set) var setsMade: [[Int]] = []
+    private var id: Int = 0
     
     // todo might not need setsMade variable
     
@@ -36,8 +37,9 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
             return
         }
         if dimension >= numberOfTraits {
+            id += 1
             deck.append(CustomShapeCard(isSelected: false, isPartOfMismatch: false,
-                        isPartOfSet: false, traits: result, id: 1000 + dimension))
+                                        isPartOfSet: false, traits: result, id: id))
             return
         }
         for i in 0..<numberOfTraitTypes {

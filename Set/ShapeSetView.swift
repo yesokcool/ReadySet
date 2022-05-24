@@ -39,17 +39,20 @@ struct CardView: View {
                 ForEach(0..<card.traits[2].type) { _ in
                     switch card.traits[0].type {
                     case 0:
-                        let rect = RoundedRectangle(cornerRadius: 10)
-                        rect.fill().foregroundColor(getColor(card.traits[3].type)).padding(5.0)
+                        RoundedRectangle(cornerRadius:10)
+                            .fill()
+                            .foregroundColor(getColor(card.traits[3].type))
+                            .padding(5.0)
                     case 1:
-                        let circle = Circle()
-                        circle.fill().foregroundColor(getColor(card.traits[3].type)).padding(5.0)
-                    case 2:
-                        let ellipse = Ellipse()
-                        ellipse.fill().foregroundColor(getColor(card.traits[3].type)).padding(5.0)
+                        Circle()
+                            .fill()
+                            .foregroundColor(getColor(card.traits[3].type))
+                            .padding(5.0)
                     default:
-                        let circle = Circle()
-                        circle.fill().foregroundColor(getColor(card.traits[3].type)).padding(5.0)
+                        Ellipse()
+                            .fill()
+                            .foregroundColor(getColor(card.traits[3].type))
+                            .padding(5.0)
                     }
                 }
             }
