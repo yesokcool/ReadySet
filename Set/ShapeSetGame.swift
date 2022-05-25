@@ -41,6 +41,10 @@ class ShapeSetGame: ObservableObject {
         _ = game.dealThree()
     }
     
+    func isSelected(_ card: Card) -> Bool {
+        return game.selectedCards.contains(where: { $0 == card })
+    }
+    
     struct Trait: Equatable, Traitable {
         let type: Int
         /*var description: String {

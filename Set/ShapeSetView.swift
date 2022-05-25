@@ -20,7 +20,7 @@ struct ShapeSetView: View {
                     CardView(card: card)
                         .padding(4)
                         .onTapGesture {
-                        game.choose(card)
+                            game.choose(card)
                     }
                 }
                 
@@ -47,8 +47,9 @@ struct ShapeSetView: View {
                     }
                 }
                 .padding(.horizontal, 50.0)
+                .padding(.bottom, 10.0)
                 
-            }.foregroundColor(.red)
+            }.foregroundColor(.primary)
     }
 }
 
@@ -62,10 +63,15 @@ struct CardView: View {
                 shape
                     .fill()
                     .foregroundColor(.white)
-                shape
-                    .stroke(lineWidth: DrawingConstants.lineWidth)
+                if (card.isSelected) {
+                    shape.stroke(lineWidth: DrawingConstants.lineWidth)
+                        .foregroundColor(.blue)
+                }
+                else {
+                    shape.stroke(lineWidth: DrawingConstants.lineWidth)
+                }
                 VStack {
-                    ForEach(0..<card.traits[1].type + 1) { _ in
+                    ForEach(0..<card.traits[1].type + 1, id: \.self) { _ in
                         switch card.traits[0].type {
                         case 0:
                             if card.traits[2].type == 1 {
