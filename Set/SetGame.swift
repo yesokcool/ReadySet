@@ -72,6 +72,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         setsMade = []
         chosenCards = []
         createDeck(currentTrait: 0)
+        deck.shuffle()
     }
     
     mutating func choose(_ card: CustomShapeCard) {
@@ -112,7 +113,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         }
         
         if !deck.isEmpty {
-            dealThree()
+            _ = dealThree()
         }
 
         return true

@@ -38,7 +38,7 @@ class ShapeSetGame: ObservableObject {
     }
     
     func dealThree() {
-        game.dealThree()
+        _ = game.dealThree()
     }
     
     struct Trait: Equatable, Traitable {
