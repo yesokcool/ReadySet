@@ -41,6 +41,10 @@ class ShapeSetGame: ObservableObject {
         _ = game.dealThree()
     }
     
+    func getScore() -> Int {
+        return game.setsMade.count * 5
+    }
+    
     func isSelected(_ card: Card) -> Bool {
         return game.selectedCards.contains(where: { $0 == card })
     }

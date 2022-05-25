@@ -14,6 +14,9 @@ struct ShapeSetView: View {
                     Text("Set")
                         .font(.largeTitle)
                         .fontWeight(.bold)
+                    Text("SCORE: \(game.getScore())")
+                        .font(.title3)
+                        .fontWeight(.semibold)
                 }
                 
                 AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
@@ -64,7 +67,7 @@ struct CardView: View {
                     .fill()
                     .foregroundColor(.white)
                 if (card.isSelected) {
-                    shape.stroke(lineWidth: DrawingConstants.lineWidth)
+                    shape.stroke(lineWidth: DrawingConstants.selectionWidth)
                         .foregroundColor(.yellow)
                 }
                 else {
@@ -79,16 +82,21 @@ struct CardView: View {
                                     .stroke(lineWidth: DrawingConstants.lineWidth)
                                     .foregroundColor(getColor(card.traits[3].type))
                             }
+                            else if card.traits[2].type == 1 {
+                                    RoundedRectangle(cornerRadius:5)
+                                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                                        .foregroundColor(getColor(card.traits[3].type))
+                                        .background() {
+                                            RoundedRectangle(cornerRadius:5)
+                                                .fill()
+                                                .foregroundColor(getColor(card.traits[3].type))
+                                                .opacity(getOpacity(card.traits[2].type))
+                                        }
+                                }
                             else {
                                 RoundedRectangle(cornerRadius:5)
-                                    .stroke(lineWidth: DrawingConstants.lineWidth)
+                                    .fill()
                                     .foregroundColor(getColor(card.traits[3].type))
-                                    .background() {
-                                        RoundedRectangle(cornerRadius:5)
-                                            .fill()
-                                            .foregroundColor(getColor(card.traits[3].type))
-                                            .opacity(getOpacity(card.traits[2].type))
-                                    }
                             }
                         case 1:
                             if card.traits[2].type == 2 {
@@ -96,7 +104,7 @@ struct CardView: View {
                                     .stroke(lineWidth: DrawingConstants.lineWidth)
                                     .foregroundColor(getColor(card.traits[3].type))
                             }
-                            else {
+                            else if card.traits[2].type == 1 {
                                 Circle()
                                     .stroke(lineWidth: DrawingConstants.lineWidth)
                                     .foregroundColor(getColor(card.traits[3].type))
@@ -107,14 +115,18 @@ struct CardView: View {
                                             .opacity(getOpacity(card.traits[2].type))
                                     }
                             }
-                                
+                            else {
+                                Circle()
+                                    .fill()
+                                    .foregroundColor(getColor(card.traits[3].type))
+                            }
                         default:
                             if card.traits[2].type == 2 {
                                 Diamond(size: 5)
                                     .stroke(lineWidth: DrawingConstants.lineWidth)
                                     .foregroundColor(getColor(card.traits[3].type))
                             }
-                            else {
+                            else if card.traits[2].type == 1 {
                                 Diamond(size:5)
                                     .stroke(lineWidth: DrawingConstants.lineWidth)
                                     .foregroundColor(getColor(card.traits[3].type))
@@ -124,6 +136,11 @@ struct CardView: View {
                                             .foregroundColor(getColor(card.traits[3].type))
                                             .opacity(getOpacity(card.traits[2].type))
                                     }
+                            }
+                            else {
+                                Diamond(size:5)
+                                    .fill()
+                                    .foregroundColor(getColor(card.traits[3].type))
                             }
                         }
                     }
@@ -153,36 +170,10 @@ struct CardView: View {
         }
     }
     
-    struct Diamond: Shape {
-        var size: Double
-        
-        func path(in rect: CGRect) -> Path {
-            let center = CGPoint(x: rect.midX, y: rect.midY)
-            let size = min(rect.width, rect.height) / 2
-            var point: CGPoint
-            
-            var p = Path()
-            point = CGPoint(x: center.x, y:center.y + size)
-            p.move(to: point)
-            point = CGPoint(x: point.x + size, y:point.y - size)
-            p.addLine(to: point)
-            p.move(to: point)
-            point = CGPoint(x: point.x - size, y:point.y - size)
-            p.addLine(to: point)
-            p.move(to: point)
-            point = CGPoint(x: point.x - size, y:point.y + size)
-            p.addLine(to: point)
-            p.move(to: point)
-            point = CGPoint(x: point.x + size, y:point.y + size)
-            p.addLine(to: point)
-            
-            return p
-        }
-    }
-    
     private struct DrawingConstants {
         static let cornerRadius: CGFloat = 10
         static let lineWidth: CGFloat = 3
+        static let selectionWidth: CGFloat = 6
     }
 }
 

@@ -14,6 +14,7 @@
 		95A2FB7427F37D830036EFD6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95A2FB7327F37D830036EFD6 /* Preview Assets.xcassets */; };
 		95A2FB7B27F37DD70036EFD6 /* SetGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A2FB7A27F37DD70036EFD6 /* SetGame.swift */; };
 		95A2FB7D27F37DEA0036EFD6 /* ShapeSetGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A2FB7C27F37DEA0036EFD6 /* ShapeSetGame.swift */; };
+		95CC7CB2283ED60800F3CDAA /* Diamond.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CC7CB1283ED60800F3CDAA /* Diamond.swift */; };
 		95D3D64F283C2102009358C4 /* Traitable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D3D64E283C2102009358C4 /* Traitable.swift */; };
 		95DCD54B2836AE6200200954 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DCD54A2836AE6200200954 /* Theme.swift */; };
 /* End PBXBuildFile section */
@@ -27,6 +28,7 @@
 		95A2FB7327F37D830036EFD6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		95A2FB7A27F37DD70036EFD6 /* SetGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGame.swift; sourceTree = "<group>"; };
 		95A2FB7C27F37DEA0036EFD6 /* ShapeSetGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeSetGame.swift; sourceTree = "<group>"; };
+		95CC7CB1283ED60800F3CDAA /* Diamond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diamond.swift; sourceTree = SOURCE_ROOT; };
 		95D3D64E283C2102009358C4 /* Traitable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Traitable.swift; sourceTree = SOURCE_ROOT; };
 		95DCD54A2836AE6200200954 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,6 +63,7 @@
 		95A2FB6B27F37D820036EFD6 /* Set */ = {
 			isa = PBXGroup;
 			children = (
+				95CC7CB1283ED60800F3CDAA /* Diamond.swift */,
 				95D3D64E283C2102009358C4 /* Traitable.swift */,
 				958D3EB727F6887A009DF6C9 /* AspectVGrid.swift */,
 				95A2FB6C27F37D820036EFD6 /* SetApp.swift */,
@@ -157,6 +160,7 @@
 				95DCD54B2836AE6200200954 /* Theme.swift in Sources */,
 				95A2FB6F27F37D820036EFD6 /* ShapeSetView.swift in Sources */,
 				95A2FB7B27F37DD70036EFD6 /* SetGame.swift in Sources */,
+				95CC7CB2283ED60800F3CDAA /* Diamond.swift in Sources */,
 				958D3EB827F6887A009DF6C9 /* AspectVGrid.swift in Sources */,
 				95A2FB6D27F37D820036EFD6 /* SetApp.swift in Sources */,
 			);
