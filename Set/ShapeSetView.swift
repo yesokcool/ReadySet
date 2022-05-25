@@ -81,9 +81,14 @@ struct CardView: View {
                             }
                             else {
                                 RoundedRectangle(cornerRadius:5)
-                                    .fill()
+                                    .stroke(lineWidth: DrawingConstants.lineWidth)
                                     .foregroundColor(getColor(card.traits[3].type))
-                                    .opacity(getOpacity(card.traits[2].type))
+                                    .background() {
+                                        RoundedRectangle(cornerRadius:5)
+                                            .fill()
+                                            .foregroundColor(getColor(card.traits[3].type))
+                                            .opacity(getOpacity(card.traits[2].type))
+                                    }
                             }
                         case 1:
                             if card.traits[2].type == 2 {
@@ -93,9 +98,14 @@ struct CardView: View {
                             }
                             else {
                                 Circle()
-                                    .fill()
+                                    .stroke(lineWidth: DrawingConstants.lineWidth)
                                     .foregroundColor(getColor(card.traits[3].type))
-                                    .opacity(getOpacity(card.traits[2].type))
+                                    .background() {
+                                        Circle()
+                                            .fill()
+                                            .foregroundColor(getColor(card.traits[3].type))
+                                            .opacity(getOpacity(card.traits[2].type))
+                                    }
                             }
                                 
                         default:
@@ -105,10 +115,15 @@ struct CardView: View {
                                     .foregroundColor(getColor(card.traits[3].type))
                             }
                             else {
-                                Diamond(size: 5)
-                                    .fill()
+                                Diamond(size:5)
+                                    .stroke(lineWidth: DrawingConstants.lineWidth)
                                     .foregroundColor(getColor(card.traits[3].type))
-                                    .opacity(getOpacity(card.traits[2].type))
+                                    .background() {
+                                        Diamond(size:5)
+                                            .fill()
+                                            .foregroundColor(getColor(card.traits[3].type))
+                                            .opacity(getOpacity(card.traits[2].type))
+                                    }
                             }
                         }
                     }
@@ -144,13 +159,22 @@ struct CardView: View {
         func path(in rect: CGRect) -> Path {
             let center = CGPoint(x: rect.midX, y: rect.midY)
             let size = min(rect.width, rect.height) / 2
+            var point: CGPoint
             
             var p = Path()
-            p.move(to: CGPoint(x: center.x + size, y:center.y + size))
-            p.addLine(to: CGPoint(x: center.x - size, y:center.y - size))
-            p.addLine(to: CGPoint(x: center.x + size, y:center.y - size))
-            p.addLine(to: CGPoint(x: center.x - size, y:center.y + size))
-            p.addLine(to: CGPoint(x: center.x, y:center.y))
+            point = CGPoint(x: center.x, y:center.y + size)
+            p.move(to: point)
+            point = CGPoint(x: point.x + size, y:point.y - size)
+            p.addLine(to: point)
+            p.move(to: point)
+            point = CGPoint(x: point.x - size, y:point.y - size)
+            p.addLine(to: point)
+            p.move(to: point)
+            point = CGPoint(x: point.x - size, y:point.y + size)
+            p.addLine(to: point)
+            p.move(to: point)
+            point = CGPoint(x: point.x + size, y:point.y + size)
+            p.addLine(to: point)
             
             return p
         }
