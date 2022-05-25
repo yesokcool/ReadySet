@@ -16,13 +16,38 @@ struct ShapeSetView: View {
                         .fontWeight(.bold)
                 }
                 
-                AspectVGrid(items: game.getDeck(), aspectRatio: 2/3) { card in
+                AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
                     CardView(card: card)
                         .padding(4)
                         .onTapGesture {
                         game.choose(card)
                     }
                 }
+                
+                HStack() {
+                    Button {
+                        game.newGame()
+                    } label: {
+                            Image(systemName: "arrow.counterclockwise")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 50)
+                    }
+                    Spacer()
+                    Button {
+                        game.dealThree()
+                    } label: {
+                        VStack(alignment: .center) {
+                            Image(systemName: "rectangle.stack.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 80)
+
+                        }
+                    }
+                }
+                .padding(.horizontal, 50.0)
+                
             }.foregroundColor(.red)
     }
 }

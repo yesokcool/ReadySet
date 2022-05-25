@@ -33,6 +33,14 @@ class ShapeSetGame: ObservableObject {
         game.choose(card)
     }
     
+    func newGame() {
+        game.newGame()
+    }
+    
+    func dealThree() {
+        game.dealThree()
+    }
+    
     struct Trait: Equatable, Traitable {
         let type: Int
         /*var description: String {
