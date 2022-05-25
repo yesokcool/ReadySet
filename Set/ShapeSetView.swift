@@ -65,28 +65,28 @@ struct CardView: View {
                     .foregroundColor(.white)
                 if (card.isSelected) {
                     shape.stroke(lineWidth: DrawingConstants.lineWidth)
-                        .foregroundColor(.blue)
+                        .foregroundColor(.yellow)
                 }
                 else {
                     shape.stroke(lineWidth: DrawingConstants.lineWidth)
                 }
                 VStack {
-                    ForEach(0..<card.traits[1].type + 1, id: \.self) { _ in
-                        switch card.traits[0].type {
+                    ForEach(0..<card.traits[0].type + 1, id: \.self) { _ in
+                        switch card.traits[1].type {
                         case 0:
-                            if card.traits[2].type == 1 {
-                                RoundedRectangle(cornerRadius:DrawingConstants.cornerRadius)
+                            if card.traits[2].type == 2 {
+                                RoundedRectangle(cornerRadius:5)
                                     .stroke(lineWidth: DrawingConstants.lineWidth)
                                     .foregroundColor(getColor(card.traits[3].type))
                             }
                             else {
-                                RoundedRectangle(cornerRadius:DrawingConstants.cornerRadius)
+                                RoundedRectangle(cornerRadius:5)
                                     .fill()
                                     .foregroundColor(getColor(card.traits[3].type))
                                     .opacity(getOpacity(card.traits[2].type))
                             }
                         case 1:
-                            if card.traits[2].type == 1 {
+                            if card.traits[2].type == 2 {
                                 Circle()
                                     .stroke(lineWidth: DrawingConstants.lineWidth)
                                     .foregroundColor(getColor(card.traits[3].type))
@@ -99,13 +99,13 @@ struct CardView: View {
                             }
                                 
                         default:
-                            if card.traits[2].type == 1 {
-                                Ellipse()
+                            if card.traits[2].type == 2 {
+                                Diamond(size: 5)
                                     .stroke(lineWidth: DrawingConstants.lineWidth)
                                     .foregroundColor(getColor(card.traits[3].type))
                             }
                             else {
-                                Ellipse()
+                                Diamond(size: 5)
                                     .fill()
                                     .foregroundColor(getColor(card.traits[3].type))
                                     .opacity(getOpacity(card.traits[2].type))
@@ -131,12 +131,28 @@ struct CardView: View {
     
     func getOpacity(_ opacity: Int) -> Double {
         switch opacity {
-            case 0:
-                return 1.0
             case 1:
-                return 0.5
+                return 0.3
             default:
                 return 1.0
+        }
+    }
+    
+    struct Diamond: Shape {
+        var size: Double
+        
+        func path(in rect: CGRect) -> Path {
+            let center = CGPoint(x: rect.midX, y: rect.midY)
+            let size = min(rect.width, rect.height) / 2
+            
+            var p = Path()
+            p.move(to: CGPoint(x: center.x + size, y:center.y + size))
+            p.addLine(to: CGPoint(x: center.x - size, y:center.y - size))
+            p.addLine(to: CGPoint(x: center.x + size, y:center.y - size))
+            p.addLine(to: CGPoint(x: center.x - size, y:center.y + size))
+            p.addLine(to: CGPoint(x: center.x, y:center.y))
+            
+            return p
         }
     }
     

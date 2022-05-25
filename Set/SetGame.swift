@@ -73,10 +73,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         cardsInPlay = []
         setsMade = []
         createDeck(currentTrait: 0)
-        deck.shuffle()
+        //deck.shuffle()
         fixedDeck = deck
     }
     
+    // todo currently using both isSelected and selectedCards, probably possible to just need to use one of these
     mutating func choose(_ card: CustomShapeCard) {
         if let chosenIndex = cardsInPlay.firstIndex(of: card),
             !cardsInPlay[chosenIndex].isPartOfSet {
@@ -90,11 +91,16 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
                 selectedCards.append(cardsInPlay[chosenIndex])
                 if selectedCards.count >= numberOfCardsInASet {
                     if isSet(selectedCards) {
+                        print("IS A SET!")
                         setsMade.append(selectedCards)
                         for c in selectedCards {
-                            fixedDeck[fixedDeck.firstIndex(of: c)!].isPartOfSet = true
                             // todo we'll see if removing from deck is okay
                             cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!)
+                        }
+                    }
+                    else {
+                        for c in selectedCards {
+                            cardsInPlay[cardsInPlay.firstIndex(of: c)!].isSelected = false
                         }
                     }
                     selectedCards = []
@@ -109,8 +115,12 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
             return false
         }
         let traits = setOfCards[0].traits
+        
+        // For every trait that exists in the game and is present in every card,
+        // check if the trait of the first card has the same type or different as
+        // the trait in every other card.
         for (traitIndex, _) in traits.enumerated() {
-            if !traitAllSameOrAllDifferent(setOfCards, with: traitIndex) {
+            if !traitAllSameOrAllDifferentType(setOfCards, with: traitIndex) {
                 return false
             }
         }
@@ -123,15 +133,21 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     }
     
     // Check if an array of cards all have the same or different selected trait, or not.
-    private func traitAllSameOrAllDifferent(_ setOfCards: [CustomShapeCard], with selectedTrait: Int) -> Bool {
+    private func traitAllSameOrAllDifferentType(_ setOfCards: [CustomShapeCard], with selectedTrait: Int) -> Bool {
         if setOfCards.count < 2 { return true }
         
-        var set: [Int] = []
+        // Go through the set of cards. For every card, take the selected trait's type
+        // and append it to the array of trait types.
+        var traitTypes: [Int] = []
         for card in setOfCards {
-            set.append(card.traits[selectedTrait].type)
+            traitTypes.append(card.traits[selectedTrait].type)
         }
         
-        return Set(set).count == 1 || Set(set).count == set.count
+        // Now with an array of trait types of every card in the set of cards
+        // convert that array to a mathematical set. If the set is equal to 1,
+        // then all the traits were the same. If the set is equal to the number
+        // of trait types, then all the traits were different.
+        return Set(traitTypes).count == 1 || Set(traitTypes).count == traitTypes.count
     }
     
     /*public func printDeck() {
