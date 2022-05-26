@@ -67,6 +67,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         result = []
         cardsInPlay = []
         setsMade = []
+        selectedCards = []
         createDeck(currentTrait: 0)
         //deck.shuffle()
         fixedDeck = deck
@@ -79,7 +80,9 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     mutating func choose(_ card: CustomShapeCard) {
         if let chosenIndex = cardsInPlay.firstIndex(of: card),
            cardsInPlay[chosenIndex].isPartOfSet != true.intValue {
+            // Set is selected
             if selectedCards.count >= numberOfCardsInASet {
+                // Set selected is a an actual set
                 if selectedCards[0].isPartOfSet == true.intValue {
                     for c in selectedCards {
                         // todo we'll see if removing from deck is okay
@@ -88,9 +91,9 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
                     }
                     selectedCards = []
                 }
+                // Set selected is not an actual set
                 else {
                     for c in selectedCards {
-                        // todo we'll see if removing from deck is okay
                         let i = cardsInPlay.firstIndex(of: c)!
                         cardsInPlay[i].isSelected = false
                         cardsInPlay[i].isPartOfSet = false.none
@@ -100,10 +103,15 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
                     selectedCards.append(cardsInPlay[chosenIndex])
                 }
             }
+            // Set is not selected
             else {
+                // Deselection
                 if (selectedCards.contains(cardsInPlay[chosenIndex])) {
-                    selectedCards.remove(at: selectedCards.firstIndex(of: cardsInPlay[chosenIndex])!)
+                    let i = selectedCards.firstIndex(of: cardsInPlay[chosenIndex])!
+                    cardsInPlay[chosenIndex].isSelected = false
+                    selectedCards.remove(at: i)
                 }
+                // Selection
                 else {
                     print("Choosing \(card)!")
                     cardsInPlay[chosenIndex].isSelected = true
