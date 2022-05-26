@@ -58,6 +58,8 @@ struct ShapeSetView: View {
     }
 }
 
+// TODO: Can probably make a @Viewbuilder function that returns Some View instead
+// of these long switch statements?
 struct CardView: View {
     let card: ShapeSetGame.Card
     
@@ -71,6 +73,14 @@ struct CardView: View {
                 if (card.isSelected) {
                     shape.stroke(lineWidth: DrawingConstants.selectionWidth)
                         .foregroundColor(.yellow)
+                }
+                else if (card.isPartOfSet == true.intValue) {
+                    shape.stroke(lineWidth: DrawingConstants.selectionWidth)
+                        .foregroundColor(.green)
+                }
+                else if (card.isPartOfSet == false.intValue) {
+                    shape.stroke(lineWidth: DrawingConstants.selectionWidth)
+                        .foregroundColor(.red)
                 }
                 else {
                     shape.stroke(lineWidth: DrawingConstants.lineWidth)

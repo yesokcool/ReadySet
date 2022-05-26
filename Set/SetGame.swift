@@ -35,9 +35,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         }
         if dimension >= numberOfTraits {
             id += 1
-            deck.append(CustomShapeCard(isPartOfSet: false,
-                                        isSelected: false,
-                                        traits: result, id: id))
+            deck.append(CustomShapeCard(traits: result, id: id))
             return
         }
         for i in 0..<numberOfTraitTypes {
@@ -63,6 +61,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         return true
     }
     
+    // TODO: Set it back to shuffle when done debugging.
     mutating func newGame() {
         deck = []
         result = []
@@ -75,32 +74,57 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     
     // TODO: Currently using both isSelected and selectedCards.
     // Perhaps possible to just need to use one of these
+    // TODO: Maybe make extension more readable and replace intValue
+    // for something else.
     mutating func choose(_ card: CustomShapeCard) {
         if let chosenIndex = cardsInPlay.firstIndex(of: card),
-            !cardsInPlay[chosenIndex].isPartOfSet {
-            if selectedCards.contains(cardsInPlay[chosenIndex]) {
-                selectedCards.remove(at: selectedCards.firstIndex(of: cardsInPlay[chosenIndex])!)
-                cardsInPlay[chosenIndex].isSelected = false
-            }
-            else if (!cardsInPlay[chosenIndex].isPartOfSet) {
-                print("Choosing \(card)!")
-                cardsInPlay[chosenIndex].isSelected = true
-                selectedCards.append(cardsInPlay[chosenIndex])
-                if selectedCards.count >= numberOfCardsInASet {
-                    if isSet(selectedCards) {
-                        print("IS A SET!")
-                        setsMade.append(selectedCards)
-                        for c in selectedCards {
-                            // todo we'll see if removing from deck is okay
-                            cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!)
-                        }
-                    }
-                    else {
-                        for c in selectedCards {
-                            cardsInPlay[cardsInPlay.firstIndex(of: c)!].isSelected = false
-                        }
+           cardsInPlay[chosenIndex].isPartOfSet != true.intValue {
+            if selectedCards.count >= numberOfCardsInASet {
+                if selectedCards[0].isPartOfSet == true.intValue {
+                    for c in selectedCards {
+                        // todo we'll see if removing from deck is okay
+                        cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!)
+                        // this doesnt matter cus removed -> cardsInPlay[cardsInPlay.firstIndex(of: c)!].isSelected = false
                     }
                     selectedCards = []
+                }
+                else {
+                    for c in selectedCards {
+                        // todo we'll see if removing from deck is okay
+                        let i = cardsInPlay.firstIndex(of: c)!
+                        cardsInPlay[i].isSelected = false
+                        cardsInPlay[i].isPartOfSet = false.none
+                    }
+                    selectedCards = []
+                    cardsInPlay[chosenIndex].isSelected = true
+                    selectedCards.append(cardsInPlay[chosenIndex])
+                }
+            }
+            else {
+                if (selectedCards.contains(cardsInPlay[chosenIndex])) {
+                    selectedCards.remove(at: selectedCards.firstIndex(of: cardsInPlay[chosenIndex])!)
+                }
+                else {
+                    print("Choosing \(card)!")
+                    cardsInPlay[chosenIndex].isSelected = true
+                    selectedCards.append(cardsInPlay[chosenIndex])
+                    if selectedCards.count >= numberOfCardsInASet {
+                        if isSet(selectedCards) {
+                            print("IS A SET!")
+                            setsMade.append(selectedCards)
+                            for (i, c) in selectedCards.enumerated() {
+                                // todo we'll see if removing from deck is okay
+                                cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = true.intValue
+                                selectedCards[i].isPartOfSet = true.intValue
+                            }
+                        }
+                        else {
+                            for (i, c) in selectedCards.enumerated() {
+                                cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = false.intValue
+                                selectedCards[i].isPartOfSet = false.intValue
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -148,9 +172,18 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     }
     
     struct CustomShapeCard: Identifiable, Equatable {
-        var isPartOfSet = false
+        var isPartOfSet = false.none
         var isSelected = false
         let traits: [CardContent]
         let id: Int
+    }
+}
+
+extension Bool {
+    var none: Int {
+        return 0
+    }
+    var intValue: Int {
+        return self ? 2 : 1
     }
 }

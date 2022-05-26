@@ -47,6 +47,19 @@ class ShapeSetGame: ObservableObject {
         return game.selectedCards.contains(where: { $0 == card })
     }
     
+    /*
+    func isPartOfSet(_ card: Card) -> Bool {
+        return card.isPartOfSet == true.intValue
+    }
+    
+    func isNotPartOfSet(_ card: Card) -> Bool {
+        return card.isPartOfSet == false.intValue
+    }
+    
+    func isNone(_ card: Card) -> Bool {
+        return card.isPartOfSet == false.none
+    }*/
+    
     struct Trait: Equatable, Traitable {
         let type: Int
         
