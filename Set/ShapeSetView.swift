@@ -86,76 +86,7 @@ struct CardView: View {
                     shape.stroke(lineWidth: DrawingConstants.lineWidth)
                 }
                 VStack {
-                    ForEach(0..<card.traits[0].type + 1, id: \.self) { _ in
-                        switch card.traits[1].type {
-                        case 0:
-                            if card.traits[2].type == 2 {
-                                RoundedRectangle(cornerRadius:5)
-                                    .stroke(lineWidth: DrawingConstants.lineWidth)
-                                    .foregroundColor(getColor(card.traits[3].type))
-                            }
-                            else if card.traits[2].type == 1 {
-                                    RoundedRectangle(cornerRadius:5)
-                                        .stroke(lineWidth: DrawingConstants.lineWidth)
-                                        .foregroundColor(getColor(card.traits[3].type))
-                                        .background() {
-                                            RoundedRectangle(cornerRadius:5)
-                                                .fill()
-                                                .foregroundColor(getColor(card.traits[3].type))
-                                                .opacity(getOpacity(card.traits[2].type))
-                                        }
-                                }
-                            else {
-                                RoundedRectangle(cornerRadius:5)
-                                    .fill()
-                                    .foregroundColor(getColor(card.traits[3].type))
-                            }
-                        case 1:
-                            if card.traits[2].type == 2 {
-                                Circle()
-                                    .stroke(lineWidth: DrawingConstants.lineWidth)
-                                    .foregroundColor(getColor(card.traits[3].type))
-                            }
-                            else if card.traits[2].type == 1 {
-                                Circle()
-                                    .stroke(lineWidth: DrawingConstants.lineWidth)
-                                    .foregroundColor(getColor(card.traits[3].type))
-                                    .background() {
-                                        Circle()
-                                            .fill()
-                                            .foregroundColor(getColor(card.traits[3].type))
-                                            .opacity(getOpacity(card.traits[2].type))
-                                    }
-                            }
-                            else {
-                                Circle()
-                                    .fill()
-                                    .foregroundColor(getColor(card.traits[3].type))
-                            }
-                        default:
-                            if card.traits[2].type == 2 {
-                                Diamond(size: 5)
-                                    .stroke(lineWidth: DrawingConstants.lineWidth)
-                                    .foregroundColor(getColor(card.traits[3].type))
-                            }
-                            else if card.traits[2].type == 1 {
-                                Diamond(size:5)
-                                    .stroke(lineWidth: DrawingConstants.lineWidth)
-                                    .foregroundColor(getColor(card.traits[3].type))
-                                    .background() {
-                                        Diamond(size:5)
-                                            .fill()
-                                            .foregroundColor(getColor(card.traits[3].type))
-                                            .opacity(getOpacity(card.traits[2].type))
-                                    }
-                            }
-                            else {
-                                Diamond(size:5)
-                                    .fill()
-                                    .foregroundColor(getColor(card.traits[3].type))
-                            }
-                        }
-                    }
+                    renderTrait()
                 }
                 .padding(5.0)
             }
@@ -179,6 +110,79 @@ struct CardView: View {
                 return 0.3
             default:
                 return 1.0
+        }
+    }
+    
+    @ViewBuilder func renderTrait() -> some View {
+        ForEach(0..<card.traits[0].type + 1, id: \.self) { _ in
+            switch card.traits[1].type {
+            case 0:
+                if card.traits[2].type == 2 {
+                    RoundedRectangle(cornerRadius:5)
+                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                        .foregroundColor(getColor(card.traits[3].type))
+                }
+                else if card.traits[2].type == 1 {
+                        RoundedRectangle(cornerRadius:5)
+                            .stroke(lineWidth: DrawingConstants.lineWidth)
+                            .foregroundColor(getColor(card.traits[3].type))
+                            .background() {
+                                RoundedRectangle(cornerRadius:5)
+                                    .fill()
+                                    .foregroundColor(getColor(card.traits[3].type))
+                                    .opacity(getOpacity(card.traits[2].type))
+                            }
+                    }
+                else {
+                    RoundedRectangle(cornerRadius:5)
+                        .fill()
+                        .foregroundColor(getColor(card.traits[3].type))
+                }
+            case 1:
+                if card.traits[2].type == 2 {
+                    Circle()
+                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                        .foregroundColor(getColor(card.traits[3].type))
+                }
+                else if card.traits[2].type == 1 {
+                    Circle()
+                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                        .foregroundColor(getColor(card.traits[3].type))
+                        .background() {
+                            Circle()
+                                .fill()
+                                .foregroundColor(getColor(card.traits[3].type))
+                                .opacity(getOpacity(card.traits[2].type))
+                        }
+                }
+                else {
+                    Circle()
+                        .fill()
+                        .foregroundColor(getColor(card.traits[3].type))
+                }
+            default:
+                if card.traits[2].type == 2 {
+                    Diamond(size: 5)
+                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                        .foregroundColor(getColor(card.traits[3].type))
+                }
+                else if card.traits[2].type == 1 {
+                    Diamond(size:5)
+                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                        .foregroundColor(getColor(card.traits[3].type))
+                        .background() {
+                            Diamond(size:5)
+                                .fill()
+                                .foregroundColor(getColor(card.traits[3].type))
+                                .opacity(getOpacity(card.traits[2].type))
+                        }
+                }
+                else {
+                    Diamond(size:5)
+                        .fill()
+                        .foregroundColor(getColor(card.traits[3].type))
+                }
+            }
         }
     }
     

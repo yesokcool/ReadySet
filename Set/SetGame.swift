@@ -27,7 +27,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         deck.shuffle()
     }
     
-    // TODO: Vod function just returning? Good style?
+    // TODO: Void function just returning? Good style?
     // Recursively iterate through a multi-dimensional array of unknown size.
     private mutating func createDeck(currentTrait dimension: Int) {
         if deck.count > deckSize {
@@ -122,7 +122,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
                             print("IS A SET!")
                             setsMade.append(selectedCards)
                             for (i, c) in selectedCards.enumerated() {
-                                // todo we'll see if removing from deck is okay
                                 cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = true.intValue
                                 selectedCards[i].isPartOfSet = true.intValue
                             }
