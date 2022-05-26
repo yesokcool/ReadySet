@@ -9,6 +9,7 @@ struct ShapeSetView: View {
     @ObservedObject var game: ShapeSetGame
     
     var body: some View {
+        if (!game.gameComplete()) {
             VStack {
                 VStack {
                     Text("Set")
@@ -49,6 +50,30 @@ struct ShapeSetView: View {
                 .padding(.bottom, 10.0)
                 
             }.foregroundColor(.primary)
+        }
+        else {
+            VStack {
+                Text("GAME COMPLETE!")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                Text("FINAL SCORE: \(game.getScore())")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                Button {
+                    game.newGame()
+                } label: {
+                    VStack {
+                    Text("NEW GAME?")
+                        .font(.title)
+                        .padding(10)
+                    Image(systemName: "arrow.counterclockwise")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 50)
+                    }
+                }
+            }
+        }
     }
     
     @ViewBuilder func buttonBuilder() -> some View {

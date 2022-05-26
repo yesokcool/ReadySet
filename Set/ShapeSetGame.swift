@@ -51,8 +51,8 @@ class ShapeSetGame: ObservableObject {
         return game.deck.isEmpty
     }
     
-    func gameComplete() {
-        
+    func gameComplete() -> Bool {
+        return game.gameComplete
     }
     
     struct Trait: Equatable, Traitable {

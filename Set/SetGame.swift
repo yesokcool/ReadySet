@@ -71,9 +71,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         setsMade = []
         selectedCards = []
         createDeck(currentTrait: 0)
-        //deck.shuffle()
+        deck.shuffle()
+        // debug deck.removeSubrange(3..<deck.count)
         fixedDeck = deck
         startingDeal()
+        gameComplete = false
     }
     
     mutating func startingDeal() {
@@ -191,6 +193,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         // of trait types, then all the traits were different.
         return Set(traitTypes).count == 1 || Set(traitTypes).count == traitTypes.count
     }
+    
+    // TODO: If there are cards left but no sets possible, how to handle?
+    // Just to check the game for any possible sets seems expensive.
+    // But if you could check it and there were not sets, it would be
+    // the same result as game being completed.
     
     struct CustomShapeCard: Identifiable, Equatable {
         var isPartOfSet = false.none
