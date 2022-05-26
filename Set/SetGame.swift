@@ -17,6 +17,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     private(set) var setsMade: [[CustomShapeCard]] = []
     private(set) var selectedCards: [CustomShapeCard] = []
     private(set) var id: Int = 0
+    private(set) var gameComplete: Bool = false
     
     init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
         self.numberOfTraits = numberOfTraits
@@ -25,6 +26,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         self.numberOfCardsInASet = numberOfCardsInASet
         createDeck(currentTrait: 0)
         deck.shuffle()
+        startingDeal()
     }
     
     // TODO: Void function just returning? Good style?
@@ -71,6 +73,13 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         createDeck(currentTrait: 0)
         //deck.shuffle()
         fixedDeck = deck
+        startingDeal()
+    }
+    
+    mutating func startingDeal() {
+        for _ in 1...4 {
+            _ = dealThree()
+        }
     }
     
     // TODO: Currently using both isSelected and selectedCards.
@@ -87,6 +96,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
                     cardsInPlay[chosenIndex].isSelected = true
                     let chosen = cardsInPlay[chosenIndex]
                     for c in selectedCards {
+                        deck.remove(at: deck.firstIndex(of: c)!)
                         cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!)
                     }
                     selectedCards = []
@@ -124,6 +134,10 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
                             for (i, c) in selectedCards.enumerated() {
                                 cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = true.intValue
                                 selectedCards[i].isPartOfSet = true.intValue
+                            }
+                            if (selectedCards.count == cardsInPlay.count) {
+                                cardsInPlay = []
+                                gameComplete = true
                             }
                         }
                         else {

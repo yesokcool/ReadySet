@@ -47,6 +47,14 @@ class ShapeSetGame: ObservableObject {
         return game.selectedCards.contains(where: { $0 == card })
     }
     
+    func deckEmpty() {
+        return game.deck.isEmpty
+    }
+    
+    func gameComplete() {
+        
+    }
+    
     struct Trait: Equatable, Traitable {
         let type: Int
         
