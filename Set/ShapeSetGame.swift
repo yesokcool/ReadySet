@@ -47,7 +47,7 @@ class ShapeSetGame: ObservableObject {
         return game.selectedCards.contains(where: { $0 == card })
     }
     
-    func deckEmpty() {
+    func deckEmpty() -> Bool {
         return game.deck.isEmpty
     }
     

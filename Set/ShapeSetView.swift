@@ -41,11 +41,7 @@ struct ShapeSetView: View {
                             game.dealThree()
                     } label: {
                         VStack(alignment: .center) {
-                            Image(systemName: "rectangle.stack.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 80)
-
+                            buttonBuilder()
                         }
                     }
                 }
@@ -53,6 +49,22 @@ struct ShapeSetView: View {
                 .padding(.bottom, 10.0)
                 
             }.foregroundColor(.primary)
+    }
+    
+    @ViewBuilder func buttonBuilder() -> some View {
+        if (game.deckEmpty()) {
+            Image(systemName: "rectangle.stack.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 80)
+                .opacity(0)
+        }
+        else {
+            Image(systemName: "rectangle.stack.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 80)
+        }
     }
 }
 

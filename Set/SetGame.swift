@@ -96,7 +96,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
                     cardsInPlay[chosenIndex].isSelected = true
                     let chosen = cardsInPlay[chosenIndex]
                     for c in selectedCards {
-                        deck.remove(at: deck.firstIndex(of: c)!)
                         cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!)
                     }
                     selectedCards = []
