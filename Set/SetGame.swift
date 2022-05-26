@@ -18,8 +18,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     private(set) var selectedCards: [CustomShapeCard] = []
     private(set) var id: Int = 0
     
-    // todo might not need setsMade variable
-    
     init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
         self.numberOfTraits = numberOfTraits
         self.numberOfTraitTypes = numberOfTraitTypes
@@ -29,9 +27,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         deck.shuffle()
     }
     
-    // todo actual id
-    // todo it being void and using return, dunno if great style
-    
+    // TODO: Vod function just returning? Good style?
     // Recursively iterate through a multi-dimensional array of unknown size.
     private mutating func createDeck(currentTrait dimension: Int) {
         if deck.count > deckSize {
@@ -52,7 +48,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         return
     }
     
-    // todo could be deal x instead, perhaps
+    // TODO: Perhaps could be deal any the game wants to.
     
     // Deals 3 cards from the shuffled deck.
     mutating func dealThree() -> Bool {
@@ -77,7 +73,8 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         fixedDeck = deck
     }
     
-    // todo currently using both isSelected and selectedCards, probably possible to just need to use one of these
+    // TODO: Currently using both isSelected and selectedCards.
+    // Perhaps possible to just need to use one of these
     mutating func choose(_ card: CustomShapeCard) {
         if let chosenIndex = cardsInPlay.firstIndex(of: card),
             !cardsInPlay[chosenIndex].isPartOfSet {
@@ -149,19 +146,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         // of trait types, then all the traits were different.
         return Set(traitTypes).count == 1 || Set(traitTypes).count == traitTypes.count
     }
-    
-    /*public func printDeck() {
-        var cardCount = 0
-        for i in 0..<deckSize {
-            print("\n")
-            print("Card Count: \(cardCount)")
-            for j in 0..<numberOfTraits {
-                let s = String(describing: deck[i].traits[j])
-                print("Trait: \(s)")
-            }
-            cardCount += 1
-        }
-    }*/
     
     struct CustomShapeCard: Identifiable, Equatable {
         var isPartOfSet = false

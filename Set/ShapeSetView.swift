@@ -19,6 +19,7 @@ struct ShapeSetView: View {
                         .fontWeight(.semibold)
                 }
                 
+                //ScrollView() {
                 AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
                     CardView(card: card)
                         .padding(4)
@@ -26,6 +27,7 @@ struct ShapeSetView: View {
                             game.choose(card)
                     }
                 }
+                //}
                 
                 HStack() {
                     Button {
