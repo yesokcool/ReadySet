@@ -70,17 +70,17 @@ struct CardView: View {
                 shape
                     .fill()
                     .foregroundColor(.white)
-                if (card.isSelected) {
-                    shape.stroke(lineWidth: DrawingConstants.selectionWidth)
-                        .foregroundColor(.yellow)
-                }
-                else if (card.isPartOfSet == true.intValue) {
+                if (card.isPartOfSet == true.intValue) {
                     shape.stroke(lineWidth: DrawingConstants.selectionWidth)
                         .foregroundColor(.green)
                 }
                 else if (card.isPartOfSet == false.intValue) {
                     shape.stroke(lineWidth: DrawingConstants.selectionWidth)
                         .foregroundColor(.red)
+                }
+                else if (card.isSelected) {
+                    shape.stroke(lineWidth: DrawingConstants.selectionWidth)
+                        .foregroundColor(.yellow)
                 }
                 else {
                     shape.stroke(lineWidth: DrawingConstants.lineWidth)

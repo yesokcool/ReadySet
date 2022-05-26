@@ -82,14 +82,15 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
            cardsInPlay[chosenIndex].isPartOfSet != true.intValue {
             // Set is selected
             if selectedCards.count >= numberOfCardsInASet {
-                // Set selected is a an actual set
+                // Set selected is an actual set
                 if selectedCards[0].isPartOfSet == true.intValue {
+                    cardsInPlay[chosenIndex].isSelected = true
+                    let chosen = cardsInPlay[chosenIndex]
                     for c in selectedCards {
-                        // todo we'll see if removing from deck is okay
                         cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!)
-                        // this doesnt matter cus removed -> cardsInPlay[cardsInPlay.firstIndex(of: c)!].isSelected = false
                     }
                     selectedCards = []
+                    selectedCards.append(chosen)
                 }
                 // Set selected is not an actual set
                 else {
