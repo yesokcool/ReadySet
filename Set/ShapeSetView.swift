@@ -101,30 +101,12 @@ struct CardView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
-                shape
-                    .fill()
-                    .foregroundColor(.white)
-                if (card.isPartOfSet == true.intValue) {
-                    shape.stroke(lineWidth: DrawingConstants.selectionWidth)
-                        .foregroundColor(.green)
-                }
-                else if (card.isPartOfSet == false.intValue) {
-                    shape.stroke(lineWidth: DrawingConstants.selectionWidth)
-                        .foregroundColor(.red)
-                }
-                else if (card.isSelected) {
-                    shape.stroke(lineWidth: DrawingConstants.selectionWidth)
-                        .foregroundColor(.yellow)
-                }
-                else {
-                    shape.stroke(lineWidth: DrawingConstants.lineWidth)
-                }
                 VStack {
                     renderTrait()
                 }
-                .padding(5.0)
             }
+            .padding(8.0)
+            .cardify(card: card)
         }
     }
     
@@ -222,9 +204,7 @@ struct CardView: View {
     }
     
     private struct DrawingConstants {
-        static let cornerRadius: CGFloat = 10
         static let lineWidth: CGFloat = 3
-        static let selectionWidth: CGFloat = 6
     }
 }
 
