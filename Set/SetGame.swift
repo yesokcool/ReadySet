@@ -54,6 +54,12 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     mutating func dealThree() -> Bool {
         for _ in 0..<3 {
             if deck.count > 0 {
+                if (!selectedCards.isEmpty && selectedCards[0].isPartOfSet == true.intValue) {
+                    for c in selectedCards {
+                        cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!)
+                    }
+                    selectedCards = []
+                }
                 cardsInPlay.append(deck.removeFirst())
             }
             else {
