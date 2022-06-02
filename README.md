@@ -1,4 +1,4 @@
-# SetGame
+A game based on the card-based "Set" that supports as many traits and trait types as desired.
 
 Topics Covered:
 - Implementing MVVM
