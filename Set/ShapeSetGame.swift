@@ -55,6 +55,10 @@ class ShapeSetGame: ObservableObject {
         return game.gameComplete
     }
     
+    func shuffle() {
+        game.shuffle()
+    }
+    
     struct Trait: Equatable, Traitable {
         let type: Int
         

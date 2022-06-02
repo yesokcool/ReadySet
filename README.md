@@ -26,3 +26,4 @@ Topics Covered:
 - System Images
 - Shape
 - GeometryReader
+- Animation

@@ -69,6 +69,10 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         return true
     }
     
+    mutating func shuffle() {
+        
+    }
+    
     // TODO: Set it back to shuffle when done debugging.
     mutating func newGame() {
         deck = []

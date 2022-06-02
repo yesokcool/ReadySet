@@ -135,23 +135,23 @@ struct CardView: View {
             switch card.traits[1].type {
             case 0:
                 if card.traits[2].type == 2 {
-                    RoundedRectangle(cornerRadius:5)
+                    RoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
                         .stroke(lineWidth: DrawingConstants.lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
                 }
                 else if card.traits[2].type == 1 {
-                        RoundedRectangle(cornerRadius:5)
+                        RoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
                             .stroke(lineWidth: DrawingConstants.lineWidth)
                             .foregroundColor(getColor(card.traits[3].type))
                             .background() {
-                                RoundedRectangle(cornerRadius:5)
+                                RoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
                                     .fill()
                                     .foregroundColor(getColor(card.traits[3].type))
                                     .opacity(getOpacity(card.traits[2].type))
                             }
                     }
                 else {
-                    RoundedRectangle(cornerRadius:5)
+                    RoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
                         .fill()
                         .foregroundColor(getColor(card.traits[3].type))
                 }
@@ -205,6 +205,7 @@ struct CardView: View {
     
     private struct DrawingConstants {
         static let lineWidth: CGFloat = 3
+        static let cornerRadiusRectangle: CGFloat = 20.0
     }
 }
 
