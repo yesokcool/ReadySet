@@ -11,7 +11,7 @@ struct Squiggle: Shape {
         var path = Path()
         let center = CGPoint(x: rect.midX, y: rect.midY)
         
-        let unit = 16.0
+        let unit = min(rect.width, rect.height) * 0.21
         
         let down: CGFloat = unit
         let right: CGFloat = unit * 2
@@ -30,25 +30,22 @@ struct Squiggle: Shape {
                       control1: CGPoint(x: x + (0.2 * left), y: y + up + up),
                       control2: CGPoint(x: x + (0.2 * right), y: y + (0.2)*down))
     
-        
         // Top right point -> Bottom right point
         path.addCurve(to: CGPoint(x: x + right, y: y + down),
-                      control1: CGPoint(x: x + right + (right / 2), y: y + up),
-                      control2: CGPoint(x: x + right + (right / 3), y: y + down))
-        
+                      control1: CGPoint(x: x + right + (right / 2.0), y: y + up),
+                      control2: CGPoint(x: x + right + (right / 3.0), y: y + down))
         
         // Bottom right point -> Bottom left point
         path.addCurve(to: CGPoint(x: x + left, y: y + down),
                       control1: CGPoint(x: x + (0.2 * right), y: y + down + down),
                       control2: CGPoint(x: x + (0.2 * left), y: y + (0.2)*up))
         
-        
         // Bottom left point -> Top left point
         path.addCurve(to: CGPoint(x: x + left, y: y + up),
-                      control1: CGPoint(x: x + left + (left / 3), y: y + down),
-                      control2: CGPoint(x: x + left + (left / 3), y: y + up))
+                      control1: CGPoint(x: x + left + (left / 3.0), y: y + down),
+                      control2: CGPoint(x: x + left + (left / 3.0), y: y + up))
         
-        path.move(to: origin)
+        path.closeSubpath()
         
         return path
     }

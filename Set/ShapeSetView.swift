@@ -135,30 +135,34 @@ struct CardView: View {
             switch card.traits[1].type {
             case 0:
                 if card.traits[2].type == 2 {
-                    RoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
+                    WideRoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
                         .stroke(lineWidth: DrawingConstants.lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
+                        .frame(maxHeight: 30)
                 }
                 else if card.traits[2].type == 1 {
-                        RoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
-                            .stroke(lineWidth: DrawingConstants.lineWidth)
-                            .foregroundColor(getColor(card.traits[3].type))
-                            .background() {
-                                RoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
-                                    .fill()
-                                    .foregroundColor(getColor(card.traits[3].type))
-                                    .opacity(getOpacity(card.traits[2].type))
-                            }
+                    WideRoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
+                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                        .foregroundColor(getColor(card.traits[3].type))
+                        .frame(maxHeight: 30)
+                        .background() {
+                            WideRoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
+                                .fill()
+                                .foregroundColor(getColor(card.traits[3].type))
+                                .opacity(getOpacity(card.traits[2].type))
+                                .frame(maxHeight: 30)
+                        }
                     }
                 else {
-                    RoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
+                    WideRoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
                         .fill()
                         .foregroundColor(getColor(card.traits[3].type))
+                        .frame(maxHeight: 30)
                 }
             case 1:
                 if card.traits[2].type == 2 {
                     Squiggle()
-                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                        .stroke(lineWidth: 5)
                         .foregroundColor(getColor(card.traits[3].type))
                 }
                 else if card.traits[2].type == 1 {
@@ -206,6 +210,7 @@ struct CardView: View {
     private struct DrawingConstants {
         static let lineWidth: CGFloat = 3
         static let cornerRadiusRectangle: CGFloat = 64.0
+        static let rectangleHeight: CGFloat = 30.0
     }
 }
 

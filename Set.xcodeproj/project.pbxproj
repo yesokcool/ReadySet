@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		957EE89F28492D7A00D64DF6 /* Squiggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957EE89E28492D7A00D64DF6 /* Squiggle.swift */; };
+		957EE8A1284965C200D64DF6 /* WideRoundedRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957EE8A0284965C200D64DF6 /* WideRoundedRectangle.swift */; };
 		958D3EB827F6887A009DF6C9 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958D3EB727F6887A009DF6C9 /* AspectVGrid.swift */; };
 		95A2FB6D27F37D820036EFD6 /* SetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A2FB6C27F37D820036EFD6 /* SetApp.swift */; };
 		95A2FB6F27F37D820036EFD6 /* ShapeSetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A2FB6E27F37D820036EFD6 /* ShapeSetView.swift */; };
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		957EE89E28492D7A00D64DF6 /* Squiggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Squiggle.swift; sourceTree = "<group>"; };
+		957EE8A0284965C200D64DF6 /* WideRoundedRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WideRoundedRectangle.swift; sourceTree = SOURCE_ROOT; };
 		958D3EB727F6887A009DF6C9 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 		95A2FB6927F37D820036EFD6 /* Set.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Set.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95A2FB6C27F37D820036EFD6 /* SetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetApp.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 		95A2FB6B27F37D820036EFD6 /* Set */ = {
 			isa = PBXGroup;
 			children = (
+				957EE8A0284965C200D64DF6 /* WideRoundedRectangle.swift */,
 				95CC7CB728414A5700F3CDAA /* Cardify.swift */,
 				95CC7CB3283F5E2C00F3CDAA /* File.swift */,
 				95CC7CB1283ED60800F3CDAA /* Diamond.swift */,
@@ -168,6 +171,7 @@
 				95D3D64F283C2102009358C4 /* Traitable.swift in Sources */,
 				95A2FB7D27F37DEA0036EFD6 /* ShapeSetGame.swift in Sources */,
 				95DCD54B2836AE6200200954 /* Theme.swift in Sources */,
+				957EE8A1284965C200D64DF6 /* WideRoundedRectangle.swift in Sources */,
 				95A2FB6F27F37D820036EFD6 /* ShapeSetView.swift in Sources */,
 				95A2FB7B27F37DD70036EFD6 /* SetGame.swift in Sources */,
 				95CC7CB2283ED60800F3CDAA /* Diamond.swift in Sources */,
