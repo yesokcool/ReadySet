@@ -130,6 +130,7 @@ struct CardView: View {
         }
     }
     
+    // TODO: There may be a way to generalize these shapes more so it's easier to add in more shapes. e.g putting the shapes in an array, iterating through the array instead of literally writing shapes. Would have to make sure to add some sort of parameter for their frame maxheight though. then use ternary to check for it
     @ViewBuilder func renderTrait() -> some View {
         ForEach(0..<card.traits[0].type + 1, id: \.self) { _ in
             switch card.traits[1].type {
@@ -138,26 +139,26 @@ struct CardView: View {
                     WideRoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
                         .stroke(lineWidth: DrawingConstants.lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
-                        .frame(maxHeight: 30)
+                        .frame(maxHeight: DrawingConstants.rectangleHeight)
                 }
                 else if card.traits[2].type == 1 {
                     WideRoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
                         .stroke(lineWidth: DrawingConstants.lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
-                        .frame(maxHeight: 30)
+                        .frame(maxHeight: DrawingConstants.rectangleHeight)
                         .background() {
                             WideRoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
                                 .fill()
                                 .foregroundColor(getColor(card.traits[3].type))
                                 .opacity(getOpacity(card.traits[2].type))
-                                .frame(maxHeight: 30)
+                                .frame(maxHeight: DrawingConstants.rectangleHeight)
                         }
                     }
                 else {
                     WideRoundedRectangle(cornerRadius:DrawingConstants.cornerRadiusRectangle)
                         .fill()
                         .foregroundColor(getColor(card.traits[3].type))
-                        .frame(maxHeight: 30)
+                        .frame(maxHeight: DrawingConstants.rectangleHeight)
                 }
             case 1:
                 if card.traits[2].type == 2 {
