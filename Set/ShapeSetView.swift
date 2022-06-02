@@ -157,23 +157,23 @@ struct CardView: View {
                 }
             case 1:
                 if card.traits[2].type == 2 {
-                    Circle()
+                    Squiggle()
                         .stroke(lineWidth: DrawingConstants.lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
                 }
                 else if card.traits[2].type == 1 {
-                    Circle()
+                    Squiggle()
                         .stroke(lineWidth: DrawingConstants.lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
                         .background() {
-                            Circle()
+                            Squiggle()
                                 .fill()
                                 .foregroundColor(getColor(card.traits[3].type))
                                 .opacity(getOpacity(card.traits[2].type))
                         }
                 }
                 else {
-                    Circle()
+                    Squiggle()
                         .fill()
                         .foregroundColor(getColor(card.traits[3].type))
                 }
@@ -205,7 +205,7 @@ struct CardView: View {
     
     private struct DrawingConstants {
         static let lineWidth: CGFloat = 3
-        static let cornerRadiusRectangle: CGFloat = 20.0
+        static let cornerRadiusRectangle: CGFloat = 64.0
     }
 }
 
