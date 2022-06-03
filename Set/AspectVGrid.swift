@@ -1,8 +1,4 @@
 
-//
-//  Created on 3/31/22.
-//
-
 import SwiftUI
 
 struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiable {

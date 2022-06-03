@@ -1,8 +1,3 @@
-//
-//  File.swift
-//  Set
-//
-//
 
 import Foundation
 import SwiftUI

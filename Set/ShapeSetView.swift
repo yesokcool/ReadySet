@@ -1,8 +1,4 @@
 
-//
-//  Created on 3/29/22.
-//
-
 import SwiftUI
 
 struct ShapeSetView: View {
@@ -132,34 +128,35 @@ struct CardView: View {
     
     // TODO: There may be a way to generalize these shapes more so it's easier to add in more shapes. e.g putting the shapes in an array, iterating through the array instead of literally writing shapes. Would have to make sure to add some sort of parameter for their frame maxheight though. then use ternary to check for it
     @ViewBuilder func renderTrait(with geometry: GeometryProxy) -> some View {
-        let cornerRadiusRectangle: CGFloat = geometry.size.width / 3
-        let rectangleHeight: CGFloat = geometry.size.height / 4
-        let squiggleWidth: CGFloat = geometry.size.width / 1.5
+        let cornerRadiusRectangle: CGFloat = geometry.size.width * 0.3
+        let rectangleHeight: CGFloat = geometry.size.height * 0.2
+        let lineWidth: CGFloat = geometry.size.width * 0.01
         
         ForEach(0..<card.traits[0].type + 1, id: \.self) { _ in
             switch card.traits[1].type {
             case 0:
                 if card.traits[2].type == 2 {
-                    WideRoundedRectangle(cornerRadius:cornerRadiusRectangle)
-                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                    WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
+                        .stroke(lineWidth: lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
                         .frame(maxHeight: rectangleHeight)
                 }
                 else if card.traits[2].type == 1 {
-                    WideRoundedRectangle(cornerRadius:cornerRadiusRectangle)
-                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                    WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
+                        .stroke(lineWidth: lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
                         .frame(maxHeight: rectangleHeight)
                         .background() {
-                            WideRoundedRectangle(cornerRadius:cornerRadiusRectangle)
+                            WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                                 .fill()
                                 .foregroundColor(getColor(card.traits[3].type))
-                                .opacity(getOpacity(card.traits[2].type))
+                                //.opacity(getOpacity(card.traits[2].type))
+                                .striped(geometry: geometry)
                                 .frame(maxHeight: rectangleHeight)
                         }
                     }
                 else {
-                    WideRoundedRectangle(cornerRadius:cornerRadiusRectangle)
+                    WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                         .fill()
                         .foregroundColor(getColor(card.traits[3].type))
                         .frame(maxHeight: rectangleHeight)
@@ -167,44 +164,42 @@ struct CardView: View {
             case 1:
                 if card.traits[2].type == 2 {
                     Squiggle()
-                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                        .stroke(lineWidth: lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
-                        .frame(maxWidth: squiggleWidth)
                 }
                 else if card.traits[2].type == 1 {
                     Squiggle()
-                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                        .stroke(lineWidth: lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
-                        .frame(maxWidth: squiggleWidth)
                         .background() {
                             Squiggle()
                                 .fill()
                                 .foregroundColor(getColor(card.traits[3].type))
-                                .opacity(getOpacity(card.traits[2].type))
-                                .frame(maxWidth: squiggleWidth)
+                                //.opacity(getOpacity(card.traits[2].type))
+                                .striped(geometry: geometry)
                         }
                 }
                 else {
                     Squiggle()
                         .fill()
                         .foregroundColor(getColor(card.traits[3].type))
-                        .frame(maxWidth: squiggleWidth)
                 }
             default:
                 if card.traits[2].type == 2 {
                     Diamond(size: 5)
-                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                        .stroke(lineWidth: lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
                 }
                 else if card.traits[2].type == 1 {
                     Diamond(size:5)
-                        .stroke(lineWidth: DrawingConstants.lineWidth)
+                        .stroke(lineWidth: lineWidth)
                         .foregroundColor(getColor(card.traits[3].type))
                         .background() {
                             Diamond(size:5)
                                 .fill()
                                 .foregroundColor(getColor(card.traits[3].type))
-                                .opacity(getOpacity(card.traits[2].type))
+                                //.opacity(getOpacity(card.traits[2].type))
+                                .striped(geometry: geometry)
                         }
                 }
                 else {
@@ -214,10 +209,6 @@ struct CardView: View {
                 }
             }
         }
-    }
-    
-    private struct DrawingConstants {
-        static let lineWidth: CGFloat = 3
     }
 }
 

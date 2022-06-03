@@ -3,11 +3,13 @@ import SwiftUI
 
 struct Squiggle: Shape {
     
+    // TODO: Refine where curves connect very slightly until completely unnoticable groove.
+    
     func path(in rect: CGRect) -> Path {
         var path = Path()
         let center = CGPoint(x: rect.midX, y: rect.midY)
         
-        let unit = min(rect.width, rect.height) * 0.25
+        let unit = min(rect.width, rect.height) * 0.20
         
         let down: CGFloat = unit
         let right: CGFloat = unit * 2

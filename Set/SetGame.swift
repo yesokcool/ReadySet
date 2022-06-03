@@ -1,8 +1,4 @@
 
-//
-//  Created on 3/29/22.
-//
-
 import Foundation
 
 struct SetGame<CardContent> where CardContent: Equatable & Traitable {
