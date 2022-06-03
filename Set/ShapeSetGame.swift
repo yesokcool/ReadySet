@@ -36,7 +36,15 @@ class ShapeSetGame: ObservableObject {
     }
     
     func getScore() -> Int {
-        return game.setsMade.count * 5
+        return game.score
+    }
+    
+    func getHighScore() -> Int {
+        return game.highScore
+    }
+    
+    func getScoreModifier() -> Int {
+        return game.scoreModifier
     }
     
     func isSelected(_ card: Card) -> Bool {

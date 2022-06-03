@@ -14,15 +14,18 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     private(set) var selectedCards: [CustomShapeCard] = []
     private(set) var id: Int = 0
     private(set) var gameComplete: Bool = false
+    private(set) var prevDate: Date = Date()
+    private(set) var score: Int = 0
+    private(set) var scoreModifier: Int = 0
+    private(set) var antiCheat: Bool = false
+    private(set) var highScore: Int = 0
     
     init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
         self.numberOfTraits = numberOfTraits
         self.numberOfTraitTypes = numberOfTraitTypes
         self.deckSize = Int(pow(Double(numberOfTraitTypes), Double(numberOfTraits)))
         self.numberOfCardsInASet = numberOfCardsInASet
-        createDeck(currentTrait: 0)
-        deck.shuffle()
-        startingDeal()
+        newGame()
     }
     
     // TODO: Void function just returning? Good style?
@@ -69,18 +72,39 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         
     }
     
+    mutating func calculateScoreModifier() -> Int {
+        if antiCheat {
+            antiCheat.toggle()
+            return 0
+        }
+
+        let modifier = Int(pow(Double(max(10 - (-Int(prevDate.timeIntervalSinceNow)), 1)), 2.0))
+        prevDate = Date()
+        
+        return modifier
+    }
+    
     // TODO: Set it back to shuffle when done debugging.
     mutating func newGame() {
         deck = []
-        result = []
         cardsInPlay = []
         setsMade = []
         selectedCards = []
+        
+        result = []
+        
         createDeck(currentTrait: 0)
-        deck.shuffle()
+        // deck.shuffle()
         // debug deck.removeSubrange(3..<deck.count)
         fixedDeck = deck
+        
+        score = 0
+        scoreModifier = 0
+        antiCheat = false
+        prevDate = Date()
+        
         startingDeal()
+
         gameComplete = false
     }
     
@@ -99,9 +123,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
            cardsInPlay[chosenIndex].isPartOfSet != true.intValue {
             // Set is selected
             if selectedCards.count >= numberOfCardsInASet {
+                scoreModifier += calculateScoreModifier()
                 // Set selected is an actual set
                 if selectedCards[0].isPartOfSet == true.intValue {
                     cardsInPlay[chosenIndex].isSelected = true
+                    // Choose new card, discard set
                     let chosen = cardsInPlay[chosenIndex]
                     for c in selectedCards {
                         cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!)
@@ -119,34 +145,44 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
                     selectedCards = []
                     cardsInPlay[chosenIndex].isSelected = true
                     selectedCards.append(cardsInPlay[chosenIndex])
+                    scoreModifier = 1
                 }
             }
             // Set is not selected
             else {
                 // Deselection
                 if (selectedCards.contains(cardsInPlay[chosenIndex])) {
+                    antiCheat = true
                     let i = selectedCards.firstIndex(of: cardsInPlay[chosenIndex])!
                     cardsInPlay[chosenIndex].isSelected = false
                     selectedCards.remove(at: i)
                 }
                 // Selection
                 else {
+                    scoreModifier += calculateScoreModifier()
                     print("Choosing \(card)!")
                     cardsInPlay[chosenIndex].isSelected = true
                     selectedCards.append(cardsInPlay[chosenIndex])
                     if selectedCards.count >= numberOfCardsInASet {
                         if isSet(selectedCards) {
+                            // Set is a set
                             print("IS A SET!")
                             setsMade.append(selectedCards)
                             for (i, c) in selectedCards.enumerated() {
                                 cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = true.intValue
                                 selectedCards[i].isPartOfSet = true.intValue
                             }
+                            score += scoreModifier * 5
+                            if score > highScore {
+                                highScore = score
+                            }
+                            // Last set made and game complete
                             if (selectedCards.count == cardsInPlay.count) {
                                 cardsInPlay = []
                                 gameComplete = true
                             }
                         }
+                        // Set is not a set
                         else {
                             for (i, c) in selectedCards.enumerated() {
                                 cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = false.intValue
