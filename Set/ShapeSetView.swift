@@ -130,7 +130,7 @@ struct CardView: View {
     @ViewBuilder func renderTrait(with geometry: GeometryProxy) -> some View {
         let cornerRadiusRectangle: CGFloat = geometry.size.width * 0.3
         let rectangleHeight: CGFloat = geometry.size.height * 0.2
-        let lineWidth: CGFloat = geometry.size.width * 0.01
+        let lineWidth: CGFloat = geometry.size.width * 0.03
         
         ForEach(0..<card.traits[0].type + 1, id: \.self) { _ in
             switch card.traits[1].type {
