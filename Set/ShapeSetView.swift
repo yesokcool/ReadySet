@@ -50,13 +50,14 @@ struct ShapeSetView: View {
                     }
                     Spacer()
                     Button {
-                        game.cheatMode.toggle()
+                        game.cheatToggle()
                     } label: {
                         VStack(alignment: .center) {
                             Image(systemName: "sparkle.magnifyingglass")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 50)
+                                .foregroundColor(game.cheat() ? .purple : .primary)
                         }
                     }
                     Spacer()

@@ -245,7 +245,8 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                                 highScore = score
                             }
                             // Last set made and game complete
-                            if (selectedCards.count == cardsInPlay.count) {
+                            if (selectedCards.count == cardsInPlay.count ||
+                                !checkIfSetIsAvailable(cardIndex: 0)) {
                                 cardsInPlay = []
                                 gameComplete = true
                             }
