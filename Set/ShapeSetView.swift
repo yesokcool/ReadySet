@@ -12,7 +12,7 @@ struct ShapeSetView: View {
                     Text("IT'S ALL UP TO YOU")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                    Text("YOU'VE EARNED \(game.getHighScore()) GOOD JOB POINTS. WOW.")
+                    Text("YOU'VE EARNED \(game.getHighScore()) GOOD JOB POINTS")
                         .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundColor(game.getHighScore() == game.getScore() ? Color.red : Color.yellow)

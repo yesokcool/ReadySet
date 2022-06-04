@@ -157,7 +157,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         resetIndices()
         
         createDeck(currentTrait: 0)
-        // deck.shuffle()
+        deck.shuffle()
         // debug deck.removeSubrange(3..<deck.count)
         fixedDeck = deck
         
@@ -172,7 +172,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     }
     
     mutating func startingDeal() {
-        for _ in 1...4 {
+        for _ in 1...1 {
             _ = dealThree()
         }
     }
@@ -197,6 +197,9 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     }
                     selectedCards = []
                     selectedCards.append(chosen)
+                    if !deck.isEmpty {
+                        _ = dealThree()
+                    }
                 }
                 // Set selected is not an actual set
                 else {
@@ -258,7 +261,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         }
     }
     
-    private mutating func isSet(_ setOfCards: [CustomShapeCard]) -> Bool {
+    private func isSet(_ setOfCards: [CustomShapeCard]) -> Bool {
         if setOfCards.count > numberOfCardsInASet
             || setOfCards.count < 1 || Set(setOfCards).count < setOfCards.count {
             return false
@@ -272,10 +275,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
             if !traitAllSameOrAllDifferentType(setOfCards, with: traitIndex) {
                 return false
             }
-        }
-        
-        if !deck.isEmpty {
-            _ = dealThree()
         }
 
         return true
