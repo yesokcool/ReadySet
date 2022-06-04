@@ -63,7 +63,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     
     // Deals 3 cards from the shuffled deck.
     mutating func dealThree() -> Bool {
-        resetIndices()
         for _ in 0..<3 {
             if deck.count > 0 {
                 // Discard cards in a set
@@ -80,8 +79,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                 return false
             }
         }
-        print(checkIfSetIsAvailable(cardIndex: 0))
-        cheatIndices = setIndices
         return true
     }
     
@@ -169,6 +166,16 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         prevDate = Date()
         
         startingDeal()
+        
+        // debug to clear out cards faster
+        /*
+        for _ in 1...20 {
+            choose(cardsInPlay[0])
+            choose(cardsInPlay[1])
+            choose(cardsInPlay[2])
+            choose(cardsInPlay[3])
+            choose(cardsInPlay[0])
+        }*/
 
         gameComplete = false
     }
@@ -176,6 +183,17 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     mutating func startingDeal() {
         for _ in 1...4 {
             _ = dealThree()
+        }
+    }
+    
+    mutating func checkIfGameIsCompleted() {
+        if (deck.isEmpty &&
+            (selectedCards.count == cardsInPlay.count ||
+             cardsInPlay.count < numberOfCardsInASet ||
+            !checkIfSetIsAvailable(cardIndex: 0))) {
+            cardsInPlay = []
+            gameComplete = true
+            print("GAME COMPLETE!!")
         }
     }
     
@@ -199,9 +217,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     }
                     selectedCards = []
                     selectedCards.append(chosen)
-                    if !deck.isEmpty {
-                        _ = dealThree()
-                    }
+                    _ = dealThree()
+                    resetIndices()
+                    print(checkIfSetIsAvailable(cardIndex: 0))
+                    cheatIndices = setIndices
+                    checkIfGameIsCompleted()
                 }
                 // Set selected is not an actual set
                 else {
@@ -245,11 +265,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                                 highScore = score
                             }
                             // Last set made and game complete
-                            if (selectedCards.count == cardsInPlay.count ||
-                                !checkIfSetIsAvailable(cardIndex: 0)) {
-                                cardsInPlay = []
-                                gameComplete = true
-                            }
+                            checkIfGameIsCompleted()
                         }
                         // Set is not a set
                         else {
@@ -266,7 +282,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     
     private func isSet(_ setOfCards: [CustomShapeCard]) -> Bool {
         if setOfCards.count > numberOfCardsInASet
-            || setOfCards.count < 1 || Set(setOfCards).count < setOfCards.count {
+            || setOfCards.count < numberOfCardsInASet || Set(setOfCards).count < setOfCards.count {
             return false
         }
         let traits = setOfCards[0].traits
@@ -285,7 +301,9 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     
     // Check if an array of cards all have the same or different selected trait, or not.
     private func traitAllSameOrAllDifferentType(_ setOfCards: [CustomShapeCard], with selectedTrait: Int) -> Bool {
-        if setOfCards.count < 2 { return true }
+        if setOfCards.count != numberOfCardsInASet {
+            return false
+        }
         
         // Go through the set of cards. For every card, take the selected trait's type
         // and append it to the array of trait types.

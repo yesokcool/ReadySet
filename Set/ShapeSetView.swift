@@ -25,9 +25,16 @@ struct ShapeSetView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                     if game.cheat() {
-                        Text("\(game.cheatIndices().description)")
-                            .font(.title3)
-                            .fontWeight(.semibold)
+                        if Set(game.cheatIndices()).count != game.cheatIndices().count {
+                            Text("No sets!")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                        }
+                        else {
+                            Text("\(game.cheatIndices().description)")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                        }
                     }
                 }
                 
