@@ -8,6 +8,7 @@ import SwiftUI
 
 class ShapeSetGame: ObservableObject {
     typealias Card = SetGame<Trait>.CustomShapeCard
+    var cheatMode: Bool = false
     
     @Published private var game: SetGame<Trait>
     
@@ -51,6 +52,10 @@ class ShapeSetGame: ObservableObject {
         return game.checkIfSetIsAvailable(cardIndex: 0)
     }
     
+    func cheatIndices() -> [Int] {
+        return game.cheatIndices
+    }
+    
     func isSelected(_ card: Card) -> Bool {
         return game.selectedCards.contains(where: { $0 == card })
     }
@@ -65,6 +70,10 @@ class ShapeSetGame: ObservableObject {
     
     func shuffle() {
         game.shuffle()
+    }
+    
+    func cheat() -> Bool {
+        return cheatMode
     }
     
     struct Trait: Equatable, Traitable, Hashable {

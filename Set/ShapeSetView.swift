@@ -24,6 +24,11 @@ struct ShapeSetView: View {
                     Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU")
                         .font(.title3)
                         .fontWeight(.semibold)
+                    if game.cheat() {
+                        Text("\(game.cheatIndices().description)")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                    }
                 }
                 
                 AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
@@ -42,6 +47,17 @@ struct ShapeSetView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 50)
+                    }
+                    Spacer()
+                    Button {
+                        game.cheatMode.toggle()
+                    } label: {
+                        VStack(alignment: .center) {
+                            Image(systemName: "sparkle.magnifyingglass")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 50)
+                        }
                     }
                     Spacer()
                     Button {

@@ -9,6 +9,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     private let deckSize: Int
     private(set) var result: [CardContent] = []
     private(set) var setIndices: [Int] = []
+    private(set) var cheatIndices: [Int] = []
     private let numberOfTraitTypes: Int
     private let numberOfTraits: Int
     private(set) var setsMade: [[CustomShapeCard]] = []
@@ -80,6 +81,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
             }
         }
         print(checkIfSetIsAvailable(cardIndex: 0))
+        cheatIndices = setIndices
         return true
     }
     
@@ -172,7 +174,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     }
     
     mutating func startingDeal() {
-        for _ in 1...1 {
+        for _ in 1...4 {
             _ = dealThree()
         }
     }
