@@ -167,6 +167,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         
         startingDeal()
         
+        resetIndices()
+        print(checkIfSetIsAvailable(cardIndex: 0))
+        cheatIndices = setIndices
+        checkIfGameIsCompleted()
+        
         // debug to clear out cards faster
         /*
         for _ in 1...20 {
