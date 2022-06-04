@@ -1,13 +1,14 @@
 
 import Foundation
 
-struct SetGame<CardContent> where CardContent: Equatable & Traitable {
+struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable {
     private(set) var deck: [CustomShapeCard] = []
     private(set) var fixedDeck: [CustomShapeCard] = []
     private(set) var cardsInPlay: [CustomShapeCard] = []
     private let numberOfCardsInASet: Int
     private let deckSize: Int
     private(set) var result: [CardContent] = []
+    private(set) var setIndices: [Int] = []
     private let numberOfTraitTypes: Int
     private let numberOfTraits: Int
     private(set) var setsMade: [[CustomShapeCard]] = []
@@ -25,6 +26,9 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         self.numberOfTraitTypes = numberOfTraitTypes
         self.deckSize = Int(pow(Double(numberOfTraitTypes), Double(numberOfTraits)))
         self.numberOfCardsInASet = numberOfCardsInASet
+        for _ in 0..<numberOfCardsInASet {
+            setIndices.append(0)
+        }
         newGame()
     }
     
@@ -47,29 +51,87 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         return
     }
     
+    
+    mutating func resetIndices() {
+        for i in 0..<numberOfCardsInASet {
+            setIndices[i] = 0
+        }
+    }
+    
     // TODO: Perhaps could be deal any the game wants to.
     
     // Deals 3 cards from the shuffled deck.
     mutating func dealThree() -> Bool {
+        resetIndices()
         for _ in 0..<3 {
             if deck.count > 0 {
+                // Discard cards in a set
                 if (!selectedCards.isEmpty && selectedCards[0].isPartOfSet == true.intValue) {
                     for c in selectedCards {
                         cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!)
                     }
                     selectedCards = []
                 }
+                // Deal card
                 cardsInPlay.append(deck.removeFirst())
             }
             else {
                 return false
             }
         }
+        print(checkIfSetIsAvailable(cardIndex: 0))
         return true
     }
     
     mutating func shuffle() {
         
+    }
+    
+    func setFromIndices(with indices: [Int]) -> [CustomShapeCard] {
+        var theSet: [CustomShapeCard] = []
+        for index in indices {
+            theSet.append(cardsInPlay[index])
+        }
+        return theSet
+    }
+    
+    mutating func checkIfSetIsAvailable(cardIndex: Int) -> Bool {
+        print("\(setIndices)")
+        print("\(cardsInPlay.count)")
+        if setIndices[cardIndex] < cardsInPlay.count {
+            print("Loop 1")
+            if cardIndex < numberOfCardsInASet - 1 {
+                for _ in 0..<cardsInPlay.count {
+                    if (checkIfSetIsAvailable(cardIndex: cardIndex + 1)) {
+                        return true
+                    }
+                    setIndices[cardIndex] += 1
+                    print("Loop 7")
+                }
+            }
+            else {
+                print("Loop 2")
+                if (Set(setIndices).count == setIndices.count
+                    && isSet(setFromIndices(with: setIndices))) {
+                    print("Loop3")
+                    return true
+                }
+                else {
+                    print("Loop 4")
+                    setIndices[cardIndex] += 1
+                    if (checkIfSetIsAvailable(cardIndex: cardIndex)) {
+                        return true
+                    }
+                }
+            }
+        }
+        else {
+            print("Loop 8")
+            print("\(setIndices)")
+            setIndices[cardIndex] = 0
+        }
+        
+        return false
     }
     
     mutating func calculateScoreModifier() -> Int {
@@ -92,6 +154,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
         selectedCards = []
         
         result = []
+        resetIndices()
         
         createDeck(currentTrait: 0)
         // deck.shuffle()
@@ -197,7 +260,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     
     private mutating func isSet(_ setOfCards: [CustomShapeCard]) -> Bool {
         if setOfCards.count > numberOfCardsInASet
-            || setOfCards.count < 1 {
+            || setOfCards.count < 1 || Set(setOfCards).count < setOfCards.count {
             return false
         }
         let traits = setOfCards[0].traits
@@ -241,7 +304,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable {
     // But if you could check it and there were not sets, it would be
     // the same result as game being completed.
     
-    struct CustomShapeCard: Identifiable, Equatable {
+    struct CustomShapeCard: Identifiable, Equatable, Hashable {
         var isPartOfSet = false.none
         var isSelected = false
         let traits: [CardContent]

@@ -47,6 +47,10 @@ class ShapeSetGame: ObservableObject {
         return game.scoreModifier
     }
     
+    func setAvailable() -> Bool {
+        return game.checkIfSetIsAvailable(cardIndex: 0)
+    }
+    
     func isSelected(_ card: Card) -> Bool {
         return game.selectedCards.contains(where: { $0 == card })
     }
@@ -63,7 +67,7 @@ class ShapeSetGame: ObservableObject {
         game.shuffle()
     }
     
-    struct Trait: Equatable, Traitable {
+    struct Trait: Equatable, Traitable, Hashable {
         let type: Int
         
         init(_ trait: Int, _ type: Int) {

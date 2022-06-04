@@ -9,19 +9,19 @@ struct ShapeSetView: View {
         if (!game.gameComplete()) {
             VStack {
                 VStack {
-                    Text("IT'S ALL UP TO YOU.")
+                    Text("IT'S ALL UP TO YOU")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                    Text("YOU'VE EARNED \(game.getHighScore()) IMAGINARY GOOD JOB POINTS. WOW.")
+                    Text("YOU'VE EARNED \(game.getHighScore()) GOOD JOB POINTS. WOW.")
                         .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundColor(game.getHighScore() == game.getScore() ? Color.red : Color.yellow)
                         .multilineTextAlignment(.center)
-                    Text("\(game.getScore()) OCEANS SAVED.")
+                    Text("\(game.getScore()) OCEANS SAVED")
                         .font(.title3)
                         .fontWeight(.semibold)
                         .foregroundColor(game.getHighScore() == game.getScore() ? Color.red : Color.primary)
-                    Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU.")
+                    Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU")
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
