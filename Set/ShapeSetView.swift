@@ -9,29 +9,48 @@ struct ShapeSetView: View {
         if (!game.gameComplete()) {
             VStack {
                 VStack {
-                    Text("IT'S ALL UP TO YOU")
+                    Text("READY, SET!")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                    Text("YOU'VE EARNED \(game.getHighScore()) GOOD JOB POINTS")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(game.getHighScore() == game.getScore() ? Color.red : Color.yellow)
+                        .padding(.bottom, 4.0)
+                    HStack {
+                        VStack {
+                            Text("HIGH SCORE:")
+                                .font(.title3)
+                                .fontWeight(.heavy)
+                            Text("\(game.getHighScore()) GOOD JOB POINTS")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                        }
+                        .foregroundColor(game.getHighScore() == game.getScore() ? Color.blue : Color.orange)
                         .multilineTextAlignment(.center)
-                    Text("\(game.getScore()) OCEANS SAVED")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .foregroundColor(game.getHighScore() == game.getScore() ? Color.red : Color.primary)
-                    Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU")
-                        .font(.title3)
-                        .fontWeight(.semibold)
+                        
+                        Spacer()
+                        VStack {
+                            Text("SCORE: ")
+                                    .font(.title3)
+                                    .fontWeight(.heavy)
+                            Text("\(game.getScore()) OCEANS SAVED")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                        }
+                        .foregroundColor(game.getHighScore() == game.getScore() ? Color.blue : Color.primary)
+                    }
+                    .padding(.horizontal, 5.0)
+                    Text("\(game.getScoreModifier()) PUPPIES DEPENDING ON YOU")
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .foregroundColor(.yellow)
+                        .padding(.all, 3.0)
+                    
                     if game.cheat() {
-                        if Set(game.cheatIndices()).count != game.cheatIndices().count {
-                            Text("No sets!")
+                        if game.setAvailable() {
+                            Text("\(game.cheatIndices().description)")
                                 .font(.title3)
                                 .fontWeight(.semibold)
                         }
                         else {
-                            Text("\(game.cheatIndices().description)")
+                            Text("No sets!")
                                 .font(.title3)
                                 .fontWeight(.semibold)
                         }
@@ -143,9 +162,9 @@ struct CardView: View {
     func getColor(_ color: Int) -> Color {
         switch color {
             case 0:
-                return .blue
+                return .cyan
             case 1:
-                return .red
+                return .pink
             default:
                 return .green
         }

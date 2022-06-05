@@ -33,7 +33,7 @@ class ShapeSetGame: ObservableObject {
     }
     
     func dealThree() {
-        _ = game.dealThree()
+        _ = game.dealThree(wasPressed: true)
     }
     
     func getScore() -> Int {
@@ -46,10 +46,6 @@ class ShapeSetGame: ObservableObject {
     
     func getScoreModifier() -> Int {
         return game.scoreModifier
-    }
-    
-    func setAvailable() -> Bool {
-        return game.checkIfSetIsAvailable(cardIndex: 0)
     }
     
     func cheatIndices() -> [Int] {
@@ -70,6 +66,10 @@ class ShapeSetGame: ObservableObject {
     
     func shuffle() {
         game.shuffle()
+    }
+    
+    func setAvailable() -> Bool {
+        game.setAvailable()
     }
     
     func cheat() -> Bool {

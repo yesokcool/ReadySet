@@ -62,7 +62,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     // TODO: Perhaps could be deal any the game wants to.
     
     // Deals 3 cards from the shuffled deck.
-    mutating func dealThree() -> Bool {
+    mutating func dealThree(wasPressed: Bool = false) -> Bool {
+        if (setAvailable() && wasPressed) {
+            scoreModifier = 0
+        }
+        
         for _ in 0..<3 {
             if deck.count > 0 {
                 // Discard cards in a set
@@ -80,6 +84,10 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
             }
         }
         return true
+    }
+    
+    func setAvailable() -> Bool {
+        Set(cheatIndices).count == cheatIndices.count
     }
     
     mutating func shuffle() {
@@ -160,12 +168,12 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         // debug deck.removeSubrange(3..<deck.count)
         fixedDeck = deck
         
+        startingDeal()
+        
         score = 0
         scoreModifier = 0
         antiCheat = false
         prevDate = Date()
-        
-        startingDeal()
         
         resetIndices()
         print(checkIfSetIsAvailable(cardIndex: 0))
@@ -238,7 +246,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     selectedCards = []
                     cardsInPlay[chosenIndex].isSelected = true
                     selectedCards.append(cardsInPlay[chosenIndex])
-                    scoreModifier = 1
+                    scoreModifier = 0
                 }
             }
             // Set is not selected
