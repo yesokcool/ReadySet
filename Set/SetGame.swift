@@ -22,7 +22,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     private(set) var antiCheat: Bool = false
     private(set) var highScore: Int = 0
     
-    private(set) var twoPlayerMode: Bool = false
+    private(set) var twoPlayerMode: Bool = true
     private(set) var turnPlayerTwo: Bool = false
     private(set) var scorePlayerTwo: Int = 0
     private(set) var highScorePlayerTwo: Int = 0
@@ -98,6 +98,14 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     
     mutating func shuffle() {
         
+    }
+    
+    mutating func playerOneTurn() {
+        turnPlayerTwo = false
+    }
+    
+    mutating func playerTwoTurn() {
+        turnPlayerTwo = true
     }
     
     mutating func twoPlayerToggle() {

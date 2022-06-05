@@ -6,12 +6,39 @@ struct ShapeSetView: View {
     
     
     // TODO: Make text pull from a library of possible texts randomly for each game
-    // TODO: Add some ways to speed up the game. Like if you match multiple sets quickly, you get a special vision that shows you sets to match and matching them has an intense POWERFUL-feeling animation, screen shake, pop up text saying quake-like stuff like unstoppable etc. And if you keep matching fast it keeps the mode going.
+    // TODO: Add some ways to speed up the game. Like if you match multiple sets quickly, you get a special vision that shows you sets to match and matching them has an intense POWERFUL-feeling animation, screen shake, pop up text saying quake-like stuff like unstoppable, particles of randomized emojis like cows etc. And if you keep matching fast, it keeps the mode going.
     // TODO: Add animation when breaking high score
     var body: some View {
         if (!game.gameComplete()) {
             VStack {
                 VStack {
+                    if (game.twoPlayers()) {
+                        HStack {
+                            VStack {
+                                Group {
+                                    Button {
+                                        game.playerTwoTurn()
+                                    } label: {
+                                        Image(systemName: "person.2.circle.fill")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .foregroundColor(.blue)
+                                    }
+                                    Text("P2 SCORE: ")
+                                            .font(.title3)
+                                            .fontWeight(.heavy)
+                                    Text("\(game.getScore()) OCEANS SAVED")
+                                        .font(.body)
+                                        .fontWeight(.semibold)
+                                }
+                                .foregroundColor(game.getHighScore() == game.getScore() &&
+                                                 game.getHighScore() != 0 ?
+                                                 Color.orange : Color.blue)
+                            }
+                        }
+                        .padding(.horizontal, 25.0)
+                        .padding(.vertical, 15.0)
+                    }
                     HStack {
                         VStack {
                             Text("HIGH SCORE:")
@@ -73,6 +100,16 @@ struct ShapeSetView: View {
                 }
                 
                 VStack {
+                    if game.twoPlayers() {
+                        Button {
+                            game.playerOneTurn()
+                        } label: {
+                            Image(systemName: "person.2.circle.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .foregroundColor(.blue)
+                        }
+                    }
                     HStack() {
                         Button {
                             game.newGame()
