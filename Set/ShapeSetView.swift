@@ -9,7 +9,7 @@ struct ShapeSetView: View {
         if (!game.gameComplete()) {
             VStack {
                 VStack {
-                    Text("READY, SET!")
+                    Text("Ready, SET!")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding(.bottom, 4.0)
