@@ -23,8 +23,12 @@ Topics Covered:
 - SF Symbols
 - Access Control
 - ViewModifiers
+    - Custom ViewModifiers
+    - Conditional ViewModifiers
 - Intent functions
 - Views
 - Custom Shapes
+    - Paths
 - GeometryReader
 - Animation
+- Custom View Grids

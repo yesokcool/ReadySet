@@ -22,6 +22,12 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     private(set) var antiCheat: Bool = false
     private(set) var highScore: Int = 0
     
+    private(set) var twoPlayerMode: Bool = false
+    private(set) var turnPlayerTwo: Bool = false
+    private(set) var scorePlayerTwo: Int = 0
+    private(set) var highScorePlayerTwo: Int = 0
+    private(set) var scoreModifierPlayerTwo: Int = 0
+    
     init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
         self.numberOfTraits = numberOfTraits
         self.numberOfTraitTypes = numberOfTraitTypes
@@ -92,6 +98,10 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     
     mutating func shuffle() {
         
+    }
+    
+    mutating func twoPlayerToggle() {
+        twoPlayerMode.toggle()
     }
     
     func setFromIndices(with indices: [Int]) -> [CustomShapeCard] {

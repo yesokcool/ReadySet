@@ -64,6 +64,14 @@ class ShapeSetGame: ObservableObject {
         return game.gameComplete
     }
     
+    func twoPlayerMode() {
+        game.twoPlayerToggle()
+    }
+    
+    func twoPlayers() -> Bool {
+        return game.twoPlayerMode
+    }
+    
     func shuffle() {
         game.shuffle()
     }

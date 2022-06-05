@@ -18,25 +18,33 @@ struct ShapeSetView: View {
                                 .font(.body)
                                 .fontWeight(.semibold)
                         }
-                        .foregroundColor(game.getHighScore() == game.getScore() ? Color.orange : Color.blue)
+                        .foregroundColor(game.getHighScore() == game.getScore() &&
+                                         game.getHighScore() != 0 ?
+                                         Color.orange : Color.blue)
                         .multilineTextAlignment(.center)
                         
                         Spacer()
                         VStack {
-                            Text("SCORE: ")
-                                    .font(.title3)
-                                    .fontWeight(.heavy)
-                            Text("\(game.getScore()) OCEANS SAVED")
-                                .font(.body)
-                                .fontWeight(.semibold)
+                            Group {
+                                Text("SCORE: ")
+                                        .font(.title3)
+                                        .fontWeight(.heavy)
+                                Text("\(game.getScore()) OCEANS SAVED")
+                                    .font(.body)
+                                    .fontWeight(.semibold)
+                            }
+                            .foregroundColor(game.getHighScore() == game.getScore() &&
+                                             game.getHighScore() != 0 ?
+                                             Color.orange : Color.blue)
                         }
-                        .foregroundColor(game.getHighScore() == game.getScore() ? Color.orange : Color.blue)
                     }
-                    .padding(.horizontal, 14.0)
+                    .padding(.horizontal, 25.0)
+                    .padding(.vertical, 15.0)
+                   
                     Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU")
                         .font(.subheadline)
                         .fontWeight(.bold)
-                        .foregroundColor(.mint)
+                        .foregroundColor(.blue)
                         .padding(.all, 6.0)
                     
                     if game.cheat() {
@@ -61,38 +69,61 @@ struct ShapeSetView: View {
                     }
                 }
                 
-                HStack() {
-                    Button {
-                        game.newGame()
-                    } label: {
-                            Image(systemName: "arrow.counterclockwise")
+                VStack {
+                    HStack() {
+                        Button {
+                            game.newGame()
+                        } label: {
+                            Image(systemName: "arrow.counterclockwise.circle")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 50)
-                    }
-                    Spacer()
-                    Button {
-                        game.cheatToggle()
-                    } label: {
-                        VStack(alignment: .center) {
-                            Image(systemName: "sparkle.magnifyingglass")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 50)
-                                .foregroundColor(game.cheat() ? .purple : .primary)
                         }
-                    }
-                    Spacer()
-                    Button {
+                        Spacer()
+                        Button {
+                            game.twoPlayerMode()
+                        } label: {
+                            game.twoPlayers() ?
+                                Image(systemName: "person.2.circle.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .foregroundColor(.blue)
+                                    .frame(width: 50)
+                                : Image(systemName: "person.2.circle")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .foregroundColor(.blue)
+                                    .frame(width: 50)
+                        }
+                        Spacer()
+                        Button {
+                            game.cheatToggle()
+                        } label: {
+                            game.cheat() ?
+                            Image(systemName: "magnifyingglass.circle.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundColor(.red)
+                                .frame(width: 50)
+                            :
+                            Image(systemName: "magnifyingglass.circle")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundColor(.blue)
+                                .frame(width: 50)
+                        }
+                        Spacer()
+                        Button {
                             game.dealThree()
-                    } label: {
-                        VStack(alignment: .center) {
+                        } label: {
                             buttonBuilder()
                         }
                     }
+                    .padding(.horizontal, 35.0)
+                    .padding(.bottom, 10.0)
+                    .foregroundColor(.blue)
                 }
-                .padding(.horizontal, 50.0)
-                .padding(.bottom, 10.0)
+                
                 
             }.foregroundColor(.primary)
         }
@@ -111,7 +142,7 @@ struct ShapeSetView: View {
                     Text("NEW GAME?")
                         .font(.title)
                         .padding(10)
-                    Image(systemName: "arrow.counterclockwise")
+                    Image(systemName: "arrow.counterclockwise.circle.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 50)
@@ -123,17 +154,17 @@ struct ShapeSetView: View {
     
     @ViewBuilder func buttonBuilder() -> some View {
         if (game.deckEmpty()) {
-            Image(systemName: "rectangle.stack.fill")
+            Image(systemName: "square.stack.3d.down.right.fill")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 80)
+                .frame(width: 50)
                 .opacity(0)
         }
         else {
-            Image(systemName: "rectangle.stack.fill")
+            Image(systemName: "square.stack.3d.down.right.fill")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 80)
+                .frame(width: 50)
         }
     }
 }
