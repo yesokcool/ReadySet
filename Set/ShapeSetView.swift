@@ -39,7 +39,7 @@ struct ShapeSetView: View {
                         .foregroundColor(.mint)
                         .padding(.all, 6.0)
                     
-                    //test
+                    // test
                     if game.cheat() {
                         if game.setAvailable() {
                             Text("\(game.cheatIndices().description)")
