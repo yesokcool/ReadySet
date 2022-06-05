@@ -9,20 +9,16 @@ struct ShapeSetView: View {
         if (!game.gameComplete()) {
             VStack {
                 VStack {
-                    Text("Ready, SET!")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .padding(.bottom, 4.0)
                     HStack {
                         VStack {
                             Text("HIGH SCORE:")
                                 .font(.title3)
                                 .fontWeight(.heavy)
-                            Text("\(game.getHighScore()) GOOD JOB POINTS")
+                            Text("\(game.getHighScore()) GOOD JOBS")
                                 .font(.body)
                                 .fontWeight(.semibold)
                         }
-                        .foregroundColor(game.getHighScore() == game.getScore() ? Color.blue : Color.orange)
+                        .foregroundColor(game.getHighScore() == game.getScore() ? Color.orange : Color.blue)
                         .multilineTextAlignment(.center)
                         
                         Spacer()
@@ -34,14 +30,14 @@ struct ShapeSetView: View {
                                 .font(.body)
                                 .fontWeight(.semibold)
                         }
-                        .foregroundColor(game.getHighScore() == game.getScore() ? Color.blue : Color.primary)
+                        .foregroundColor(game.getHighScore() == game.getScore() ? Color.orange : Color.blue)
                     }
-                    .padding(.horizontal, 5.0)
-                    Text("\(game.getScoreModifier()) PUPPIES DEPENDING ON YOU")
+                    .padding(.horizontal, 14.0)
+                    Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU")
                         .font(.subheadline)
                         .fontWeight(.bold)
-                        .foregroundColor(.yellow)
-                        .padding(.all, 3.0)
+                        .foregroundColor(.mint)
+                        .padding(.all, 6.0)
                     
                     if game.cheat() {
                         if game.setAvailable() {
@@ -268,6 +264,6 @@ struct CardView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let game = ShapeSetGame(4, 3, 3)
-        return ShapeSetView(game: game).preferredColorScheme(.dark)
+        return ShapeSetView(game: game).preferredColorScheme(.light)
     }
 }
