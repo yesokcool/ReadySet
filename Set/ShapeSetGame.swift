@@ -11,7 +11,7 @@ class ShapeSetGame: ObservableObject {
     
     @Published private var game: SetGame<Trait>
     @Published private(set) var cheatMode: Bool = false
-    @Published private(set) var colorblindMode: Bool = true
+    @Published private(set) var colorblindMode: Bool = false
     
     init(_ one:Int, _ two:Int, _ three:Int) {
         game = SetGame(numberOfTraits: one, numberOfTraitTypes: two, setsOf: three)
@@ -95,6 +95,10 @@ class ShapeSetGame: ObservableObject {
     
     func cheatToggle() {
         cheatMode.toggle()
+    }
+    
+    func colorblindToggle() {
+        colorblindMode.toggle()
     }
     
     struct Trait: Equatable, Traitable, Hashable {

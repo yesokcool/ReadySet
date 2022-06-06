@@ -68,6 +68,22 @@ struct ShapeSetView: View {
             }
             Spacer()
             Button {
+                game.colorblindToggle()
+            } label: {
+                game.colorblindMode ?
+                    Image(systemName: "circle.hexagongrid.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.blue)
+                        .frame(width: DrawingConstants.controlButtonWidth)
+                    : Image(systemName: "circle.hexagongrid.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.blue)
+                        .frame(width: DrawingConstants.controlButtonWidth)
+            }
+            Spacer()
+            Button {
                 game.twoPlayerMode()
             } label: {
                 game.twoPlayers() ?
