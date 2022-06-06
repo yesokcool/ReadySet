@@ -16,12 +16,18 @@ struct ShapeSetView: View {
                     }
                 }
                 score()
+                Divider().overlay(.blue)
+                
                 if !game.twoPlayers() {
                     scoreModifier()
+                    Divider().overlay(.blue)
                 }
                 if game.cheatMode {
                     showSolutions()
                 }
+                
+                
+                
                 cards()
                 
                 Spacer()
@@ -141,27 +147,28 @@ struct ShapeSetView: View {
         HStack {
             if !game.twoPlayers() {
                 VStack {
-                    Text("HIGH SCORE:")
-                        .font(.title3)
-                        .fontWeight(.heavy)
-                    Text("\(game.getHighScore()) GOOD JOBS")
+                    Text("HIGH SCORE")
                         .font(.body)
                         .fontWeight(.semibold)
+                    Text("\(game.getHighScore()) GOOD JOBS")
+                        .font(.body)
+                        .fontWeight(.heavy)
                 }
                 .foregroundColor(game.getHighScore() == game.getScore() &&
                                  game.getHighScore() != 0 ?
                                  Color.orange : Color.blue)
                 .multilineTextAlignment(.center)
+                .padding(.horizontal, 20)
             }
             VStack {
                 if !game.twoPlayers() {
                     Group {
-                    Text("SCORE: ")
-                            .font(.title3)
-                            .fontWeight(.heavy)
+                    Text("SCORE")
+                            .font(.body)
+                            .fontWeight(.semibold)
                     Text("\(game.getScore()) OCEANS SAVED")
                         .font(.body)
-                        .fontWeight(.semibold)
+                        .fontWeight(.heavy)
                 }
                 .foregroundColor(game.getHighScore() == game.getScore() &&
                                  game.getHighScore() != 0 ?
@@ -169,7 +176,7 @@ struct ShapeSetView: View {
                 }
             }
         }
-        .padding(.horizontal, 25.0)
+        .padding(.horizontal, 20.0)
         .padding(.top, 5.0)
     }
     

@@ -31,7 +31,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     private(set) var highScore: Int = 0
     
     // Two-player scoring
-    private(set) var twoPlayerMode: Bool = true
+    private(set) var twoPlayerMode: Bool = false
     private(set) var turnPlayerTwo: Bool = false
     private(set) var scorePlayerTwo: Int = 0
     
