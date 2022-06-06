@@ -108,7 +108,7 @@ struct ShapeSetView: View {
             }
         }
         .padding(.horizontal, 35.0)
-        .padding(.bottom, 10.0)
+        .padding(.vertical, 10.0)
         .foregroundColor(.blue)
     }
     
@@ -255,8 +255,9 @@ struct ShapeSetView: View {
     }
     
     struct DrawingConstants {
-        static let flagWidth: CGFloat = 80
-        static let controlButtonWidth: CGFloat = 30
+        static let flagWidth: CGFloat = 80.0
+        static let controlButtonWidth: CGFloat = 30.0
+        static let controlSpacing: CGFloat = 10.0
     }
 }
 

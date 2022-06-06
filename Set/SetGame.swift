@@ -35,10 +35,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     private(set) var turnPlayerTwo: Bool = false
     private(set) var scorePlayerTwo: Int = 0
     
-    // Possible future features.
-    // private(set) var highScorePlayerTwo: Int = 0
-    // private(set) var scoreModifierPlayerTwo: Int = 0
-    
     init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
         self.numberOfTraits = numberOfTraits
         self.numberOfTraitTypes = numberOfTraitTypes

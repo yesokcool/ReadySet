@@ -8,12 +8,16 @@ An educational project and game based on the card-based "Set" that supports as m
 - Support for adding as many "trait types" as desired (types are just integer values and can be visualized as anything, like a Shape trait having the types of Triangle, Circle, Squiggle, Diamond, and so on)
 - Score modifier that rewards faster set matching
 - Two-player mode
+    - Compete for a high score.
+    - Build up or take down the score modifier together.
+    - Time your calls to steal points from your opponent.
 - Auto-solving (cheat) mode
 - Color-blind accessibility
 
 ## Future features:
 - Randomized text
 - Speed mode
+- Call cooldown
 
 ## Topics Covered:
 - MVVM
