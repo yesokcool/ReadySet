@@ -256,7 +256,7 @@ struct ShapeSetView: View {
     
     struct DrawingConstants {
         static let flagWidth: CGFloat = 80.0
-        static let controlButtonWidth: CGFloat = 30.0
+        static let controlButtonWidth: CGFloat = 35.0
         static let controlSpacing: CGFloat = 10.0
     }
 }
