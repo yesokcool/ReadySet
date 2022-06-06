@@ -19,11 +19,12 @@ struct ShapeSetView: View {
                                     Button {
                                         game.playerTwoTurn()
                                     } label: {
-                                        Image(systemName: "person.2.circle.fill")
+                                        Image(systemName: "flag.circle")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
                                                 .foregroundColor(.blue)
                                     }
+                                    .frame(width: 100)
                                     Text("P2 SCORE: ")
                                             .font(.title3)
                                             .fontWeight(.heavy)
@@ -31,13 +32,12 @@ struct ShapeSetView: View {
                                         .font(.body)
                                         .fontWeight(.semibold)
                                 }
+                                .rotationEffect(Angle.degrees(180))
                                 .foregroundColor(game.getHighScore() == game.getScore() &&
                                                  game.getHighScore() != 0 ?
                                                  Color.orange : Color.blue)
                             }
                         }
-                        .padding(.horizontal, 25.0)
-                        .padding(.vertical, 15.0)
                     }
                     HStack {
                         VStack {
@@ -52,10 +52,9 @@ struct ShapeSetView: View {
                                          game.getHighScore() != 0 ?
                                          Color.orange : Color.blue)
                         .multilineTextAlignment(.center)
-                        
-                        Spacer()
                         VStack {
-                            Group {
+                            if !game.twoPlayers() {
+                                Group {
                                 Text("SCORE: ")
                                         .font(.title3)
                                         .fontWeight(.heavy)
@@ -66,10 +65,11 @@ struct ShapeSetView: View {
                             .foregroundColor(game.getHighScore() == game.getScore() &&
                                              game.getHighScore() != 0 ?
                                              Color.orange : Color.blue)
+                            }
                         }
                     }
                     .padding(.horizontal, 25.0)
-                    .padding(.vertical, 15.0)
+                    .padding(.top, 5.0)
                    
                     Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU")
                         .font(.subheadline)
@@ -98,16 +98,30 @@ struct ShapeSetView: View {
                             game.choose(card)
                     }
                 }
-                
+                Spacer()
                 VStack {
                     if game.twoPlayers() {
+                        VStack {
+                            Group {
+                            Text("SCORE: ")
+                                    .font(.title3)
+                                    .fontWeight(.heavy)
+                            Text("\(game.getScore()) OCEANS SAVED")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                        }
+                        .foregroundColor(game.getHighScore() == game.getScore() &&
+                                         game.getHighScore() != 0 ?
+                                         Color.orange : Color.blue)
+                        }
                         Button {
                             game.playerOneTurn()
                         } label: {
-                            Image(systemName: "person.2.circle.fill")
+                            Image(systemName: "flag.circle")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .foregroundColor(.blue)
+                                    .frame(width: 100)
                         }
                     }
                     HStack() {
