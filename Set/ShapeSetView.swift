@@ -12,170 +12,25 @@ struct ShapeSetView: View {
         if (!game.gameComplete()) {
             VStack {
                 VStack {
-                    if (game.twoPlayers()) {
-                        HStack {
-                            VStack {
-                                Group {
-                                    Button {
-                                        game.playerTwoTurn()
-                                    } label: {
-                                        Image(systemName: "flag.circle")
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .foregroundColor(.blue)
-                                    }
-                                    .frame(width: 100)
-                                    Text("P2 SCORE: ")
-                                            .font(.title3)
-                                            .fontWeight(.heavy)
-                                    Text("\(game.getScore()) OCEANS SAVED")
-                                        .font(.body)
-                                        .fontWeight(.semibold)
-                                }
-                                .rotationEffect(Angle.degrees(180))
-                                .foregroundColor(game.getHighScore() == game.getScore() &&
-                                                 game.getHighScore() != 0 ?
-                                                 Color.orange : Color.blue)
-                            }
-                        }
-                    }
-                    HStack {
-                        VStack {
-                            Text("HIGH SCORE:")
-                                .font(.title3)
-                                .fontWeight(.heavy)
-                            Text("\(game.getHighScore()) GOOD JOBS")
-                                .font(.body)
-                                .fontWeight(.semibold)
-                        }
-                        .foregroundColor(game.getHighScore() == game.getScore() &&
-                                         game.getHighScore() != 0 ?
-                                         Color.orange : Color.blue)
-                        .multilineTextAlignment(.center)
-                        VStack {
-                            if !game.twoPlayers() {
-                                Group {
-                                Text("SCORE: ")
-                                        .font(.title3)
-                                        .fontWeight(.heavy)
-                                Text("\(game.getScore()) OCEANS SAVED")
-                                    .font(.body)
-                                    .fontWeight(.semibold)
-                            }
-                            .foregroundColor(game.getHighScore() == game.getScore() &&
-                                             game.getHighScore() != 0 ?
-                                             Color.orange : Color.blue)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 25.0)
-                    .padding(.top, 5.0)
-                   
-                    Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU")
-                        .font(.subheadline)
-                        .fontWeight(.bold)
-                        .foregroundColor(.blue)
-                        .padding(.all, 6.0)
-                    
-                    if game.cheat() {
-                        if game.setAvailable() {
-                            Text("\(game.cheatIndices().description)")
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                        }
-                        else {
-                            Text("No sets!")
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                        }
+                    if game.twoPlayers() {
+                        playerTwoControls()
                     }
                 }
+                score()
+                if !game.twoPlayers() {
+                    scoreModifier()
+                }
+                if game.cheat() {
+                    showSolutions()
+                }
+                cards()
                 
-                AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
-                    CardView(card: card)
-                        .padding(4)
-                        .onTapGesture {
-                            game.choose(card)
-                    }
-                }
                 Spacer()
                 VStack {
                     if game.twoPlayers() {
-                        VStack {
-                            Group {
-                            Text("SCORE: ")
-                                    .font(.title3)
-                                    .fontWeight(.heavy)
-                            Text("\(game.getScore()) OCEANS SAVED")
-                                .font(.body)
-                                .fontWeight(.semibold)
-                        }
-                        .foregroundColor(game.getHighScore() == game.getScore() &&
-                                         game.getHighScore() != 0 ?
-                                         Color.orange : Color.blue)
-                        }
-                        Button {
-                            game.playerOneTurn()
-                        } label: {
-                            Image(systemName: "flag.circle")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .foregroundColor(.blue)
-                                    .frame(width: 100)
-                        }
+                        playerOneControls()
                     }
-                    HStack() {
-                        Button {
-                            game.newGame()
-                        } label: {
-                            Image(systemName: "arrow.counterclockwise.circle")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 50)
-                        }
-                        Spacer()
-                        Button {
-                            game.twoPlayerMode()
-                        } label: {
-                            game.twoPlayers() ?
-                                Image(systemName: "person.2.circle.fill")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .foregroundColor(.blue)
-                                    .frame(width: 50)
-                                : Image(systemName: "person.2.circle")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .foregroundColor(.blue)
-                                    .frame(width: 50)
-                        }
-                        Spacer()
-                        Button {
-                            game.cheatToggle()
-                        } label: {
-                            game.cheat() ?
-                            Image(systemName: "magnifyingglass.circle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.red)
-                                .frame(width: 50)
-                            :
-                            Image(systemName: "magnifyingglass.circle")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.blue)
-                                .frame(width: 50)
-                        }
-                        Spacer()
-                        Button {
-                            game.dealThree()
-                        } label: {
-                            buttonBuilder()
-                        }
-                    }
-                    .padding(.horizontal, 35.0)
-                    .padding(.bottom, 10.0)
-                    .foregroundColor(.blue)
+                    controls()
                 }
                 
                 
@@ -199,7 +54,7 @@ struct ShapeSetView: View {
                     Image(systemName: "arrow.counterclockwise.circle.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 50)
+                        .frame(width: DrawingConstants.controlButtonWidth)
                     }
                 }
             }
@@ -211,15 +66,193 @@ struct ShapeSetView: View {
             Image(systemName: "square.stack.3d.down.right.fill")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 50)
+                .frame(width: DrawingConstants.controlButtonWidth)
                 .opacity(0)
         }
         else {
             Image(systemName: "square.stack.3d.down.right.fill")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 50)
+                .frame(width: DrawingConstants.controlButtonWidth)
         }
+    }
+    
+    func controls() -> some View {
+        HStack() {
+            Button {
+                game.newGame()
+            } label: {
+                Image(systemName: "arrow.counterclockwise.circle")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: DrawingConstants.controlButtonWidth)
+            }
+            Spacer()
+            Button {
+                game.twoPlayerMode()
+            } label: {
+                game.twoPlayers() ?
+                    Image(systemName: "person.2.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.blue)
+                        .frame(width: DrawingConstants.controlButtonWidth)
+                    : Image(systemName: "person.2.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.blue)
+                        .frame(width: DrawingConstants.controlButtonWidth)
+            }
+            Spacer()
+            Button {
+                game.cheatToggle()
+            } label: {
+                game.cheat() ?
+                Image(systemName: "magnifyingglass.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.red)
+                    .frame(width: DrawingConstants.controlButtonWidth)
+                :
+                Image(systemName: "magnifyingglass.circle")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.blue)
+                    .frame(width: DrawingConstants.controlButtonWidth)
+            }
+            Spacer()
+            Button {
+                game.dealThree()
+            } label: {
+                buttonBuilder()
+            }
+        }
+        .padding(.horizontal, 35.0)
+        .padding(.bottom, 10.0)
+        .foregroundColor(.blue)
+    }
+    
+    func cards() -> some View {
+        AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
+            CardView(card: card)
+                .padding(4)
+                .onTapGesture {
+                    game.choose(card)
+            }
+        }
+    }
+        
+    func score() -> some View {
+        HStack {
+            if !game.twoPlayers() {
+                VStack {
+                    Text("HIGH SCORE:")
+                        .font(.title3)
+                        .fontWeight(.heavy)
+                    Text("\(game.getHighScore()) GOOD JOBS")
+                        .font(.body)
+                        .fontWeight(.semibold)
+                }
+                .foregroundColor(game.getHighScore() == game.getScore() &&
+                                 game.getHighScore() != 0 ?
+                                 Color.orange : Color.blue)
+                .multilineTextAlignment(.center)
+            }
+            VStack {
+                if !game.twoPlayers() {
+                    Group {
+                    Text("SCORE: ")
+                            .font(.title3)
+                            .fontWeight(.heavy)
+                    Text("\(game.getScore()) OCEANS SAVED")
+                        .font(.body)
+                        .fontWeight(.semibold)
+                }
+                .foregroundColor(game.getHighScore() == game.getScore() &&
+                                 game.getHighScore() != 0 ?
+                                 Color.orange : Color.blue)
+                }
+            }
+        }
+        .padding(.horizontal, 25.0)
+        .padding(.top, 5.0)
+    }
+    
+    func scoreModifier() -> some View {
+        Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU")
+            .font(.subheadline)
+            .fontWeight(.bold)
+            .foregroundColor(.blue)
+            .padding(.all, 6.0)
+    }
+    
+    func showSolutions() -> some View {
+        if game.setAvailable() {
+            return Text("\(game.cheatIndices().description)")
+                .font(.title3)
+                .fontWeight(.semibold)
+        }
+        return Text("No sets!")
+            .font(.title3)
+            .fontWeight(.semibold)
+    }
+    
+    func playerOneControls() -> some View {
+        VStack {
+            Group {
+            Text("SCORE: ")
+                    .font(.title3)
+                    .fontWeight(.heavy)
+            Text("\(game.getScore()) OCEANS SAVED")
+                .font(.body)
+                .fontWeight(.semibold)
+        }
+        .foregroundColor(game.getHighScore() == game.getScore() &&
+                         game.getHighScore() != 0 ?
+                         Color.orange : Color.blue)
+            Button {
+                game.playerOneTurn()
+            } label: {
+                Image(systemName: "flag.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.blue)
+                        .frame(width: DrawingConstants.flagWidth)
+            }
+        }
+    }
+    
+    func playerTwoControls() -> some View {
+        HStack {
+            VStack {
+                Group {
+                    Button {
+                        game.playerTwoTurn()
+                    } label: {
+                        Image(systemName: "flag.circle")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundColor(.mint)
+                    }
+                    .frame(width: DrawingConstants.flagWidth)
+                    Text("P2 SCORE: ")
+                            .font(.title3)
+                            .fontWeight(.heavy)
+                    Text("\(game.getScore()) OCEANS SAVED")
+                        .font(.body)
+                        .fontWeight(.semibold)
+                }
+                .rotationEffect(Angle.degrees(180))
+                .foregroundColor(game.getHighScore() == game.getScore() &&
+                                 game.getHighScore() != 0 ?
+                                 Color.orange : Color.mint)
+            }
+        }
+    }
+    
+    struct DrawingConstants {
+        static let flagWidth: CGFloat = 80
+        static let controlButtonWidth: CGFloat = 30
     }
 }
 
