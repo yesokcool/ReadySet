@@ -37,27 +37,7 @@ struct ShapeSetView: View {
             }.foregroundColor(.primary)
         }
         else {
-            VStack {
-                Text("GAME COMPLETE!")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                Text("FINAL SCORE: \(game.getScore())")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                Button {
-                    game.newGame()
-                } label: {
-                    VStack {
-                    Text("NEW GAME?")
-                        .font(.title)
-                        .padding(10)
-                    Image(systemName: "arrow.counterclockwise.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: DrawingConstants.controlButtonWidth)
-                    }
-                }
-            }
+            gameComplete()
         }
     }
     
@@ -235,17 +215,41 @@ struct ShapeSetView: View {
                                 .foregroundColor(.mint)
                     }
                     .frame(width: DrawingConstants.flagWidth)
+                    Text("\(game.getScorePlayerTwo()) OCEANS SAVED")
+                        .font(.body)
+                        .fontWeight(.semibold)
                     Text("P2 SCORE: ")
                             .font(.title3)
                             .fontWeight(.heavy)
-                    Text("\(game.getScore()) OCEANS SAVED")
-                        .font(.body)
-                        .fontWeight(.semibold)
                 }
                 .rotationEffect(Angle.degrees(180))
-                .foregroundColor(game.getHighScore() == game.getScore() &&
+                .foregroundColor(game.getHighScore() == game.getScorePlayerTwo() &&
                                  game.getHighScore() != 0 ?
                                  Color.orange : Color.mint)
+            }
+        }
+    }
+    
+    func gameComplete() -> some View {
+        VStack {
+            Text("GAME COMPLETE!")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            Text("FINAL SCORE: \(game.getScore())")
+                .font(.title2)
+                .fontWeight(.semibold)
+            Button {
+                game.newGame()
+            } label: {
+                VStack {
+                Text("NEW GAME?")
+                    .font(.title)
+                    .padding(10)
+                Image(systemName: "arrow.counterclockwise.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: DrawingConstants.controlButtonWidth)
+                }
             }
         }
     }

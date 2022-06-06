@@ -72,12 +72,16 @@ class ShapeSetGame: ObservableObject {
         return game.twoPlayerMode
     }
     
+    func getScorePlayerTwo() -> Int {
+        return game.scorePlayerTwo
+    }
+    
     func playerOneTurn() {
-        game.playerOneTurn()
+        game.turnToPlayerOne()
     }
     
     func playerTwoTurn() {
-        game.playerTwoTurn()
+        game.turnToPlayerTwo()
     }
     
     func shuffle() {

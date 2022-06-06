@@ -2,31 +2,42 @@
 import Foundation
 
 struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable {
+    
+    // Card management
     private(set) var deck: [CustomShapeCard] = []
     private(set) var fixedDeck: [CustomShapeCard] = []
     private(set) var cardsInPlay: [CustomShapeCard] = []
+    private(set) var setsMade: [[CustomShapeCard]] = []
+    private(set) var selectedCards: [CustomShapeCard] = []
+    
+    // Game definitions
+    private(set) var gameComplete: Bool = false
     private let numberOfCardsInASet: Int
     private let deckSize: Int
+    private let numberOfTraitTypes: Int
+    private let numberOfTraits: Int
+    
+    // Utility
     private(set) var result: [CardContent] = []
     private(set) var setIndices: [Int] = []
     private(set) var cheatIndices: [Int] = []
-    private let numberOfTraitTypes: Int
-    private let numberOfTraits: Int
-    private(set) var setsMade: [[CustomShapeCard]] = []
-    private(set) var selectedCards: [CustomShapeCard] = []
     private(set) var id: Int = 0
-    private(set) var gameComplete: Bool = false
+    
+    // Scoring
     private(set) var prevDate: Date = Date()
     private(set) var score: Int = 0
     private(set) var scoreModifier: Int = 0
     private(set) var antiCheat: Bool = false
     private(set) var highScore: Int = 0
     
+    // Two-player scoring
     private(set) var twoPlayerMode: Bool = true
     private(set) var turnPlayerTwo: Bool = false
     private(set) var scorePlayerTwo: Int = 0
-    private(set) var highScorePlayerTwo: Int = 0
-    private(set) var scoreModifierPlayerTwo: Int = 0
+    
+    // Possible future features.
+    // private(set) var highScorePlayerTwo: Int = 0
+    // private(set) var scoreModifierPlayerTwo: Int = 0
     
     init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
         self.numberOfTraits = numberOfTraits
@@ -100,11 +111,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         
     }
     
-    mutating func playerOneTurn() {
+    mutating func turnToPlayerOne() {
         turnPlayerTwo = false
     }
     
-    mutating func playerTwoTurn() {
+    mutating func turnToPlayerTwo() {
         turnPlayerTwo = true
     }
     
@@ -291,7 +302,12 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                                 cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = true.intValue
                                 selectedCards[i].isPartOfSet = true.intValue
                             }
-                            score += scoreModifier * 5
+                            
+                            if twoPlayerMode {
+                                if turnPlayerTwo { scorePlayerTwo += scoreModifier * 5 }
+                                else { score += scoreModifier * 5 }
+                            }
+                            
                             if score > highScore {
                                 highScore = score
                             }
