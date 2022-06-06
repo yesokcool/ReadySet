@@ -4,7 +4,6 @@ import SwiftUI
 struct ShapeSetView: View {
     @ObservedObject var game: ShapeSetGame
     
-    
     // TODO: Make text pull from a library of possible texts randomly for each game
     // TODO: Add some ways to speed up the game. Like if you match multiple sets quickly, you get a special vision that shows you sets to match and matching them has an intense POWERFUL-feeling animation, screen shake, pop up text saying quake-like stuff like unstoppable, particles of randomized emojis like cows etc. And if you keep matching fast, it keeps the mode going.
     // TODO: Add animation when breaking high score
@@ -20,7 +19,7 @@ struct ShapeSetView: View {
                 if !game.twoPlayers() {
                     scoreModifier()
                 }
-                if game.cheat() {
+                if game.cheatMode {
                     showSolutions()
                 }
                 cards()
@@ -87,7 +86,7 @@ struct ShapeSetView: View {
             Button {
                 game.cheatToggle()
             } label: {
-                game.cheat() ?
+                game.cheatMode ?
                 Image(systemName: "magnifyingglass.circle.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -114,7 +113,7 @@ struct ShapeSetView: View {
     
     func cards() -> some View {
         AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
-            CardView(card: card)
+            CardView(card: card, colorblindMode: game.colorblindMode)
                 .padding(4)
                 .onTapGesture {
                     game.choose(card)
@@ -261,10 +260,14 @@ struct ShapeSetView: View {
     }
 }
 
-// TODO: Can probably make a @Viewbuilder function that returns Some View instead
-// of these long switch statements?
 struct CardView: View {
     let card: ShapeSetGame.Card
+    let colorblindMode: Bool
+    
+    init(card: ShapeSetGame.Card, colorblindMode: Bool = false) {
+        self.card = card
+        self.colorblindMode = colorblindMode
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -278,23 +281,30 @@ struct CardView: View {
         }
     }
     
-    func getColor(_ color: Int) -> Color {
-        switch color {
-            case 0:
-                return .cyan
-            case 1:
-                return .pink
-            default:
-                return .green
-        }
-    }
+    ///    Colorblind palette sourced from the article:
+    ///    **What to consider when visualizing data for colorblind readers**
+    ///    *by Lisa Charlotte Muth*
     
-    func getOpacity(_ opacity: Int) -> Double {
-        switch opacity {
-            case 1:
-                return 0.3
-            default:
-                return 1.0
+    func getColor(_ color: Int) -> Color {
+        if !colorblindMode {
+            switch color {
+                case 0:
+                    return .cyan
+                case 1:
+                    return .pink
+                default:
+                    return .green
+            }
+        }
+        else {
+            switch color {
+                case 0:
+                return Color.init(hue: 0.58, saturation: 1.0, brightness: 0.88)
+                case 1:
+                return Color.init(hue: 0.54, saturation: 0.3, brightness: 0.99)
+                default:
+                    return .orange
+            }
         }
     }
     
@@ -306,79 +316,79 @@ struct CardView: View {
         
         ForEach(0..<card.traits[0].type + 1, id: \.self) { _ in
             switch card.traits[1].type {
-            case 0:
-                if card.traits[2].type == 2 {
-                    WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
-                        .stroke(lineWidth: lineWidth)
-                        .foregroundColor(getColor(card.traits[3].type))
-                        .frame(maxHeight: rectangleHeight)
-                }
-                else if card.traits[2].type == 1 {
-                    WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
-                        .stroke(lineWidth: lineWidth)
-                        .foregroundColor(getColor(card.traits[3].type))
-                        .frame(maxHeight: rectangleHeight)
-                        .background() {
-                            WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
-                                .fill()
-                                .foregroundColor(getColor(card.traits[3].type))
-                                //.opacity(getOpacity(card.traits[2].type))
-                                .striped(geometry: geometry)
-                                .frame(maxHeight: rectangleHeight)
-                        }
+                case 0:
+                    if card.traits[2].type == 2 {
+                        WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
+                            .stroke(lineWidth: lineWidth)
+                            .foregroundColor(getColor(card.traits[3].type))
+                            .frame(maxHeight: rectangleHeight)
                     }
-                else {
-                    WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
-                        .fill()
-                        .foregroundColor(getColor(card.traits[3].type))
-                        .frame(maxHeight: rectangleHeight)
-                }
-            case 1:
-                if card.traits[2].type == 2 {
-                    Squiggle()
-                        .stroke(lineWidth: lineWidth)
-                        .foregroundColor(getColor(card.traits[3].type))
-                }
-                else if card.traits[2].type == 1 {
-                    Squiggle()
-                        .stroke(lineWidth: lineWidth)
-                        .foregroundColor(getColor(card.traits[3].type))
-                        .background() {
-                            Squiggle()
-                                .fill()
-                                .foregroundColor(getColor(card.traits[3].type))
-                                //.opacity(getOpacity(card.traits[2].type))
-                                .striped(geometry: geometry)
+                    else if card.traits[2].type == 1 {
+                        WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
+                            .stroke(lineWidth: lineWidth)
+                            .foregroundColor(getColor(card.traits[3].type))
+                            .frame(maxHeight: rectangleHeight)
+                            .background() {
+                                WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
+                                    .fill()
+                                    .foregroundColor(getColor(card.traits[3].type))
+                                    //.opacity(getOpacity(card.traits[2].type))
+                                    .striped(geometry: geometry)
+                                    .frame(maxHeight: rectangleHeight)
+                            }
                         }
-                }
-                else {
-                    Squiggle()
-                        .fill()
-                        .foregroundColor(getColor(card.traits[3].type))
-                }
-            default:
-                if card.traits[2].type == 2 {
-                    Diamond(size: 5)
-                        .stroke(lineWidth: lineWidth)
-                        .foregroundColor(getColor(card.traits[3].type))
-                }
-                else if card.traits[2].type == 1 {
-                    Diamond(size:5)
-                        .stroke(lineWidth: lineWidth)
-                        .foregroundColor(getColor(card.traits[3].type))
-                        .background() {
-                            Diamond(size:5)
-                                .fill()
-                                .foregroundColor(getColor(card.traits[3].type))
-                                //.opacity(getOpacity(card.traits[2].type))
-                                .striped(geometry: geometry)
-                        }
-                }
-                else {
-                    Diamond(size:5)
-                        .fill()
-                        .foregroundColor(getColor(card.traits[3].type))
-                }
+                    else {
+                        WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
+                            .fill()
+                            .foregroundColor(getColor(card.traits[3].type))
+                            .frame(maxHeight: rectangleHeight)
+                    }
+                case 1:
+                    if card.traits[2].type == 2 {
+                        Squiggle()
+                            .stroke(lineWidth: lineWidth)
+                            .foregroundColor(getColor(card.traits[3].type))
+                    }
+                    else if card.traits[2].type == 1 {
+                        Squiggle()
+                            .stroke(lineWidth: lineWidth)
+                            .foregroundColor(getColor(card.traits[3].type))
+                            .background() {
+                                Squiggle()
+                                    .fill()
+                                    .foregroundColor(getColor(card.traits[3].type))
+                                    //.opacity(getOpacity(card.traits[2].type))
+                                    .striped(geometry: geometry)
+                            }
+                    }
+                    else {
+                        Squiggle()
+                            .fill()
+                            .foregroundColor(getColor(card.traits[3].type))
+                    }
+                default:
+                    if card.traits[2].type == 2 {
+                        Diamond(size: 5)
+                            .stroke(lineWidth: lineWidth)
+                            .foregroundColor(getColor(card.traits[3].type))
+                    }
+                    else if card.traits[2].type == 1 {
+                        Diamond(size:5)
+                            .stroke(lineWidth: lineWidth)
+                            .foregroundColor(getColor(card.traits[3].type))
+                            .background() {
+                                Diamond(size:5)
+                                    .fill()
+                                    .foregroundColor(getColor(card.traits[3].type))
+                                    //.opacity(getOpacity(card.traits[2].type))
+                                    .striped(geometry: geometry)
+                            }
+                    }
+                    else {
+                        Diamond(size:5)
+                            .fill()
+                            .foregroundColor(getColor(card.traits[3].type))
+                    }
             }
         }
     }

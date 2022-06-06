@@ -10,7 +10,8 @@ class ShapeSetGame: ObservableObject {
     typealias Card = SetGame<Trait>.CustomShapeCard
     
     @Published private var game: SetGame<Trait>
-    @Published private var cheatMode: Bool = false
+    @Published private(set) var cheatMode: Bool = false
+    @Published private(set) var colorblindMode: Bool = true
     
     init(_ one:Int, _ two:Int, _ three:Int) {
         game = SetGame(numberOfTraits: one, numberOfTraitTypes: two, setsOf: three)
@@ -90,10 +91,6 @@ class ShapeSetGame: ObservableObject {
     
     func setAvailable() -> Bool {
         game.setAvailable()
-    }
-    
-    func cheat() -> Bool {
-        return cheatMode
     }
     
     func cheatToggle() {
