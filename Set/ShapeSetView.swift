@@ -10,29 +10,33 @@ struct ShapeSetView: View {
     var body: some View {
         if !game.gameComplete() {
             VStack {
-                VStack {
-                    if game.twoPlayers() {
-                        playerTwoControls
-                    }
+                if game.twoPlayers() {
+                    multiplayerScoreAndControls(player1: false, color: .mint)
+                        .rotationEffect(Angle.degrees(180))
                 }
-                score
-                Divider().overlay(.blue)
+                else {
+                    score
+                    Divider().overlay(.blue)
+                }
                 
                 if !game.twoPlayers() {
                     scoreModifier
                     Divider().overlay(.blue)
                 }
+                
                 if game.cheatMode() {
                     showSolutions
                 }
                 
                 cards
-                
+            
                 Spacer()
+                
                 VStack {
                     if game.twoPlayers() {
-                        playerOneControls
+                        multiplayerScoreAndControls(player1: true, color: .blue)
                     }
+                    
                     controls
                 }
             }.foregroundColor(.primary)
@@ -114,8 +118,7 @@ struct ShapeSetView: View {
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(.red)
                     .frame(width: DrawingConstants.controlButtonWidth)
-                :
-                Image(systemName: "magnifyingglass.circle")
+                : Image(systemName: "magnifyingglass.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(.blue)
@@ -145,12 +148,11 @@ struct ShapeSetView: View {
         
     var score: some View {
         HStack {
-            if !game.twoPlayers() {
                 VStack {
                     Text("HIGH SCORE")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.semibold)
-                    Text("\(game.getHighScore()) \n\(game.randomScoringText())")
+                    Text("\(game.getHighScore()) \n\(game.anotherRandomScoringText)")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
                 }
@@ -159,15 +161,13 @@ struct ShapeSetView: View {
                                  Color.orange : Color.blue)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
-            }
             Spacer()
             VStack {
-                if !game.twoPlayers() {
                     Group {
                     Text("SCORE")
                             .font(DrawingConstants.scoreFontSize)
                             .fontWeight(.semibold)
-                        Text("\(game.getScore()) \n\(game.randomScoringText())")
+                        Text("\(game.getScore()) \n\(game.randomScoringText)")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
                         .multilineTextAlignment(.center)
@@ -175,7 +175,6 @@ struct ShapeSetView: View {
                 .foregroundColor(game.getHighScore() == game.getScore() &&
                                  game.getHighScore() != 0 ?
                                  Color.orange : Color.blue)
-                }
             }
         }
         .padding(.horizontal, 10.0)
@@ -183,7 +182,7 @@ struct ShapeSetView: View {
     }
     
     var scoreModifier: some View {
-        Text("\(game.getScoreModifier()) \(game.randomScoreModifierText())")
+        Text("\(game.getScoreModifier()) \(game.randomScoreModifierText)")
             .font(DrawingConstants.scoreFontSize)
             .fontWeight(.bold)
             .foregroundColor(.blue)
@@ -201,71 +200,50 @@ struct ShapeSetView: View {
             .fontWeight(.semibold)
     }
     
-    var playerOneControls: some View {
+    func multiplayerScoreAndControls(player1: Bool, color: Color) -> some View {
         VStack {
             Group {
-            Text("SCORE: ")
+                Text("SCORE: ")
                     .font(DrawingConstants.scoreFontSize)
                     .fontWeight(.heavy)
-            Text("\(game.getScore()) OCEANS SAVED")
-                .font(DrawingConstants.scoreFontSize)
-                .fontWeight(.semibold)
-        }
-        .foregroundColor(game.getHighScore() == game.getScore() &&
-                         game.getHighScore() != 0 ?
-                         Color.orange : Color.blue)
+                Text(player1 ?
+                     "\(game.getScore()) \(game.randomScoringText)"
+                     : "\(game.getScore()) \(game.anotherRandomScoringText)" )
+                    .font(DrawingConstants.scoreFontSize)
+                    .fontWeight(.semibold)
+            }
+            .foregroundColor(game.getHighScore() == game.getScore() &&
+                             game.getHighScore() != 0 ?
+                             Color.orange : color)
+            
             Button {
-                game.turnToPlayerOne()
-            } label: {
-                !game.isPlayerOneTurn() ?
-                Image(systemName: "flag.circle")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.blue)
-                        .frame(width: DrawingConstants.flagWidth)
-                :
-                Image(systemName: "flag.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.blue)
-                        .frame(width: DrawingConstants.flagWidth)
-            }
-        }
-    }
-    
-    var playerTwoControls: some View {
-        HStack {
-            VStack {
-                Group {
-                    Button {
-                        game.turnToPlayerTwo()
-                    } label: {
-                        game.isPlayerOneTurn() ?
-                        Image(systemName: "flag.circle")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.mint)
-                                .frame(width: DrawingConstants.flagWidth)
-                        :
-                        Image(systemName: "flag.circle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.mint)
-                                .frame(width: DrawingConstants.flagWidth)
-                    }
-                    .frame(width: DrawingConstants.flagWidth)
-                    Text("\(game.getScorePlayerTwo()) OCEANS SAVED")
-                        .font(DrawingConstants.scoreFontSize)
-                        .fontWeight(.semibold)
-                    Text("P2 SCORE: ")
-                            .font(DrawingConstants.scoreFontSize)
-                            .fontWeight(.heavy)
+                if player1 {
+                    game.turnToPlayerOne()
                 }
-                .rotationEffect(Angle.degrees(180))
-                .foregroundColor(game.getHighScore() == game.getScorePlayerTwo() &&
-                                 game.getHighScore() != 0 ?
-                                 Color.orange : Color.mint)
+                else {
+                    game.turnToPlayerTwo()
+                }
+            } label: {
+                if player1 {
+                    !game.isPlayerOneTurn() ?
+                    Image(systemName: "flag.circle")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                    : Image(systemName: "flag.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                } else {
+                    game.isPlayerOneTurn() ?
+                    Image(systemName: "flag.circle")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                    : Image(systemName: "flag.circle.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                }
             }
+            .foregroundColor(color)
+            .frame(width: DrawingConstants.flagWidth)
         }
     }
     

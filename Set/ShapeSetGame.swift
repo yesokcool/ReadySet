@@ -11,6 +11,9 @@ class ShapeSetGame: ObservableObject {
     
     @Published private var game: SetGame<Trait>
     @Published private(set) var colorblindMode: Bool = false
+    private(set) var randomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
+    private(set) var anotherRandomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
+    private(set) var randomScoreModifierText = SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
     
     init(_ one:Int, _ two:Int, _ three:Int) {
         game = SetGame(numberOfTraits: one, numberOfTraitTypes: two, setsOf: three)
@@ -30,6 +33,9 @@ class ShapeSetGame: ObservableObject {
     
     func newGame() {
         game.newGame()
+        randomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
+        anotherRandomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
+        randomScoreModifierText = SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
     }
     
     func dealThree() {
@@ -106,14 +112,6 @@ class ShapeSetGame: ObservableObject {
     
     func colorblindToggle() {
         colorblindMode.toggle()
-    }
-    
-    func randomScoringText() -> String {
-        SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
-    }
-    
-    func randomScoreModifierText() -> String {
-        SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
     }
     
     struct Trait: Equatable, Traitable, Hashable {
