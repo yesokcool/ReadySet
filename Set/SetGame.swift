@@ -255,7 +255,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     }
                     selectedCards = []
                     selectedCards.append(chosen)
-                    _ = dealThree()
                     resetIndices()
                     print(checkIfSetIsAvailable(cardIndex: 0))
                     cheatIndices = setIndices
