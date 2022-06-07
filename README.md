@@ -11,6 +11,7 @@ An educational project and game based on the card-based "Set" that supports as m
     - Compete for a high score.
     - Build up or take down the score modifier together.
     - Time your calls to steal points from your opponent.
+        - Or be civilized and create your own rules!
 - Auto-solving (cheat) mode
 - Color-blind accessibility
 

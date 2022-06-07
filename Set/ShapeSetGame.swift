@@ -77,12 +77,16 @@ class ShapeSetGame: ObservableObject {
         return game.scorePlayerTwo
     }
     
-    func playerOneTurn() {
+    func turnToPlayerOne() {
         game.turnToPlayerOne()
     }
     
-    func playerTwoTurn() {
+    func turnToPlayerTwo() {
         game.turnToPlayerTwo()
+    }
+    
+    func isPlayerOneTurn() -> Bool {
+        return !game.turnPlayerTwo
     }
     
     func shuffle() {

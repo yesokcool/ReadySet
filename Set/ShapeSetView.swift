@@ -62,6 +62,8 @@ struct ShapeSetView: View {
         }
     }
     
+    // TODO: Make more functions (like when filling the button) so code and viewmodifers don't have to be repeated.
+    // TODO: Make a scoreBuilder function.
     func controls() -> some View {
         HStack() {
             Button {
@@ -148,10 +150,10 @@ struct ShapeSetView: View {
             if !game.twoPlayers() {
                 VStack {
                     Text("HIGH SCORE")
-                        .font(.body)
+                        .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.semibold)
-                    Text("\(game.getHighScore()) GOOD JOBS")
-                        .font(.body)
+                    Text("\(game.getHighScore()) \nGOOD JOBS")
+                        .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
                 }
                 .foregroundColor(game.getHighScore() == game.getScore() &&
@@ -160,15 +162,17 @@ struct ShapeSetView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
             }
+            Spacer()
             VStack {
                 if !game.twoPlayers() {
                     Group {
                     Text("SCORE")
-                            .font(.body)
+                            .font(DrawingConstants.scoreFontSize)
                             .fontWeight(.semibold)
-                    Text("\(game.getScore()) OCEANS SAVED")
-                        .font(.body)
+                    Text("\(game.getScore()) \nOCEANS SAVED")
+                        .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
+                        .multilineTextAlignment(.center)
                 }
                 .foregroundColor(game.getHighScore() == game.getScore() &&
                                  game.getHighScore() != 0 ?
@@ -176,13 +180,13 @@ struct ShapeSetView: View {
                 }
             }
         }
-        .padding(.horizontal, 20.0)
+        .padding(.horizontal, 10.0)
         .padding(.top, 5.0)
     }
     
     func scoreModifier() -> some View {
         Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU")
-            .font(.subheadline)
+            .font(DrawingConstants.scoreFontSize)
             .fontWeight(.bold)
             .foregroundColor(.blue)
             .padding(.all, 6.0)
@@ -191,11 +195,11 @@ struct ShapeSetView: View {
     func showSolutions() -> some View {
         if game.setAvailable() {
             return Text("\(game.cheatIndices().description)")
-                .font(.title3)
+                .font(DrawingConstants.scoreFontSize)
                 .fontWeight(.semibold)
         }
         return Text("No sets!")
-            .font(.title3)
+            .font(DrawingConstants.scoreFontSize)
             .fontWeight(.semibold)
     }
     
@@ -203,19 +207,26 @@ struct ShapeSetView: View {
         VStack {
             Group {
             Text("SCORE: ")
-                    .font(.title3)
+                    .font(DrawingConstants.scoreFontSize)
                     .fontWeight(.heavy)
             Text("\(game.getScore()) OCEANS SAVED")
-                .font(.body)
+                .font(DrawingConstants.scoreFontSize)
                 .fontWeight(.semibold)
         }
         .foregroundColor(game.getHighScore() == game.getScore() &&
                          game.getHighScore() != 0 ?
                          Color.orange : Color.blue)
             Button {
-                game.playerOneTurn()
+                game.turnToPlayerOne()
             } label: {
+                !game.isPlayerOneTurn() ?
                 Image(systemName: "flag.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.blue)
+                        .frame(width: DrawingConstants.flagWidth)
+                :
+                Image(systemName: "flag.circle.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .foregroundColor(.blue)
@@ -229,19 +240,27 @@ struct ShapeSetView: View {
             VStack {
                 Group {
                     Button {
-                        game.playerTwoTurn()
+                        game.turnToPlayerTwo()
                     } label: {
+                        game.isPlayerOneTurn() ?
                         Image(systemName: "flag.circle")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundColor(.mint)
+                                .frame(width: DrawingConstants.flagWidth)
+                        :
+                        Image(systemName: "flag.circle.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundColor(.mint)
+                                .frame(width: DrawingConstants.flagWidth)
                     }
                     .frame(width: DrawingConstants.flagWidth)
                     Text("\(game.getScorePlayerTwo()) OCEANS SAVED")
-                        .font(.body)
+                        .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.semibold)
                     Text("P2 SCORE: ")
-                            .font(.title3)
+                            .font(DrawingConstants.scoreFontSize)
                             .fontWeight(.heavy)
                 }
                 .rotationEffect(Angle.degrees(180))
@@ -280,6 +299,7 @@ struct ShapeSetView: View {
         static let flagWidth: CGFloat = 80.0
         static let controlButtonWidth: CGFloat = 35.0
         static let controlSpacing: CGFloat = 10.0
+        static let scoreFontSize = Font.caption
     }
 }
 
