@@ -35,6 +35,9 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     private(set) var turnPlayerTwo: Bool = false
     private(set) var scorePlayerTwo: Int = 0
     
+    // Cheat
+    private(set) var cheatMode: Bool = false
+    
     init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
         self.numberOfTraits = numberOfTraits
         self.numberOfTraitTypes = numberOfTraitTypes
@@ -117,6 +120,10 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     
     mutating func twoPlayerToggle() {
         twoPlayerMode.toggle()
+    }
+    
+    mutating func cheatModeToggle() {
+        cheatMode.toggle()
     }
     
     func setFromIndices(with indices: [Int]) -> [CustomShapeCard] {
@@ -239,12 +246,15 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     // Perhaps possible to just need to use one of these
     // TODO: Maybe make extension more readable and replace intValue
     // for something else.
+    // TODO: Break this up into functions.
     mutating func choose(_ card: CustomShapeCard) {
         if let chosenIndex = cardsInPlay.firstIndex(of: card),
            cardsInPlay[chosenIndex].isPartOfSet != true.intValue {
             // Set is selected
             if selectedCards.count >= numberOfCardsInASet {
-                scoreModifier += calculateScoreModifier()
+                if !cheatMode {
+                    scoreModifier += calculateScoreModifier()
+                }
                 // Set selected is an actual set
                 if selectedCards[0].isPartOfSet == true.intValue {
                     cardsInPlay[chosenIndex].isSelected = true
@@ -284,7 +294,9 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                 }
                 // Selection
                 else {
-                    scoreModifier += calculateScoreModifier()
+                    if (!cheatMode) {
+                        scoreModifier += calculateScoreModifier()
+                    }
                     print("Choosing \(card)!")
                     cardsInPlay[chosenIndex].isSelected = true
                     selectedCards.append(cardsInPlay[chosenIndex])
@@ -298,14 +310,17 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                                 selectedCards[i].isPartOfSet = true.intValue
                             }
                             
-                            if twoPlayerMode {
-                                if turnPlayerTwo { scorePlayerTwo += scoreModifier * 5 }
-                                else { score += scoreModifier * 5 }
+                            if (!cheatMode) {
+                                if twoPlayerMode {
+                                    if turnPlayerTwo { scorePlayerTwo += scoreModifier * 5 }
+                                    else { score += scoreModifier * 5 }
+                                }
+                                
+                                if score > highScore {
+                                    highScore = score
+                                }
                             }
                             
-                            if score > highScore {
-                                highScore = score
-                            }
                             // Last set made and game complete
                             checkIfGameIsCompleted()
                         }

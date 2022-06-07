@@ -22,11 +22,9 @@ struct ShapeSetView: View {
                     scoreModifier()
                     Divider().overlay(.blue)
                 }
-                if game.cheatMode {
+                if game.cheatMode() {
                     showSolutions()
                 }
-                
-                
                 
                 cards()
                 
@@ -110,7 +108,7 @@ struct ShapeSetView: View {
             Button {
                 game.cheatToggle()
             } label: {
-                game.cheatMode ?
+                game.cheatMode() ?
                 Image(systemName: "magnifyingglass.circle.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
