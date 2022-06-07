@@ -35,8 +35,6 @@ struct ShapeSetView: View {
                     }
                     controls
                 }
-                
-                
             }.foregroundColor(.primary)
         }
         else {
@@ -152,7 +150,7 @@ struct ShapeSetView: View {
                     Text("HIGH SCORE")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.semibold)
-                    Text("\(game.getHighScore()) \nGOOD JOBS")
+                    Text("\(game.getHighScore()) \n\(game.randomScoringText())")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
                 }
@@ -169,7 +167,7 @@ struct ShapeSetView: View {
                     Text("SCORE")
                             .font(DrawingConstants.scoreFontSize)
                             .fontWeight(.semibold)
-                    Text("\(game.getScore()) \nOCEANS SAVED")
+                        Text("\(game.getScore()) \n\(game.randomScoringText())")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
                         .multilineTextAlignment(.center)
@@ -185,7 +183,7 @@ struct ShapeSetView: View {
     }
     
     var scoreModifier: some View {
-        Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU")
+        Text("\(game.getScoreModifier()) \(game.randomScoreModifierText())")
             .font(DrawingConstants.scoreFontSize)
             .fontWeight(.bold)
             .foregroundColor(.blue)

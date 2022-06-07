@@ -20,10 +20,10 @@ struct SillyText {
         "cats. just cats"
     ]
     
-    let scoringModifier =
+    static let scoringModifier =
     [
         "PUPPIES ARE DEPENDING ON YOU",
         "TELETUBBIES ARE GRANTING YOU STRENGTH",
-        "POWER UP GEM BOOSTER DISCO JET PACKS",
+        "POWER UP GEM BOOSTER DISCO JET PACKS"
     ]
 }

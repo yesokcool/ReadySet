@@ -97,7 +97,7 @@ class ShapeSetGame: ObservableObject {
     }
     
     func cheatToggle() {
-        game.cheatModeToggle()
+    game.cheatModeToggle()
     }
     
     func cheatMode() -> Bool {
@@ -106,6 +106,14 @@ class ShapeSetGame: ObservableObject {
     
     func colorblindToggle() {
         colorblindMode.toggle()
+    }
+    
+    func randomScoringText() -> String {
+        SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
+    }
+    
+    func randomScoreModifierText() -> String {
+        SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
     }
     
     struct Trait: Equatable, Traitable, Hashable {
