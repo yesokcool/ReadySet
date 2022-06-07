@@ -8,41 +8,43 @@ struct ShapeSetView: View {
     // TODO: Add some ways to speed up the game. Like if you match multiple sets quickly, you get a special vision that shows you sets to match and matching them has an intense POWERFUL-feeling animation, screen shake, pop up text saying quake-like stuff like unstoppable, particles of randomized emojis like cows etc. And if you keep matching fast, it keeps the mode going.
     // TODO: Add animation when breaking high score
     var body: some View {
-        if (!game.gameComplete()) {
+        if !game.gameComplete() {
             VStack {
                 VStack {
                     if game.twoPlayers() {
-                        playerTwoControls()
+                        playerTwoControls
                     }
                 }
-                score()
+                score
                 Divider().overlay(.blue)
                 
                 if !game.twoPlayers() {
-                    scoreModifier()
+                    scoreModifier
                     Divider().overlay(.blue)
                 }
                 if game.cheatMode() {
-                    showSolutions()
+                    showSolutions
                 }
                 
-                cards()
+                cards
                 
                 Spacer()
                 VStack {
                     if game.twoPlayers() {
-                        playerOneControls()
+                        playerOneControls
                     }
-                    controls()
+                    controls
                 }
                 
                 
             }.foregroundColor(.primary)
         }
         else {
-            gameComplete()
+            gameComplete
         }
     }
+    
+    
     
     @ViewBuilder func buttonBuilder() -> some View {
         if (game.deckEmpty()) {
@@ -62,7 +64,7 @@ struct ShapeSetView: View {
     
     // TODO: Make more functions (like when filling the button) so code and viewmodifers don't have to be repeated.
     // TODO: Make a scoreBuilder function.
-    func controls() -> some View {
+    var controls: some View {
         HStack() {
             Button {
                 game.newGame()
@@ -133,7 +135,7 @@ struct ShapeSetView: View {
         .foregroundColor(.blue)
     }
     
-    func cards() -> some View {
+    var cards: some View {
         AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
             CardView(card: card, colorblindMode: game.colorblindMode)
                 .padding(4)
@@ -143,7 +145,7 @@ struct ShapeSetView: View {
         }
     }
         
-    func score() -> some View {
+    var score: some View {
         HStack {
             if !game.twoPlayers() {
                 VStack {
@@ -182,7 +184,7 @@ struct ShapeSetView: View {
         .padding(.top, 5.0)
     }
     
-    func scoreModifier() -> some View {
+    var scoreModifier: some View {
         Text("\(game.getScoreModifier()) PUPPIES ARE DEPENDING ON YOU")
             .font(DrawingConstants.scoreFontSize)
             .fontWeight(.bold)
@@ -190,7 +192,7 @@ struct ShapeSetView: View {
             .padding(.all, 6.0)
     }
     
-    func showSolutions() -> some View {
+    var showSolutions: some View {
         if game.setAvailable() {
             return Text("\(game.cheatIndices().description)")
                 .font(DrawingConstants.scoreFontSize)
@@ -201,7 +203,7 @@ struct ShapeSetView: View {
             .fontWeight(.semibold)
     }
     
-    func playerOneControls() -> some View {
+    var playerOneControls: some View {
         VStack {
             Group {
             Text("SCORE: ")
@@ -233,7 +235,7 @@ struct ShapeSetView: View {
         }
     }
     
-    func playerTwoControls() -> some View {
+    var playerTwoControls: some View {
         HStack {
             VStack {
                 Group {
@@ -269,7 +271,7 @@ struct ShapeSetView: View {
         }
     }
     
-    func gameComplete() -> some View {
+    var gameComplete: some View {
         VStack {
             Text("GAME COMPLETE!")
                 .font(.largeTitle)
