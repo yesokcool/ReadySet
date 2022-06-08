@@ -85,13 +85,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         
         for _ in 0..<3 {
             if deck.count > 0 {
-                // Discard cards in a set
-                if (!selectedCards.isEmpty && selectedCards[0].isPartOfSet == true.intValue) {
-                    for c in selectedCards {
-                        cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!)
-                    }
-                    selectedCards = []
-                }
                 // Deal card
                 cardsInPlay.append(deck.removeFirst())
             }
@@ -145,6 +138,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                         return true
                     }
                     setIndices[cardIndex] += 1
+                    cheatIndices = setIndices
                     print("Loop 7")
                 }
             }
@@ -158,6 +152,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                 else {
                     print("Loop 4")
                     setIndices[cardIndex] += 1
+                    cheatIndices = setIndices
                     if (checkIfSetIsAvailable(cardIndex: cardIndex)) {
                         return true
                     }
@@ -168,6 +163,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
             print("Loop 8")
             print("\(setIndices)")
             setIndices[cardIndex] = 0
+            cheatIndices = setIndices
         }
         
         return false
@@ -221,6 +217,8 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
             choose(cardsInPlay[3])
             choose(cardsInPlay[0])
         }*/
+        
+        cheatMode = false
 
         gameComplete = false
     }
@@ -267,7 +265,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     selectedCards.append(chosen)
                     resetIndices()
                     print(checkIfSetIsAvailable(cardIndex: 0))
-                    cheatIndices = setIndices
+                    // cheatIndices = setIndices may not be needed because moving this to the algo
                     checkIfGameIsCompleted()
                 }
                 // Set selected is not an actual set
@@ -310,10 +308,17 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                                 selectedCards[i].isPartOfSet = true.intValue
                             }
                             
-                            if (!cheatMode) {
+                            if !cheatMode {
                                 if twoPlayerMode {
-                                    if turnPlayerTwo { scorePlayerTwo += scoreModifier * 5 }
-                                    else { score += scoreModifier * 5 }
+                                    if turnPlayerTwo {
+                                        scorePlayerTwo += scoreModifier * 5
+                                    }
+                                    else {
+                                        score += scoreModifier * 5
+                                    }
+                                }
+                                else {
+                                    score += scoreModifier * 5
                                 }
                                 
                                 if score > highScore {

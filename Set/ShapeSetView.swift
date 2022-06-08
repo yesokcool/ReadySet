@@ -26,6 +26,7 @@ struct ShapeSetView: View {
                 
                 if game.cheatMode() {
                     showSolutions
+                        .font(DrawingConstants.smallestFontSize)
                 }
                 
                 cards
@@ -127,6 +128,7 @@ struct ShapeSetView: View {
             Spacer()
             Button {
                 game.dealThree()
+                _ = game.checkIfSetIsAvailable()
             } label: {
                 buttonBuilder()
             }
@@ -155,12 +157,13 @@ struct ShapeSetView: View {
                     Text("\(game.getHighScore()) \n\(game.anotherRandomScoringText)")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
+                        .fixedSize()
                 }
                 .foregroundColor(game.getHighScore() == game.getScore() &&
                                  game.getHighScore() != 0 ?
                                  Color.orange : Color.blue)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 20)
+                
             Spacer()
             VStack {
                     Group {
@@ -171,13 +174,15 @@ struct ShapeSetView: View {
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
                         .multilineTextAlignment(.center)
+                        .fixedSize()
                 }
                 .foregroundColor(game.getHighScore() == game.getScore() &&
                                  game.getHighScore() != 0 ?
                                  Color.orange : Color.blue)
+                
             }
         }
-        .padding(.horizontal, 10.0)
+        .padding(.horizontal, 40.0)
         .padding(.top, 5.0)
     }
     
@@ -187,16 +192,15 @@ struct ShapeSetView: View {
             .fontWeight(.bold)
             .foregroundColor(.blue)
             .padding(.all, 6.0)
+            .multilineTextAlignment(.center)
     }
     
     var showSolutions: some View {
         if game.setAvailable() {
             return Text("\(game.cheatIndices().description)")
-                .font(DrawingConstants.scoreFontSize)
-                .fontWeight(.semibold)
+
         }
         return Text("No sets!")
-            .font(DrawingConstants.scoreFontSize)
             .fontWeight(.semibold)
     }
     
@@ -211,6 +215,7 @@ struct ShapeSetView: View {
                      : "\(game.getScore()) \(game.anotherRandomScoringText)" )
                     .font(DrawingConstants.scoreFontSize)
                     .fontWeight(.semibold)
+                    .fixedSize()
             }
             .foregroundColor(game.getHighScore() == game.getScore() &&
                              game.getHighScore() != 0 ?
@@ -276,6 +281,7 @@ struct ShapeSetView: View {
         static let controlButtonWidth: CGFloat = 35.0
         static let controlSpacing: CGFloat = 10.0
         static let scoreFontSize = Font.caption
+        static let smallestFontSize = Font.footnote
     }
 }
 
@@ -300,7 +306,7 @@ struct CardView: View {
         }
     }
     
-    ///    Colorblind palette sourced from the article:
+    ///    Colorblind palette source:
     ///    **What to consider when visualizing data for colorblind readers**
     ///    *by Lisa Charlotte Muth*
     

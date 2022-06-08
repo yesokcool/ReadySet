@@ -102,8 +102,13 @@ class ShapeSetGame: ObservableObject {
         game.setAvailable()
     }
     
+    func checkIfSetIsAvailable() -> Bool {
+        game.resetIndices()
+        return game.checkIfSetIsAvailable(cardIndex: 0)
+    }
+    
     func cheatToggle() {
-    game.cheatModeToggle()
+        game.cheatModeToggle()
     }
     
     func cheatMode() -> Bool {
