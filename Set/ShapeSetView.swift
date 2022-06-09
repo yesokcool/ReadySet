@@ -3,8 +3,7 @@ import SwiftUI
 
 struct ShapeSetView: View {
     @ObservedObject var game: ShapeSetGame
-    
-    // TODO: Make text pull from a library of possible texts randomly for each game
+    @Namespace private var dealingNamespace
     // TODO: Add some ways to speed up the game. Like if you match multiple sets quickly, you get a special vision that shows you sets to match and matching them has an intense POWERFUL-feeling animation, screen shake, pop up text saying quake-like stuff like unstoppable, particles of randomized emojis like cows etc. And if you keep matching fast, it keeps the mode going.
     // TODO: Add animation when breaking high score
     var body: some View {
@@ -13,8 +12,7 @@ struct ShapeSetView: View {
                 if game.twoPlayers() {
                     multiplayerScoreAndControls(player1: false, color: .mint)
                         .rotationEffect(Angle.degrees(180))
-                }
-                else {
+                } else {
                     score
                     Divider().overlay(.blue)
                 }
@@ -37,36 +35,45 @@ struct ShapeSetView: View {
                     if game.twoPlayers() {
                         multiplayerScoreAndControls(player1: true, color: .blue)
                     }
-                    
                     controls
                 }
             }.foregroundColor(.primary)
-        }
-        else {
+        } else {
             gameComplete
         }
     }
     
-    
-    
-    @ViewBuilder func buttonBuilder() -> some View {
-        if (game.deckEmpty()) {
-            Image(systemName: "square.stack.3d.down.right.fill")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: DrawingConstants.controlButtonWidth)
-                .opacity(0)
-        }
-        else {
-            Image(systemName: "square.stack.3d.down.right.fill")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: DrawingConstants.controlButtonWidth)
-        }
+    private func dealAnimation(for card: ShapeSetGame.Card, index: Int) -> Animation {
+        let delay = Double(index) * (CardConstants.totalDealDuration / Double(game.getCardsInPlay().count))
+        return Animation.easeInOut(duration: CardConstants.dealDuration).delay(delay)
     }
     
-    // TODO: Make more functions (like when filling the button) so code and viewmodifers don't have to be repeated.
-    // TODO: Make a scoreBuilder function.
+    private func zIndex(of card: ShapeSetGame.Card) -> Double {
+        -Double(game.getDeck().firstIndex(where: { $0.id == card.id}) ?? 0)
+    }
+    
+    var deckBody: some View {
+        ZStack {
+            ForEach(game.getDeck().filter( { !$0.isInPlay } )) { card in
+                CardView(card: card)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
+            }
+        }
+        .onTapGesture {
+            for i in 0..<3 {
+                withAnimation(dealAnimation(for: game.getDeck()[game.getDeck().count - 1], index: i)) {
+                        game.deal()
+                }
+            }
+            _ = game.checkIfSetIsAvailable()
+        }
+        .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
+        .padding(.horizontal)
+    }
+    
+    // TODO: Make function for filling the buttons
+    
     var controls: some View {
         HStack() {
             Button {
@@ -126,12 +133,7 @@ struct ShapeSetView: View {
                     .frame(width: DrawingConstants.controlButtonWidth)
             }
             Spacer()
-            Button {
-                game.dealThree()
-                _ = game.checkIfSetIsAvailable()
-            } label: {
-                buttonBuilder()
-            }
+            deckBody
         }
         .padding(.horizontal, 35.0)
         .padding(.vertical, 10.0)
@@ -140,10 +142,19 @@ struct ShapeSetView: View {
     
     var cards: some View {
         AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
-            CardView(card: card, colorblindMode: game.colorblindMode)
-                .padding(4)
-                .onTapGesture {
-                    game.choose(card)
+            if !card.isInPlay {
+                Color.clear
+            } else {
+                CardView(card: card, colorblindMode: game.colorblindMode)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .padding(4)
+                    .transition(AnyTransition.asymmetric(insertion: .identity, removal: .opacity))
+                    .zIndex(zIndex(of: card))
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            game.choose(card)
+                        }
+                }
             }
         }
     }
@@ -224,8 +235,7 @@ struct ShapeSetView: View {
             Button {
                 if player1 {
                     game.turnToPlayerOne()
-                }
-                else {
+                } else {
                     game.turnToPlayerTwo()
                 }
             } label: {
@@ -283,6 +293,16 @@ struct ShapeSetView: View {
         static let scoreFontSize = Font.caption
         static let smallestFontSize = Font.footnote
     }
+    
+    private struct CardConstants {
+        static let color = Color.red
+        static let aspectRatio: CGFloat = 2/3
+        static let dealDuration: Double = 0.5
+        static let totalDealDuration: Double = 2.0
+        static let undealtHeight: CGFloat = 90
+        static let undealtWidth = undealtHeight * aspectRatio
+     }
+
 }
 
 struct CardView: View {
@@ -320,8 +340,7 @@ struct CardView: View {
                 default:
                     return .green
             }
-        }
-        else {
+        } else {
             switch color {
                 case 0:
                 return Color.init(hue: 0.58, saturation: 1.0, brightness: 0.88)
@@ -347,8 +366,7 @@ struct CardView: View {
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(getColor(card.traits[3].type))
                             .frame(maxHeight: rectangleHeight)
-                    }
-                    else if card.traits[2].type == 1 {
+                    } else if card.traits[2].type == 1 {
                         WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(getColor(card.traits[3].type))
@@ -361,20 +379,18 @@ struct CardView: View {
                                     .striped(geometry: geometry)
                                     .frame(maxHeight: rectangleHeight)
                             }
-                        }
-                    else {
-                        WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
-                            .fill()
-                            .foregroundColor(getColor(card.traits[3].type))
-                            .frame(maxHeight: rectangleHeight)
+                        } else {
+                            WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
+                                .fill()
+                                .foregroundColor(getColor(card.traits[3].type))
+                                .frame(maxHeight: rectangleHeight)
                     }
                 case 1:
                     if card.traits[2].type == 2 {
                         Squiggle()
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(getColor(card.traits[3].type))
-                    }
-                    else if card.traits[2].type == 1 {
+                    } else if card.traits[2].type == 1 {
                         Squiggle()
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(getColor(card.traits[3].type))
@@ -385,8 +401,7 @@ struct CardView: View {
                                     //.opacity(getOpacity(card.traits[2].type))
                                     .striped(geometry: geometry)
                             }
-                    }
-                    else {
+                    } else {
                         Squiggle()
                             .fill()
                             .foregroundColor(getColor(card.traits[3].type))
@@ -396,8 +411,7 @@ struct CardView: View {
                         Diamond(size: 5)
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(getColor(card.traits[3].type))
-                    }
-                    else if card.traits[2].type == 1 {
+                    } else if card.traits[2].type == 1 {
                         Diamond(size:5)
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(getColor(card.traits[3].type))
@@ -408,8 +422,7 @@ struct CardView: View {
                                     //.opacity(getOpacity(card.traits[2].type))
                                     .striped(geometry: geometry)
                             }
-                    }
-                    else {
+                    } else {
                         Diamond(size:5)
                             .fill()
                             .foregroundColor(getColor(card.traits[3].type))

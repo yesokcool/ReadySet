@@ -49,7 +49,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         newGame()
     }
     
-    // TODO: Void function just returning? Good style?
+    // TODO: Void function just returning? Better way to do this?
     // Recursively iterate through a multi-dimensional array of unknown size.
     private mutating func createDeck(currentTrait dimension: Int) {
         if deck.count > deckSize {
@@ -77,21 +77,19 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     
     // TODO: Perhaps could be deal any the game wants to.
     
-    // Deals 3 cards from the shuffled deck.
-    mutating func dealThree(wasPressed: Bool = false) -> Bool {
+    // Deals 1 card from the deck.
+    mutating func deal(wasPressed: Bool = false) -> Bool {
         if (setAvailable() && wasPressed) {
             scoreModifier = 0
         }
-        
-        for _ in 0..<3 {
-            if deck.count > 0 {
-                // Deal card
-                cardsInPlay.append(deck.removeFirst())
-            }
-            else {
-                return false
-            }
+        if deck.count > 0 {
+            // Deal card
+            cardsInPlay.append(deck.removeFirst())
+            cardsInPlay[cardsInPlay.count - 1].isInPlay = true
+        } else {
+            return false
         }
+        
         return true
     }
     
@@ -141,15 +139,13 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     cheatIndices = setIndices
                     print("Loop 7")
                 }
-            }
-            else {
+            } else {
                 print("Loop 2")
                 if (Set(setIndices).count == setIndices.count
                     && isSet(setFromIndices(with: setIndices))) {
                     print("Loop3")
                     return true
-                }
-                else {
+                } else {
                     print("Loop 4")
                     setIndices[cardIndex] += 1
                     cheatIndices = setIndices
@@ -158,8 +154,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     }
                 }
             }
-        }
-        else {
+        } else {
             print("Loop 8")
             print("\(setIndices)")
             setIndices[cardIndex] = 0
@@ -224,8 +219,8 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     }
     
     mutating func startingDeal() {
-        for _ in 1...4 {
-            _ = dealThree()
+        for _ in 1...12 {
+            _ = deal()
         }
     }
     
@@ -267,9 +262,8 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     print(checkIfSetIsAvailable(cardIndex: 0))
                     // cheatIndices = setIndices may not be needed because moving this to the algo
                     checkIfGameIsCompleted()
-                }
                 // Set selected is not an actual set
-                else {
+                } else {
                     for c in selectedCards {
                         let i = cardsInPlay.firstIndex(of: c)!
                         cardsInPlay[i].isSelected = false
@@ -280,18 +274,16 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     selectedCards.append(cardsInPlay[chosenIndex])
                     scoreModifier = 0
                 }
-            }
             // Set is not selected
-            else {
+            } else {
                 // Deselection
                 if (selectedCards.contains(cardsInPlay[chosenIndex])) {
                     antiCheat = true
                     let i = selectedCards.firstIndex(of: cardsInPlay[chosenIndex])!
                     cardsInPlay[chosenIndex].isSelected = false
                     selectedCards.remove(at: i)
-                }
                 // Selection
-                else {
+                } else {
                     if (!cheatMode) {
                         scoreModifier += calculateScoreModifier()
                     }
@@ -312,12 +304,10 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                                 if twoPlayerMode {
                                     if turnPlayerTwo {
                                         scorePlayerTwo += scoreModifier * 5
-                                    }
-                                    else {
+                                    } else {
                                         score += scoreModifier * 5
                                     }
-                                }
-                                else {
+                                } else {
                                     score += scoreModifier * 5
                                 }
                                 
@@ -328,9 +318,8 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                             
                             // Last set made and game complete
                             checkIfGameIsCompleted()
-                        }
                         // Set is not a set
-                        else {
+                        } else {
                             for (i, c) in selectedCards.enumerated() {
                                 cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = false.intValue
                                 selectedCards[i].isPartOfSet = false.intValue
@@ -381,14 +370,10 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         return Set(traitTypes).count == 1 || Set(traitTypes).count == traitTypes.count
     }
     
-    // TODO: If there are cards left but no sets possible, how to handle?
-    // Just to check the game for any possible sets seems expensive.
-    // But if you could check it and there were not sets, it would be
-    // the same result as game being completed.
-    
     struct CustomShapeCard: Identifiable, Equatable, Hashable {
         var isPartOfSet = false.none
         var isSelected = false
+        var isInPlay = false
         let traits: [CardContent]
         let id: Int
     }
