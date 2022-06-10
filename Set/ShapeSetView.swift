@@ -184,19 +184,19 @@ struct ShapeSetView: View {
                     .frame(width: DrawingConstants.controlButtonWidth)
             }
             Spacer()
-            pushButtonBuilder(withImage: Image(systemName: "circle.hexagongrid.circle.fill"),
+            pushButton(withImage: Image(systemName: "circle.hexagongrid.circle.fill"),
                               whenPressedIs: Image(systemName: "circle.hexagongrid.circle"),
                               whichDoes: game.toggleColorblindAssistance,
                               checksWith: game.isUsingColorblindAssistance,
                               color1: .blue)
             Spacer()
-            pushButtonBuilder(withImage: Image(systemName: "person.2.circle.fill"),
+            pushButton(withImage: Image(systemName: "person.2.circle.fill"),
                               whenPressedIs: Image(systemName: "person.2.circle"),
                               whichDoes: game.toggleMultiplayer,
                               checksWith: game.isMultiplayer(),
                               color1: .blue)
             Spacer()
-            pushButtonBuilder(withImage: Image(systemName: "magnifyingglass.circle.fill"),
+            pushButton(withImage: Image(systemName: "magnifyingglass.circle.fill"),
                               whenPressedIs: Image(systemName: "magnifyingglass.circle"),
                               whichDoes: game.toggleCheatVision,
                               checksWith: game.hasCheatVision(),
@@ -208,7 +208,7 @@ struct ShapeSetView: View {
         .foregroundColor(.blue)
     }
     
-    func pushButtonBuilder(withImage buttonImage: Image, whenPressedIs buttonImageWhenPressed: Image,
+    func pushButton(withImage buttonImage: Image, whenPressedIs buttonImageWhenPressed: Image,
                            whichDoes function: @escaping () -> Void, checksWith conditional: Bool? = nil,
                            color1: Color, color2: Color? = nil) -> some View {
         return Button {
