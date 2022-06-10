@@ -115,6 +115,26 @@ struct ShapeSetView: View {
         .padding(.horizontal)
     }
     
+    func cardXOffset(at index: Int) -> CGFloat {
+        switch index {
+        case 1:
+            return 0.0
+        case 2:
+            return CardConstants.stackXOffset
+        default:
+            return -CardConstants.stackXOffset
+        }
+    }
+    
+    func cardYOffset(at index: Int) -> CGFloat {
+        switch index {
+        case 1:
+            return 0.0
+        default:
+            return CardConstants.stackYOffset * 2
+        }
+    }
+    
     var discardBody: some View {
         ZStack {
             ForEach(game.getSetsMade(), id: \.self) { aSet in
@@ -122,10 +142,7 @@ struct ShapeSetView: View {
                     CardView(card: card, isFaceUp: isFaceUp(card) )
                         .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                         .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
-                        .offset(
-                            aSet.firstIndex(of: card)! == 1 ?
-                            aSet.firstIndex(of: card)! == 2 ? :
-                                x: 5.0 * CGFloat(aSet.firstIndex(of: card)!), y: -5.0 * CGFloat(aSet.firstIndex(of: card)!))
+                        .offset(x: cardXOffset(at: aSet.firstIndex(of: card)!), y: cardYOffset(at: aSet.firstIndex(of: card)!))
                 }
             }
         }
@@ -138,6 +155,7 @@ struct ShapeSetView: View {
     var controls: some View {
         HStack() {
             discardBody
+            Spacer()
             Button {
                 game.newGame()
             } label: {
@@ -194,7 +212,6 @@ struct ShapeSetView: View {
                     .foregroundColor(.blue)
                     .frame(width: DrawingConstants.controlButtonWidth)
             }
-            Spacer()
             deckBody
         }
         .padding(.horizontal, 35.0)
@@ -353,7 +370,7 @@ struct ShapeSetView: View {
     struct DrawingConstants {
         static let flagWidth: CGFloat = 80.0
         static let controlButtonWidth: CGFloat = 35.0
-        static let controlSpacing: CGFloat = 10.0
+        static let controlSpacing: CGFloat = 8.0
         static let scoreFontSize = Font.caption
         static let smallestFontSize = Font.footnote
     }
@@ -365,6 +382,8 @@ struct ShapeSetView: View {
         static let totalDealDuration: Double = 2.0
         static let undealtHeight: CGFloat = 90
         static let undealtWidth = undealtHeight * aspectRatio
+        static let stackXOffset = 10.0
+        static let stackYOffset = 6.0
      }
 
 }
@@ -431,25 +450,25 @@ struct CardView: View {
                         WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(getColor(card.traits[3].type))
-                            .frame(maxHeight: rectangleHeight)
+                            .frame(maxHeight: abs(rectangleHeight))
                     } else if card.traits[2].type == 1 {
                         WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(getColor(card.traits[3].type))
-                            .frame(maxHeight: rectangleHeight)
+                            .frame(maxHeight: abs(rectangleHeight))
                             .background() {
                                 WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                                     .fill()
                                     .foregroundColor(getColor(card.traits[3].type))
                                     //.opacity(getOpacity(card.traits[2].type))
                                     .striped(geometry: geometry)
-                                    .frame(maxHeight: rectangleHeight)
+                                    .frame(maxHeight: abs(rectangleHeight))
                             }
                         } else {
                             WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                                 .fill()
                                 .foregroundColor(getColor(card.traits[3].type))
-                                .frame(maxHeight: rectangleHeight)
+                                .frame(maxHeight: abs(rectangleHeight))
                     }
                 case 1:
                     if card.traits[2].type == 2 {
