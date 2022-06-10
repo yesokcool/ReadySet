@@ -4,21 +4,22 @@ An educational project and game based on the card-based "Set" that supports as m
 
 ## Features:
 - The full game of Set
-- Support for adding as many "traits" as desired (traits can be visualized as anything, like Shapes, Shadings, Numbers, Colors, etc.)
+- Support for adding as many "traits" as desired (traits can be visualized as anything, like Shapes, Shadings, Numbers, Colors, and so on)
 - Support for adding as many "trait types" as desired (types are just integer values and can be visualized as anything, like a Shape trait having the types of Triangle, Circle, Squiggle, Diamond, and so on)
 - Score modifier that rewards faster set matching
 - Two-player mode
-    - Compete for a high score.
-    - Build up or take down the score modifier together.
-    - Time your calls to steal points from your opponent.
-        - Or be civilized and create your own rules!
+    - Compete for a high score!
+    - Build up or take down the score modifier together!
+    - Time your flags to steal points from your opponent!
+        - Or pretend to be civilized and create your own rules!
+- Fun animations
 - Auto-solving (cheat) mode
 - Color-blind accessibility
+- Randomized flavor text
 
 ## Future features:
-- Randomized text
-- Speed mode
-- Call cooldown
+- READY, SET mode (fun mode)
+- Flag cooldown
 
 ## Topics Covered:
 - MVVM
