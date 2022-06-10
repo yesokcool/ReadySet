@@ -184,58 +184,51 @@ struct ShapeSetView: View {
                     .frame(width: DrawingConstants.controlButtonWidth)
             }
             Spacer()
-            Button {
-                game.toggleColorblindAssistance()
-            } label: {
-                game.isUsingColorblindAssistance ?
-                    Image(systemName: "circle.hexagongrid.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.blue)
-                        .frame(width: DrawingConstants.controlButtonWidth)
-                    : Image(systemName: "circle.hexagongrid.circle")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.blue)
-                        .frame(width: DrawingConstants.controlButtonWidth)
-            }
+            pushButtonBuilder(withImage: Image(systemName: "circle.hexagongrid.circle.fill"),
+                              whenPressedIs: Image(systemName: "circle.hexagongrid.circle"),
+                              whichDoes: game.toggleColorblindAssistance,
+                              checksWith: game.isUsingColorblindAssistance,
+                              color1: .blue)
             Spacer()
-            Button {
-                game.toggleMultiplayer()
-            } label: {
-                game.isMultiplayer() ?
-                    Image(systemName: "person.2.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.blue)
-                        .frame(width: DrawingConstants.controlButtonWidth)
-                    : Image(systemName: "person.2.circle")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.blue)
-                        .frame(width: DrawingConstants.controlButtonWidth)
-            }
+            pushButtonBuilder(withImage: Image(systemName: "person.2.circle.fill"),
+                              whenPressedIs: Image(systemName: "person.2.circle"),
+                              whichDoes: game.toggleMultiplayer,
+                              checksWith: game.isMultiplayer(),
+                              color1: .blue)
             Spacer()
-            Button {
-                game.toggleCheatVision()
-            } label: {
-                game.hasCheatVision() ?
-                Image(systemName: "magnifyingglass.circle.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.red)
-                    .frame(width: DrawingConstants.controlButtonWidth)
-                : Image(systemName: "magnifyingglass.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.blue)
-                    .frame(width: DrawingConstants.controlButtonWidth)
-            }
+            pushButtonBuilder(withImage: Image(systemName: "magnifyingglass.circle.fill"),
+                              whenPressedIs: Image(systemName: "magnifyingglass.circle"),
+                              whichDoes: game.toggleCheatVision,
+                              checksWith: game.hasCheatVision(),
+                              color1: .red, color2: .blue)
             deckOfCards
         }
         .padding(.horizontal, 35.0)
         .padding(.vertical, 10.0)
         .foregroundColor(.blue)
+    }
+    
+    func pushButtonBuilder(withImage buttonImage: Image, whenPressedIs buttonImageWhenPressed: Image,
+                           whichDoes function: @escaping () -> Void, checksWith conditional: Bool? = nil,
+                           color1: Color, color2: Color? = nil) -> some View {
+        return Button {
+            function()
+        } label: {
+            if let conditional = conditional {
+                conditional ?
+                buttonImage
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(color1)
+                    .frame(width: DrawingConstants.controlButtonWidth)
+                :
+                buttonImageWhenPressed
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(color2 ?? color1)
+                    .frame(width: DrawingConstants.controlButtonWidth)
+            }
+        }
     }
         
     var scoreboard: some View {

@@ -9,7 +9,7 @@ class ShapeSetGame: ObservableObject {
     typealias Card = SetGame<Trait>.CustomShapeCard
     
     @Published private var game: SetGame<Trait>
-    @Published private(set) var         isUsingColorblindAssistance: Bool = false
+    @Published private(set) var isUsingColorblindAssistance: Bool = false
     private(set) var randomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
     private(set) var anotherRandomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
     private(set) var randomScoreModifierText = SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
