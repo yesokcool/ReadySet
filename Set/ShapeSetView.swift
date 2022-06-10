@@ -6,6 +6,7 @@ struct ShapeSetView: View {
     @Namespace private var dealingNamespace
     // TODO: Add some ways to speed up the game. Like if you match multiple sets quickly, you get a special vision that shows you sets to match and matching them has an intense POWERFUL-feeling animation, screen shake, pop up text saying quake-like stuff like unstoppable, particles of randomized emojis like cows etc. And if you keep matching fast, it keeps the mode going.
     // TODO: Add animation when breaking high score
+    // Aaa
     // TODO: Add shuffle button for fun?
     var body: some View {
         if !game.gameComplete() {
