@@ -128,10 +128,12 @@ struct ShapeSetView: View {
     
     func cardYOffset(at index: Int) -> CGFloat {
         switch index {
-        case 1:
-            return 0.0
-        default:
+        case 0:
             return CardConstants.stackYOffset * 2
+        case 1:
+            return -CardConstants.stackYOffset
+        default:
+            return CardConstants.stackYOffset * 4
         }
     }
     
@@ -229,7 +231,7 @@ struct ShapeSetView: View {
                     .padding(4)
                     .transition(AnyTransition.asymmetric(insertion: .identity, removal: .opacity))
                     .zIndex(zIndex(of: card))
-                    .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: card.isPartOfSet)
+                    .animation(Animation.spring(), value: card.isPartOfSet)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             game.choose(card)

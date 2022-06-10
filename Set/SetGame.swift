@@ -75,6 +75,17 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         }
     }
     
+    mutating func clearSelectedSet() {
+        var discardedSet: [CustomShapeCard] = []
+        if (!selectedCards.isEmpty && selectedCards[0].isPartOfSet == true.intValue) {
+             for c in selectedCards {
+                 discardedSet.append(cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!))
+             }
+             selectedCards = []
+         }
+        setsMade.append(discardedSet)
+    }
+    
     // TODO: Perhaps could be deal any the game wants to.
     
     // Deals 1 card from the deck.
@@ -82,6 +93,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         if (setAvailable() && wasPressed) {
             scoreModifier = 0
         }
+        
+        // When a set is selected and Deal is pressed
+        // this will handle the selected set and
+        // remove as in the choose function.
+        clearSelectedSet()
         
         if deck.count > 0 {
             // Deal card
@@ -235,12 +251,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     cardsInPlay[chosenIndex].isSelected = true
                     // Choose new card, discard set
                     let chosen = cardsInPlay[chosenIndex]
-                    var discardedSet: [CustomShapeCard] = []
-                    for c in selectedCards {
-                        discardedSet.append(cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!))
-                    }
-                    setsMade.append(discardedSet)
-                    selectedCards = []
+                    clearSelectedSet()
                     selectedCards.append(chosen)
                     resetIndices()
                     print(checkIfSetIsAvailable(cardIndex: 0))
