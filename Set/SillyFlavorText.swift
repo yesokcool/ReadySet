@@ -16,7 +16,6 @@ struct SillyText {
         "GOOD HAIR DAYS",
         "ICE CREAM TUBS",
         "idk",
-        "lols",
         "cats. just cats"
     ]
     

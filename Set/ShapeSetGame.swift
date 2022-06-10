@@ -5,8 +5,7 @@
 import Foundation
 import SwiftUI
 
-class ShapeSetGame: ObservableObject
-{
+class ShapeSetGame: ObservableObject {
     typealias Card = SetGame<Trait>.CustomShapeCard
     
     @Published private var game: SetGame<Trait>
@@ -15,56 +14,46 @@ class ShapeSetGame: ObservableObject
     private(set) var anotherRandomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
     private(set) var randomScoreModifierText = SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
     
-    init(_ one:Int, _ two:Int, _ three:Int)
-    {
+    init(_ one:Int, _ two:Int, _ three:Int) {
         game = SetGame(numberOfTraits: one, numberOfTraitTypes: two, setsOf: three)
     }
     
-    func getCardsInPlay() -> [Card]
-    {
+    func getCardsInPlay() -> [Card] {
         return game.cardsInPlay
     }
     
-    func getDeck() -> [Card]
-    {
+    func getDeck() -> [Card] {
         return game.deck
     }
     
-    func choose(_ card: Card)
-    {
+    func choose(_ card: Card) {
         game.choose(card)
     }
     
-    func newGame()
-    {
+    func newGame() {
         game.newGame()
         randomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
         anotherRandomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
         randomScoreModifierText = SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
     }
     
-    func deal()
-    {
+    func deal() {
         _ = game.deal(wasPressed: true)
     }
     
-    func getScore() -> Int
-    {
+    func getScore() -> Int {
         return game.score
     }
     
-    func getHighScore() -> Int
-    {
+    func getHighScore() -> Int {
         return game.highScore
     }
     
-    func getScoreModifier() -> Int
-    {
+    func getScoreModifier() -> Int {
         return game.scoreModifier
     }
     
-    func cheatIndices() -> [Int]
-    {
+    func cheatIndices() -> [Int] {
         return game.cheatIndices
     }
     
@@ -78,78 +67,63 @@ class ShapeSetGame: ObservableObject
         return game.deck.isEmpty
     }
     
-    func gameComplete() -> Bool
-    {
+    func gameComplete() -> Bool {
         return game.gameComplete
     }
     
-    func twoPlayerMode()
-    {
+    func twoPlayerMode() {
         game.twoPlayerToggle()
     }
     
-    func twoPlayers() -> Bool
-    {
+    func twoPlayers() -> Bool {
         return game.twoPlayerMode
     }
     
-    func getScorePlayerTwo() -> Int
-    {
+    func getScorePlayerTwo() -> Int {
         return game.scorePlayerTwo
     }
     
-    func turnToPlayerOne()
-    {
+    func turnToPlayerOne() {
         game.turnToPlayerOne()
     }
     
-    func turnToPlayerTwo()
-    {
+    func turnToPlayerTwo() {
         game.turnToPlayerTwo()
     }
     
-    func isPlayerOneTurn() -> Bool
-    {
+    func isPlayerOneTurn() -> Bool {
         return !game.turnPlayerTwo
     }
     
-    func shuffle()
-    {
+    func shuffle() {
         game.shuffle()
     }
     
-    func setAvailable() -> Bool
-    {
+    func setAvailable() -> Bool {
         game.setAvailable()
     }
     
-    func checkIfSetIsAvailable() -> Bool
-    {
+    func checkIfSetIsAvailable() -> Bool {
         game.resetIndices()
         return game.checkIfSetIsAvailable(cardIndex: 0)
     }
     
-    func cheatToggle()
-    {
+    func cheatToggle() {
         game.cheatModeToggle()
     }
     
-    func cheatMode() -> Bool
-    {
+    func cheatMode() -> Bool {
         return game.cheatMode
     }
     
-    func colorblindToggle()
-    {
+    func colorblindToggle() {
         colorblindMode.toggle()
     }
     
-    struct Trait: Equatable, Traitable, Hashable
-    {
+    struct Trait: Equatable, Traitable, Hashable {
         let type: Int
         
-        init(_ trait: Int, _ type: Int)
-        {
+        init(_ trait: Int, _ type: Int) {
             self.type = type
         }
     }

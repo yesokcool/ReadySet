@@ -6,6 +6,7 @@ struct ShapeSetView: View {
     @Namespace private var dealingNamespace
     // TODO: Add some ways to speed up the game. Like if you match multiple sets quickly, you get a special vision that shows you sets to match and matching them has an intense POWERFUL-feeling animation, screen shake, pop up text saying quake-like stuff like unstoppable, particles of randomized emojis like cows etc. And if you keep matching fast, it keeps the mode going.
     // TODO: Add animation when breaking high score
+    // TODO: Add shuffle button for fun?
     var body: some View {
         if !game.gameComplete() {
             VStack {
@@ -43,10 +44,35 @@ struct ShapeSetView: View {
         }
     }
     
+    @State private var dealt = Set<Int>()
+    @State private var faceUp = Set<Int>()
+    
+    private func deal(_ card: ShapeSetGame.Card) {
+        dealt.insert(card.id)
+    }
+    
+    private func isUndealt(_ card: ShapeSetGame.Card) -> Bool {
+        !dealt.contains(card.id)
+    }
+    
+    private func faceUp(_ card: ShapeSetGame.Card) {
+        faceUp.insert(card.id)
+    }
+    
+    private func isFaceUp(_ card: ShapeSetGame.Card) -> Bool {
+        faceUp.contains(card.id)
+    }
+    
     private func dealAnimation(for card: ShapeSetGame.Card, index: Int) -> Animation {
-        let delay = Double(index) * (CardConstants.totalDealDuration / Double(game.getCardsInPlay().count))
+        let delay = Double(index + 1) * (CardConstants.totalDealDuration / Double(game.getDeck().count))
         return Animation.easeInOut(duration: CardConstants.dealDuration).delay(delay)
     }
+    
+    /*private func flipAnimation(for card: ShapeSetGame.Card, index: Int) -> Animation {
+        //let delay = Double(index * 1) * (CardConstants.totalDealDuration / Double(game.getDeck().count))
+        let duration = CardConstants.dealDuration / Double(index + 1)
+        return Animation.easeInOut(duration: duration) //.delay(5.0)
+    }*/
     
     private func zIndex(of card: ShapeSetGame.Card) -> Double {
         -Double(game.getDeck().firstIndex(where: { $0.id == card.id}) ?? 0)
@@ -54,16 +80,33 @@ struct ShapeSetView: View {
     
     var deckBody: some View {
         ZStack {
-            ForEach(game.getDeck().filter( { !$0.isInPlay } )) { card in
-                CardView(card: card)
+            ForEach(game.getDeck().filter( { isUndealt($0) } ).reversed()) { card in
+                CardView(card: card, isFaceUp: isFaceUp(card) )
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
             }
         }
         .onTapGesture {
-            for i in 0..<3 {
-                withAnimation(dealAnimation(for: game.getDeck()[game.getDeck().count - 1], index: i)) {
+            // starting deal
+            if game.getCardsInPlay().count == 0 {
+                for i in 0..<12 {
+                    withAnimation(dealAnimation(for: game.getDeck()[game.getDeck().count - 1], index: i)) {
                         game.deal()
+                        deal(game.getCardsInPlay()[game.getCardsInPlay().count - 1])
+                    }
+                }
+            // normal deal 3
+            } else {
+                for i in 0..<3 {
+                    withAnimation(dealAnimation(for: game.getDeck()[game.getDeck().count - 1], index: i)) {
+                        game.deal()
+                        deal(game.getCardsInPlay()[game.getCardsInPlay().count - 1])
+                    }
+                }
+            }
+            for card in game.getCardsInPlay() {
+                withAnimation(Animation.easeInOut(duration: CardConstants.dealDuration).delay(0.5)) {
+                    faceUp(card)
                 }
             }
             _ = game.checkIfSetIsAvailable()
@@ -142,10 +185,10 @@ struct ShapeSetView: View {
     
     var cards: some View {
         AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
-            if !card.isInPlay {
+            if isUndealt(card) {
                 Color.clear
             } else {
-                CardView(card: card, colorblindMode: game.colorblindMode)
+                CardView(card: card, colorblindMode: game.colorblindMode, isFaceUp: isFaceUp(card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .padding(4)
                     .transition(AnyTransition.asymmetric(insertion: .identity, removal: .opacity))
@@ -157,6 +200,7 @@ struct ShapeSetView: View {
                 }
             }
         }
+        
     }
         
     var score: some View {
@@ -308,10 +352,12 @@ struct ShapeSetView: View {
 struct CardView: View {
     let card: ShapeSetGame.Card
     let colorblindMode: Bool
+    let isFaceUp: Bool
     
-    init(card: ShapeSetGame.Card, colorblindMode: Bool = false) {
+    init(card: ShapeSetGame.Card, colorblindMode: Bool = false, isFaceUp: Bool) {
         self.card = card
         self.colorblindMode = colorblindMode
+        self.isFaceUp = isFaceUp
     }
     
     var body: some View {
@@ -322,7 +368,7 @@ struct CardView: View {
                 }
             }
             .padding(8.0)
-            .cardify(card: card)
+            .cardify(card: card, isFaceUp: isFaceUp)
         }
     }
     

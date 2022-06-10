@@ -82,10 +82,10 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         if (setAvailable() && wasPressed) {
             scoreModifier = 0
         }
+        
         if deck.count > 0 {
             // Deal card
             cardsInPlay.append(deck.removeFirst())
-            cardsInPlay[cardsInPlay.count - 1].isInPlay = true
         } else {
             return false
         }
@@ -126,10 +126,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     }
     
     mutating func checkIfSetIsAvailable(cardIndex: Int) -> Bool {
-        print("\(setIndices)")
-        print("\(cardsInPlay.count)")
         if setIndices[cardIndex] < cardsInPlay.count {
-            print("Loop 1")
             if cardIndex < numberOfCardsInASet - 1 {
                 for _ in 0..<cardsInPlay.count {
                     if (checkIfSetIsAvailable(cardIndex: cardIndex + 1)) {
@@ -137,16 +134,12 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     }
                     setIndices[cardIndex] += 1
                     cheatIndices = setIndices
-                    print("Loop 7")
                 }
             } else {
-                print("Loop 2")
                 if (Set(setIndices).count == setIndices.count
                     && isSet(setFromIndices(with: setIndices))) {
-                    print("Loop3")
                     return true
                 } else {
-                    print("Loop 4")
                     setIndices[cardIndex] += 1
                     cheatIndices = setIndices
                     if (checkIfSetIsAvailable(cardIndex: cardIndex)) {
@@ -155,8 +148,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                 }
             }
         } else {
-            print("Loop 8")
-            print("\(setIndices)")
             setIndices[cardIndex] = 0
             cheatIndices = setIndices
         }
@@ -191,8 +182,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         // debug deck.removeSubrange(3..<deck.count)
         fixedDeck = deck
         
-        startingDeal()
-        
         score = 0
         scoreModifier = 0
         antiCheat = false
@@ -218,12 +207,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         gameComplete = false
     }
     
-    mutating func startingDeal() {
-        for _ in 1...12 {
-            _ = deal()
-        }
-    }
-    
     mutating func checkIfGameIsCompleted() {
         if (deck.isEmpty &&
             (selectedCards.count == cardsInPlay.count ||
@@ -231,7 +214,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
             !checkIfSetIsAvailable(cardIndex: 0))) {
             cardsInPlay = []
             gameComplete = true
-            print("GAME COMPLETE!!")
         }
     }
     
@@ -287,13 +269,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     if (!cheatMode) {
                         scoreModifier += calculateScoreModifier()
                     }
-                    print("Choosing \(card)!")
                     cardsInPlay[chosenIndex].isSelected = true
                     selectedCards.append(cardsInPlay[chosenIndex])
                     if selectedCards.count >= numberOfCardsInASet {
                         if isSet(selectedCards) {
                             // Set is a set
-                            print("IS A SET!")
                             setsMade.append(selectedCards)
                             for (i, c) in selectedCards.enumerated() {
                                 cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = true.intValue
@@ -373,7 +353,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     struct CustomShapeCard: Identifiable, Equatable, Hashable {
         var isPartOfSet = false.none
         var isSelected = false
-        var isInPlay = false
         let traits: [CardContent]
         let id: Int
     }
