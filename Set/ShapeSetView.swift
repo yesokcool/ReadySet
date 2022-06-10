@@ -115,10 +115,29 @@ struct ShapeSetView: View {
         .padding(.horizontal)
     }
     
+    var discardBody: some View {
+        ZStack {
+            ForEach(game.getSetsMade(), id: \.self) { aSet in
+                ForEach(aSet) { card in
+                    CardView(card: card, isFaceUp: isFaceUp(card) )
+                        .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                        .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
+                        .offset(
+                            aSet.firstIndex(of: card)! == 1 ?
+                            aSet.firstIndex(of: card)! == 2 ? :
+                                x: 5.0 * CGFloat(aSet.firstIndex(of: card)!), y: -5.0 * CGFloat(aSet.firstIndex(of: card)!))
+                }
+            }
+        }
+        .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
+        .padding(.horizontal)
+    }
+    
     // TODO: Make function for filling the buttons
     
     var controls: some View {
         HStack() {
+            discardBody
             Button {
                 game.newGame()
             } label: {
@@ -193,6 +212,7 @@ struct ShapeSetView: View {
                     .padding(4)
                     .transition(AnyTransition.asymmetric(insertion: .identity, removal: .opacity))
                     .zIndex(zIndex(of: card))
+                    .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: card.isPartOfSet)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             game.choose(card)

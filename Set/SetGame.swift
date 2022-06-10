@@ -235,9 +235,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     cardsInPlay[chosenIndex].isSelected = true
                     // Choose new card, discard set
                     let chosen = cardsInPlay[chosenIndex]
+                    var discardedSet: [CustomShapeCard] = []
                     for c in selectedCards {
-                        cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!)
+                        discardedSet.append(cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!))
                     }
+                    setsMade.append(discardedSet)
                     selectedCards = []
                     selectedCards.append(chosen)
                     resetIndices()
@@ -274,7 +276,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     if selectedCards.count >= numberOfCardsInASet {
                         if isSet(selectedCards) {
                             // Set is a set
-                            setsMade.append(selectedCards)
                             for (i, c) in selectedCards.enumerated() {
                                 cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = true.intValue
                                 selectedCards[i].isPartOfSet = true.intValue

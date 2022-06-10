@@ -28,6 +28,7 @@ An educational project and game based on the card-based "Set" that supports as m
 - Closures and closure syntax
 - init functions
 - structs and classes
+- Generics
 - Property Observers
 - Computed Properties
 - @State and @ViewBuilder

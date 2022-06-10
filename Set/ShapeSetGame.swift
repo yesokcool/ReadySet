@@ -19,11 +19,11 @@ class ShapeSetGame: ObservableObject {
     }
     
     func getCardsInPlay() -> [Card] {
-        return game.cardsInPlay
+        game.cardsInPlay
     }
     
     func getDeck() -> [Card] {
-        return game.deck
+        game.deck
     }
     
     func choose(_ card: Card) {
@@ -42,33 +42,31 @@ class ShapeSetGame: ObservableObject {
     }
     
     func getScore() -> Int {
-        return game.score
+        game.score
     }
     
     func getHighScore() -> Int {
-        return game.highScore
+        game.highScore
     }
     
     func getScoreModifier() -> Int {
-        return game.scoreModifier
+        game.scoreModifier
     }
     
     func cheatIndices() -> [Int] {
-        return game.cheatIndices
+        game.cheatIndices
     }
     
-    func isSelected(_ card: Card) -> Bool
-    {
-        return game.selectedCards.contains(where: { $0 == card })
+    func isSelected(_ card: Card) -> Bool {
+        game.selectedCards.contains(where: { $0 == card })
     }
     
-    func deckEmpty() -> Bool
-    {
-        return game.deck.isEmpty
+    func deckEmpty() -> Bool {
+        game.deck.isEmpty
     }
     
     func gameComplete() -> Bool {
-        return game.gameComplete
+        game.gameComplete
     }
     
     func twoPlayerMode() {
@@ -76,11 +74,11 @@ class ShapeSetGame: ObservableObject {
     }
     
     func twoPlayers() -> Bool {
-        return game.twoPlayerMode
+        game.twoPlayerMode
     }
     
     func getScorePlayerTwo() -> Int {
-        return game.scorePlayerTwo
+        game.scorePlayerTwo
     }
     
     func turnToPlayerOne() {
@@ -92,7 +90,7 @@ class ShapeSetGame: ObservableObject {
     }
     
     func isPlayerOneTurn() -> Bool {
-        return !game.turnPlayerTwo
+        !game.turnPlayerTwo
     }
     
     func shuffle() {
@@ -113,11 +111,15 @@ class ShapeSetGame: ObservableObject {
     }
     
     func cheatMode() -> Bool {
-        return game.cheatMode
+        game.cheatMode
     }
     
     func colorblindToggle() {
         colorblindMode.toggle()
+    }
+    
+    func getSetsMade() -> [[Card]] {
+        game.setsMade
     }
     
     struct Trait: Equatable, Traitable, Hashable {
