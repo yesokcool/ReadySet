@@ -11,7 +11,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     private(set) var selectedCards: [CustomShapeCard] = []
     
     // Game definitions
-    private(set) var gameComplete: Bool = false
+    private(set) var complete: Bool = false
     private let numberOfCardsInASet: Int
     private let deckSize: Int
     private let numberOfTraitTypes: Int
@@ -31,12 +31,12 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     private(set) var highScore: Int = 0
     
     // Two-player scoring
-    private(set) var twoPlayerMode: Bool = false
+    private(set) var isMultiplayer: Bool = false
     private(set) var turnPlayerTwo: Bool = false
     private(set) var scorePlayerTwo: Int = 0
     
     // Cheat
-    private(set) var cheatMode: Bool = false
+    private(set) var cheatVision: Bool = false
     
     init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
         self.numberOfTraits = numberOfTraits
@@ -46,7 +46,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         for _ in 0..<numberOfCardsInASet {
             setIndices.append(0)
         }
-        newGame()
+        startNewGame()
     }
     
     // TODO: Void function just returning? Better way to do this?
@@ -77,7 +77,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     
     mutating func clearSelectedSet() {
         var discardedSet: [CustomShapeCard] = []
-        if (!selectedCards.isEmpty && selectedCards[0].isPartOfSet == true.intValue) {
+        if !selectedCards.isEmpty && selectedCards[0].isPartOfSet == true.intValue {
              for c in selectedCards {
                  discardedSet.append(cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!))
              }
@@ -90,7 +90,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     
     // Deals 1 card from the deck.
     mutating func deal(wasPressed: Bool = false) -> Bool {
-        if (setAvailable() && wasPressed) {
+        if setIsAvailable() && wasPressed {
             scoreModifier = 0
         }
         
@@ -109,7 +109,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         return true
     }
     
-    func setAvailable() -> Bool {
+    func setIsAvailable() -> Bool {
         Set(cheatIndices).count == cheatIndices.count
     }
     
@@ -125,12 +125,12 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         turnPlayerTwo = true
     }
     
-    mutating func twoPlayerToggle() {
-        twoPlayerMode.toggle()
+    mutating func toggleMultiplayer() {
+        isMultiplayer.toggle()
     }
     
-    mutating func cheatModeToggle() {
-        cheatMode.toggle()
+    mutating func toggleCheatVision() {
+        cheatVision.toggle()
     }
     
     func setFromIndices(with indices: [Int]) -> [CustomShapeCard] {
@@ -141,24 +141,24 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         return theSet
     }
     
-    mutating func checkIfSetIsAvailable(cardIndex: Int) -> Bool {
+    mutating func lookForSet(cardIndex: Int) -> Bool {
         if setIndices[cardIndex] < cardsInPlay.count {
             if cardIndex < numberOfCardsInASet - 1 {
                 for _ in 0..<cardsInPlay.count {
-                    if (checkIfSetIsAvailable(cardIndex: cardIndex + 1)) {
+                    if lookForSet(cardIndex: cardIndex + 1) {
                         return true
                     }
                     setIndices[cardIndex] += 1
                     cheatIndices = setIndices
                 }
             } else {
-                if (Set(setIndices).count == setIndices.count
-                    && isSet(setFromIndices(with: setIndices))) {
+                if Set(setIndices).count == setIndices.count
+                    && isSet(setFromIndices(with: setIndices)) {
                     return true
                 } else {
                     setIndices[cardIndex] += 1
                     cheatIndices = setIndices
-                    if (checkIfSetIsAvailable(cardIndex: cardIndex)) {
+                    if lookForSet(cardIndex: cardIndex) {
                         return true
                     }
                 }
@@ -182,9 +182,8 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         
         return modifier
     }
-    
-    // TODO: Set it back to shuffle when done debugging.
-    mutating func newGame() {
+
+    mutating func startNewGame() {
         deck = []
         cardsInPlay = []
         setsMade = []
@@ -204,7 +203,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         prevDate = Date()
         
         resetIndices()
-        print(checkIfSetIsAvailable(cardIndex: 0))
+        print(lookForSet(cardIndex: 0))
         cheatIndices = setIndices
         checkIfGameIsCompleted()
         
@@ -218,18 +217,17 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
             choose(cardsInPlay[0])
         }*/
         
-        cheatMode = false
+        cheatVision = false
 
-        gameComplete = false
+        complete = false
     }
     
     mutating func checkIfGameIsCompleted() {
-        if (deck.isEmpty &&
-            (selectedCards.count == cardsInPlay.count ||
-             cardsInPlay.count < numberOfCardsInASet ||
-            !checkIfSetIsAvailable(cardIndex: 0))) {
+        if  deck.isEmpty && (selectedCards.count == cardsInPlay.count ||
+                             cardsInPlay.count < numberOfCardsInASet ||
+                             !lookForSet(cardIndex: 0)) {
             cardsInPlay = []
-            gameComplete = true
+            complete = true
         }
     }
     
@@ -243,7 +241,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
            cardsInPlay[chosenIndex].isPartOfSet != true.intValue {
             // Set is selected
             if selectedCards.count >= numberOfCardsInASet {
-                if !cheatMode {
+                if !cheatVision {
                     scoreModifier += calculateScoreModifier()
                 }
                 // Set selected is an actual set
@@ -254,7 +252,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     clearSelectedSet()
                     selectedCards.append(chosen)
                     resetIndices()
-                    print(checkIfSetIsAvailable(cardIndex: 0))
+                    print(lookForSet(cardIndex: 0))
                     // cheatIndices = setIndices may not be needed because moving this to the algo
                     checkIfGameIsCompleted()
                 // Set selected is not an actual set
@@ -272,14 +270,14 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
             // Set is not selected
             } else {
                 // Deselection
-                if (selectedCards.contains(cardsInPlay[chosenIndex])) {
+                if selectedCards.contains(cardsInPlay[chosenIndex]) {
                     antiCheat = true
                     let i = selectedCards.firstIndex(of: cardsInPlay[chosenIndex])!
                     cardsInPlay[chosenIndex].isSelected = false
                     selectedCards.remove(at: i)
                 // Selection
                 } else {
-                    if (!cheatMode) {
+                    if !cheatVision {
                         scoreModifier += calculateScoreModifier()
                     }
                     cardsInPlay[chosenIndex].isSelected = true
@@ -292,8 +290,8 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                                 selectedCards[i].isPartOfSet = true.intValue
                             }
                             
-                            if !cheatMode {
-                                if twoPlayerMode {
+                            if !cheatVision {
+                                if isMultiplayer {
                                     if turnPlayerTwo {
                                         scorePlayerTwo += scoreModifier * 5
                                     } else {
@@ -324,8 +322,9 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     }
     
     private func isSet(_ setOfCards: [CustomShapeCard]) -> Bool {
-        if setOfCards.count > numberOfCardsInASet
-            || setOfCards.count < numberOfCardsInASet || Set(setOfCards).count < setOfCards.count {
+        if  setOfCards.count > numberOfCardsInASet ||
+            setOfCards.count < numberOfCardsInASet ||
+            Set(setOfCards).count < setOfCards.count {
             return false
         }
         let traits = setOfCards[0].traits

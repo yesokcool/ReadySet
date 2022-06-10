@@ -9,7 +9,7 @@ class ShapeSetGame: ObservableObject {
     typealias Card = SetGame<Trait>.CustomShapeCard
     
     @Published private var game: SetGame<Trait>
-    @Published private(set) var colorblindMode: Bool = false
+    @Published private(set) var         isUsingColorblindAssistance: Bool = false
     private(set) var randomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
     private(set) var anotherRandomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
     private(set) var randomScoreModifierText = SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
@@ -18,11 +18,11 @@ class ShapeSetGame: ObservableObject {
         game = SetGame(numberOfTraits: one, numberOfTraitTypes: two, setsOf: three)
     }
     
-    func getCardsInPlay() -> [Card] {
+    func cardsInPlay() -> [Card] {
         game.cardsInPlay
     }
     
-    func getDeck() -> [Card] {
+    func deck() -> [Card] {
         game.deck
     }
     
@@ -30,8 +30,8 @@ class ShapeSetGame: ObservableObject {
         game.choose(card)
     }
     
-    func newGame() {
-        game.newGame()
+    func startNewGame() {
+        game.startNewGame()
         randomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
         anotherRandomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
         randomScoreModifierText = SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
@@ -41,19 +41,19 @@ class ShapeSetGame: ObservableObject {
         _ = game.deal(wasPressed: true)
     }
     
-    func getScore() -> Int {
+    func score() -> Int {
         game.score
     }
     
-    func getHighScore() -> Int {
+    func highScore() -> Int {
         game.highScore
     }
     
-    func getScoreModifier() -> Int {
+    func scoreModifier() -> Int {
         game.scoreModifier
     }
     
-    func cheatIndices() -> [Int] {
+    func solutions() -> [Int] {
         game.cheatIndices
     }
     
@@ -65,16 +65,16 @@ class ShapeSetGame: ObservableObject {
         game.deck.isEmpty
     }
     
-    func gameComplete() -> Bool {
-        game.gameComplete
+    func complete() -> Bool {
+        game.complete
     }
     
-    func twoPlayerMode() {
-        game.twoPlayerToggle()
+    func toggleMultiplayer() {
+        game.toggleMultiplayer()
     }
     
-    func twoPlayers() -> Bool {
-        game.twoPlayerMode
+    func isMultiplayer() -> Bool {
+        game.isMultiplayer
     }
     
     func getScorePlayerTwo() -> Int {
@@ -97,28 +97,28 @@ class ShapeSetGame: ObservableObject {
         game.shuffle()
     }
     
-    func setAvailable() -> Bool {
-        game.setAvailable()
+    func hasAPossibleSet() -> Bool {
+        game.setIsAvailable()
     }
     
-    func checkIfSetIsAvailable() -> Bool {
+    func lookForSet() {
         game.resetIndices()
-        return game.checkIfSetIsAvailable(cardIndex: 0)
+        _ = game.lookForSet(cardIndex: 0)
     }
     
-    func cheatToggle() {
-        game.cheatModeToggle()
+    func toggleCheatVision() {
+        game.toggleCheatVision()
     }
     
-    func cheatMode() -> Bool {
-        game.cheatMode
+    func hasCheatVision() -> Bool {
+        game.cheatVision
     }
     
-    func colorblindToggle() {
-        colorblindMode.toggle()
+    func toggleColorblindAssistance() {
+        isUsingColorblindAssistance.toggle()
     }
     
-    func getSetsMade() -> [[Card]] {
+    func setsMade() -> [[Card]] {
         game.setsMade
     }
     

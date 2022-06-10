@@ -1,46 +1,48 @@
 
+// TODO: Add some ways to speed up the game. Like if you match multiple sets quickly, you get a special vision that shows you sets to match and matching them has an intense POWERFUL-feeling animation, screen shake, pop up text saying quake-like stuff like unstoppable, particles of randomized emojis like cows etc. And if you keep matching fast, it keeps the mode going. Call this READY, SET, and have it flash on screen, kind of like Super Hot.
+// TODO: Add animation when breaking high score
+// TODO: Add shuffle button for fun?
+
 import SwiftUI
 
 struct ShapeSetView: View {
     @ObservedObject var game: ShapeSetGame
     @Namespace private var dealingNamespace
-    // TODO: Add some ways to speed up the game. Like if you match multiple sets quickly, you get a special vision that shows you sets to match and matching them has an intense POWERFUL-feeling animation, screen shake, pop up text saying quake-like stuff like unstoppable, particles of randomized emojis like cows etc. And if you keep matching fast, it keeps the mode going. Call this READY, SET, and have it flash on screen, kind of like Super Hot.
-    // TODO: Add animation when breaking high score
-    // TODO: Add shuffle button for fun?
+    
     var body: some View {
-        if !game.gameComplete() {
+        if !game.complete() {
             VStack {
-                if game.twoPlayers() {
-                    multiplayerScoreAndControls(player1: false, color: .mint)
+                if game.isMultiplayer() {
+                    multiplayerScoreAndControls(forPlayerOne: false, havingTeamColor: .mint)
                         .rotationEffect(Angle.degrees(180))
                 } else {
-                    score
+                    scoreboard
                     Divider().overlay(.blue)
                 }
                 
-                if !game.twoPlayers() {
+                if !game.isMultiplayer() {
                     scoreModifier
                     Divider().overlay(.blue)
                 }
                 
-                if game.cheatMode() {
+                if game.hasCheatVision() {
                     showSolutions
                         .font(DrawingConstants.smallestFontSize)
                 }
                 
-                cards
+                dealtOutCards
             
                 Spacer()
                 
                 VStack {
-                    if game.twoPlayers() {
-                        multiplayerScoreAndControls(player1: true, color: .blue)
+                    if game.isMultiplayer() {
+                        multiplayerScoreAndControls(forPlayerOne: true, havingTeamColor: .blue)
                     }
-                    controls
+                    bottomControls
                 }
             }.foregroundColor(.primary)
         } else {
-            gameComplete
+            completedGame
         }
     }
     
@@ -51,11 +53,11 @@ struct ShapeSetView: View {
         dealt.insert(card.id)
     }
     
-    private func isUndealt(_ card: ShapeSetGame.Card) -> Bool {
+    private func isNotDealt(_ card: ShapeSetGame.Card) -> Bool {
         !dealt.contains(card.id)
     }
     
-    private func faceUp(_ card: ShapeSetGame.Card) {
+    private func turnFaceUp(_ card: ShapeSetGame.Card) {
         faceUp.insert(card.id)
     }
     
@@ -64,169 +66,16 @@ struct ShapeSetView: View {
     }
     
     private func dealAnimation(for card: ShapeSetGame.Card, index: Int) -> Animation {
-        let delay = Double(index + 1) * (CardConstants.totalDealDuration / Double(game.getDeck().count))
+        let delay = Double(index + 1) * (CardConstants.totalDealDuration / Double(game.deck().count))
         return Animation.easeInOut(duration: CardConstants.dealDuration).delay(delay)
     }
-    
-    /*private func flipAnimation(for card: ShapeSetGame.Card, index: Int) -> Animation {
-        //let delay = Double(index * 1) * (CardConstants.totalDealDuration / Double(game.getDeck().count))
-        let duration = CardConstants.dealDuration / Double(index + 1)
-        return Animation.easeInOut(duration: duration) //.delay(5.0)
-    }*/
-    
-    private func zIndex(of card: ShapeSetGame.Card) -> Double {
-        -Double(game.getDeck().firstIndex(where: { $0.id == card.id}) ?? 0)
-    }
-    
-    var deckBody: some View {
-        ZStack {
-            ForEach(game.getDeck().filter( { isUndealt($0) } ).reversed()) { card in
-                CardView(card: card, isFaceUp: isFaceUp(card) )
-                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                    .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
-            }
-        }
-        .onTapGesture {
-            // starting deal
-            if game.getCardsInPlay().count == 0 {
-                for i in 0..<12 {
-                    withAnimation(dealAnimation(for: game.getDeck()[game.getDeck().count - 1], index: i)) {
-                        game.deal()
-                        deal(game.getCardsInPlay()[game.getCardsInPlay().count - 1])
-                    }
-                }
-            // normal deal 3
-            } else {
-                for i in 0..<3 {
-                    withAnimation(dealAnimation(for: game.getDeck()[game.getDeck().count - 1], index: i)) {
-                        game.deal()
-                        deal(game.getCardsInPlay()[game.getCardsInPlay().count - 1])
-                    }
-                }
-            }
-            for card in game.getCardsInPlay() {
-                withAnimation(Animation.easeInOut(duration: CardConstants.dealDuration).delay(0.5)) {
-                    faceUp(card)
-                }
-            }
-            _ = game.checkIfSetIsAvailable()
-        }
-        .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
-        .padding(.horizontal)
-    }
-    
-    func cardXOffset(at index: Int) -> CGFloat {
-        switch index {
-        case 1:
-            return 0.0
-        case 2:
-            return CardConstants.stackXOffset
-        default:
-            return -CardConstants.stackXOffset
-        }
-    }
-    
-    func cardYOffset(at index: Int) -> CGFloat {
-        switch index {
-        case 0:
-            return CardConstants.stackYOffset * 2
-        case 1:
-            return -CardConstants.stackYOffset
-        default:
-            return CardConstants.stackYOffset * 4
-        }
-    }
-    
-    var discardBody: some View {
-        ZStack {
-            ForEach(game.getSetsMade(), id: \.self) { aSet in
-                ForEach(aSet) { card in
-                    CardView(card: card, isFaceUp: isFaceUp(card) )
-                        .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                        .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
-                        .offset(x: cardXOffset(at: aSet.firstIndex(of: card)!), y: cardYOffset(at: aSet.firstIndex(of: card)!))
-                }
-            }
-        }
-        .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
-        .padding(.horizontal)
-    }
-    
-    // TODO: Make function for filling the buttons
-    
-    var controls: some View {
-        HStack() {
-            discardBody
-            Spacer()
-            Button {
-                game.newGame()
-            } label: {
-                Image(systemName: "arrow.counterclockwise.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: DrawingConstants.controlButtonWidth)
-            }
-            Spacer()
-            Button {
-                game.colorblindToggle()
-            } label: {
-                game.colorblindMode ?
-                    Image(systemName: "circle.hexagongrid.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.blue)
-                        .frame(width: DrawingConstants.controlButtonWidth)
-                    : Image(systemName: "circle.hexagongrid.circle")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.blue)
-                        .frame(width: DrawingConstants.controlButtonWidth)
-            }
-            Spacer()
-            Button {
-                game.twoPlayerMode()
-            } label: {
-                game.twoPlayers() ?
-                    Image(systemName: "person.2.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.blue)
-                        .frame(width: DrawingConstants.controlButtonWidth)
-                    : Image(systemName: "person.2.circle")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.blue)
-                        .frame(width: DrawingConstants.controlButtonWidth)
-            }
-            Spacer()
-            Button {
-                game.cheatToggle()
-            } label: {
-                game.cheatMode() ?
-                Image(systemName: "magnifyingglass.circle.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.red)
-                    .frame(width: DrawingConstants.controlButtonWidth)
-                : Image(systemName: "magnifyingglass.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.blue)
-                    .frame(width: DrawingConstants.controlButtonWidth)
-            }
-            deckBody
-        }
-        .padding(.horizontal, 35.0)
-        .padding(.vertical, 10.0)
-        .foregroundColor(.blue)
-    }
-    
-    var cards: some View {
-        AspectVGrid(items: game.getCardsInPlay(), aspectRatio: 2/3) { card in
-            if isUndealt(card) {
+
+    var dealtOutCards: some View {
+        AspectVGrid(items: game.cardsInPlay(), aspectRatio: 2/3) { card in
+            if isNotDealt(card) {
                 Color.clear
             } else {
-                CardView(card: card, colorblindMode: game.colorblindMode, isFaceUp: isFaceUp(card))
+                CardView(card: card, colorblindMode: game.isUsingColorblindAssistance, isFaceUp: isFaceUp(card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .padding(4)
                     .transition(AnyTransition.asymmetric(insertion: .identity, removal: .opacity))
@@ -241,20 +90,167 @@ struct ShapeSetView: View {
         }
         
     }
+    
+    var deckOfCards: some View {
+        ZStack {
+            ForEach(game.deck().filter( { isNotDealt($0) } ).reversed()) { card in
+                CardView(card: card, isFaceUp: isFaceUp(card) )
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
+            }
+        }
+        .onTapGesture {
+            // starting deal
+            if game.cardsInPlay().count == 0 {
+                for i in 0..<12 {
+                    withAnimation(dealAnimation(for: game.deck()[game.deck().count - 1], index: i)) {
+                        game.deal()
+                        deal(game.cardsInPlay()[game.cardsInPlay().count - 1])
+                    }
+                } // normal deal 3
+            } else {
+                for i in 0..<3 {
+                    withAnimation(dealAnimation(for: game.deck()[game.deck().count - 1], index: i)) {
+                        game.deal()
+                        deal(game.cardsInPlay()[game.cardsInPlay().count - 1])
+                    }
+                }
+            }
+            for card in game.cardsInPlay() {
+                withAnimation(Animation.easeInOut(duration: CardConstants.dealDuration).delay(0.5)) {
+                    turnFaceUp(card)
+                }
+            }
+            game.lookForSet()
+        }
+        .frame(width: CardConstants.notDealtWidth, height: CardConstants.notDealtHeight)
+        .padding(.horizontal)
+    }
+    
+    var discardedCardPile: some View {
+        ZStack {
+            ForEach(game.setsMade(), id: \.self) { aSet in
+                ForEach(aSet) { card in
+                    CardView(card: card, isFaceUp: isFaceUp(card) )
+                        .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                        .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
+                        .offset(x: cardOffset(forCardAtIndex: aSet.firstIndex(of: card)!, along: Axis.horizontal), y: cardOffset(forCardAtIndex: aSet.firstIndex(of: card)!, along: Axis.vertical))
+                }
+            }
+        }
+        .frame(width: CardConstants.notDealtWidth, height: CardConstants.notDealtHeight)
+        .padding(.horizontal)
+    }
+
+    private func zIndex(of card: ShapeSetGame.Card) -> Double {
+        -Double(game.deck().firstIndex(where: { $0.id == card.id}) ?? 0)
+    }
+    
+    func cardOffset(forCardAtIndex index: Int, along axis: Axis) -> CGFloat {
+        switch axis {
+        case Axis.horizontal:
+            switch index {
+                case 1:
+                    return 0.0
+                case 2:
+                    return CardConstants.stackXOffset
+                default:
+                    return -CardConstants.stackXOffset
+            }
+        default:
+            switch index {
+            case 0:
+                return CardConstants.stackYOffset * 2
+            case 1:
+                return -CardConstants.stackYOffset
+            default:
+                return CardConstants.stackYOffset * 4
+            }
+        }
+    }
+    
+    // TODO: Make function for filling the buttons
+    
+    var bottomControls: some View {
+        HStack() {
+            discardedCardPile
+            Spacer()
+            Button {
+                game.startNewGame()
+            } label: {
+                Image(systemName: "arrow.counterclockwise.circle")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: DrawingConstants.controlButtonWidth)
+            }
+            Spacer()
+            Button {
+                game.toggleColorblindAssistance()
+            } label: {
+                game.isUsingColorblindAssistance ?
+                    Image(systemName: "circle.hexagongrid.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.blue)
+                        .frame(width: DrawingConstants.controlButtonWidth)
+                    : Image(systemName: "circle.hexagongrid.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.blue)
+                        .frame(width: DrawingConstants.controlButtonWidth)
+            }
+            Spacer()
+            Button {
+                game.toggleMultiplayer()
+            } label: {
+                game.isMultiplayer() ?
+                    Image(systemName: "person.2.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.blue)
+                        .frame(width: DrawingConstants.controlButtonWidth)
+                    : Image(systemName: "person.2.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.blue)
+                        .frame(width: DrawingConstants.controlButtonWidth)
+            }
+            Spacer()
+            Button {
+                game.toggleCheatVision()
+            } label: {
+                game.hasCheatVision() ?
+                Image(systemName: "magnifyingglass.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.red)
+                    .frame(width: DrawingConstants.controlButtonWidth)
+                : Image(systemName: "magnifyingglass.circle")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.blue)
+                    .frame(width: DrawingConstants.controlButtonWidth)
+            }
+            deckOfCards
+        }
+        .padding(.horizontal, 35.0)
+        .padding(.vertical, 10.0)
+        .foregroundColor(.blue)
+    }
         
-    var score: some View {
+    var scoreboard: some View {
         HStack {
                 VStack {
                     Text("HIGH SCORE")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.semibold)
-                    Text("\(game.getHighScore()) \n\(game.anotherRandomScoringText)")
+                    Text("\(game.highScore()) \n\(game.anotherRandomScoringText)")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
                         .fixedSize()
                 }
-                .foregroundColor(game.getHighScore() == game.getScore() &&
-                                 game.getHighScore() != 0 ?
+                .foregroundColor(game.highScore() == game.score() &&
+                                 game.highScore() != 0 ?
                                  Color.orange : Color.blue)
                 .multilineTextAlignment(.center)
                 
@@ -264,14 +260,14 @@ struct ShapeSetView: View {
                     Text("SCORE")
                             .font(DrawingConstants.scoreFontSize)
                             .fontWeight(.semibold)
-                        Text("\(game.getScore()) \n\(game.randomScoringText)")
+                        Text("\(game.score()) \n\(game.randomScoringText)")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
                         .multilineTextAlignment(.center)
                         .fixedSize()
                 }
-                .foregroundColor(game.getHighScore() == game.getScore() &&
-                                 game.getHighScore() != 0 ?
+                .foregroundColor(game.highScore() == game.score() &&
+                                 game.highScore() != 0 ?
                                  Color.orange : Color.blue)
                 
             }
@@ -281,7 +277,7 @@ struct ShapeSetView: View {
     }
     
     var scoreModifier: some View {
-        Text("\(game.getScoreModifier()) \(game.randomScoreModifierText)")
+        Text("\(game.scoreModifier()) \(game.randomScoreModifierText)")
             .font(DrawingConstants.scoreFontSize)
             .fontWeight(.bold)
             .foregroundColor(.blue)
@@ -290,39 +286,39 @@ struct ShapeSetView: View {
     }
     
     var showSolutions: some View {
-        if game.setAvailable() {
-            return Text("\(game.cheatIndices().description)")
+        if game.hasAPossibleSet() {
+            return Text("\(game.solutions().description)")
 
         }
         return Text("No sets!")
             .fontWeight(.semibold)
     }
     
-    func multiplayerScoreAndControls(player1: Bool, color: Color) -> some View {
+    func multiplayerScoreAndControls(forPlayerOne: Bool, havingTeamColor teamColor: Color) -> some View {
         VStack {
             Group {
                 Text("SCORE: ")
                     .font(DrawingConstants.scoreFontSize)
                     .fontWeight(.heavy)
-                Text(player1 ?
-                     "\(game.getScore()) \(game.randomScoringText)"
-                     : "\(game.getScore()) \(game.anotherRandomScoringText)" )
+                Text(forPlayerOne ?
+                     "\(game.score()) \(game.randomScoringText)"
+                     : "\(game.score()) \(game.anotherRandomScoringText)" )
                     .font(DrawingConstants.scoreFontSize)
                     .fontWeight(.semibold)
                     .fixedSize()
             }
-            .foregroundColor(game.getHighScore() == game.getScore() &&
-                             game.getHighScore() != 0 ?
-                             Color.orange : color)
+            .foregroundColor(game.highScore() == game.score() &&
+                             game.highScore() != 0 ?
+                             Color.orange : teamColor)
             
             Button {
-                if player1 {
+                if forPlayerOne {
                     game.turnToPlayerOne()
                 } else {
                     game.turnToPlayerTwo()
                 }
             } label: {
-                if player1 {
+                if forPlayerOne {
                     !game.isPlayerOneTurn() ?
                     Image(systemName: "flag.circle")
                             .resizable()
@@ -340,21 +336,21 @@ struct ShapeSetView: View {
                             .aspectRatio(contentMode: .fit)
                 }
             }
-            .foregroundColor(color)
+            .foregroundColor(teamColor)
             .frame(width: DrawingConstants.flagWidth)
         }
     }
     
-    var gameComplete: some View {
+    var completedGame: some View {
         VStack {
             Text("GAME COMPLETE!")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-            Text("FINAL SCORE: \(game.getScore())")
+            Text("FINAL SCORE: \(game.score())")
                 .font(.title2)
                 .fontWeight(.semibold)
             Button {
-                game.newGame()
+                game.startNewGame()
             } label: {
                 VStack {
                 Text("NEW GAME?")
@@ -382,8 +378,8 @@ struct ShapeSetView: View {
         static let aspectRatio: CGFloat = 2/3
         static let dealDuration: Double = 0.5
         static let totalDealDuration: Double = 2.0
-        static let undealtHeight: CGFloat = 90
-        static let undealtWidth = undealtHeight * aspectRatio
+        static let notDealtHeight: CGFloat = 90
+        static let notDealtWidth = notDealtHeight * aspectRatio
         static let stackXOffset = 10.0
         static let stackYOffset = 6.0
      }
@@ -392,12 +388,12 @@ struct ShapeSetView: View {
 
 struct CardView: View {
     let card: ShapeSetGame.Card
-    let colorblindMode: Bool
+    let isUsingColorblindAssistance: Bool
     let isFaceUp: Bool
     
     init(card: ShapeSetGame.Card, colorblindMode: Bool = false, isFaceUp: Bool) {
         self.card = card
-        self.colorblindMode = colorblindMode
+        self.isUsingColorblindAssistance = colorblindMode
         self.isFaceUp = isFaceUp
     }
     
@@ -413,13 +409,14 @@ struct CardView: View {
         }
     }
     
-    ///    Colorblind palette source:
-    ///    **What to consider when visualizing data for colorblind readers**
-    ///    *by Lisa Charlotte Muth*
-    
-    func getColor(_ color: Int) -> Color {
-        if !colorblindMode {
-            switch color {
+    //===----------------------------------------------------------------------===//
+    // Colorblind palette source:
+    // What to consider when visualizing data for colorblind readers
+    //  by Lisa Charlotte Muth
+    //===----------------------------------------------------------------------===//
+    func colorForTraitType(_ typeNumber: Int) -> Color {
+        if !isUsingColorblindAssistance {
+            switch typeNumber {
                 case 0:
                     return .cyan
                 case 1:
@@ -428,7 +425,7 @@ struct CardView: View {
                     return .green
             }
         } else {
-            switch color {
+            switch typeNumber {
                 case 0:
                 return Color.init(hue: 0.58, saturation: 1.0, brightness: 0.88)
                 case 1:
@@ -451,17 +448,17 @@ struct CardView: View {
                     if card.traits[2].type == 2 {
                         WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(getColor(card.traits[3].type))
+                            .foregroundColor(colorForTraitType(card.traits[3].type))
                             .frame(maxHeight: abs(rectangleHeight))
                     } else if card.traits[2].type == 1 {
                         WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(getColor(card.traits[3].type))
+                            .foregroundColor(colorForTraitType(card.traits[3].type))
                             .frame(maxHeight: abs(rectangleHeight))
                             .background() {
                                 WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                                     .fill()
-                                    .foregroundColor(getColor(card.traits[3].type))
+                                    .foregroundColor(colorForTraitType(card.traits[3].type))
                                     //.opacity(getOpacity(card.traits[2].type))
                                     .striped(geometry: geometry)
                                     .frame(maxHeight: abs(rectangleHeight))
@@ -469,50 +466,50 @@ struct CardView: View {
                         } else {
                             WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                                 .fill()
-                                .foregroundColor(getColor(card.traits[3].type))
+                                .foregroundColor(colorForTraitType(card.traits[3].type))
                                 .frame(maxHeight: abs(rectangleHeight))
                     }
                 case 1:
                     if card.traits[2].type == 2 {
                         Squiggle()
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(getColor(card.traits[3].type))
+                            .foregroundColor(colorForTraitType(card.traits[3].type))
                     } else if card.traits[2].type == 1 {
                         Squiggle()
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(getColor(card.traits[3].type))
+                            .foregroundColor(colorForTraitType(card.traits[3].type))
                             .background() {
                                 Squiggle()
                                     .fill()
-                                    .foregroundColor(getColor(card.traits[3].type))
+                                    .foregroundColor(colorForTraitType(card.traits[3].type))
                                     //.opacity(getOpacity(card.traits[2].type))
                                     .striped(geometry: geometry)
                             }
                     } else {
                         Squiggle()
                             .fill()
-                            .foregroundColor(getColor(card.traits[3].type))
+                            .foregroundColor(colorForTraitType(card.traits[3].type))
                     }
                 default:
                     if card.traits[2].type == 2 {
                         Diamond(size: 5)
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(getColor(card.traits[3].type))
+                            .foregroundColor(colorForTraitType(card.traits[3].type))
                     } else if card.traits[2].type == 1 {
                         Diamond(size:5)
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(getColor(card.traits[3].type))
+                            .foregroundColor(colorForTraitType(card.traits[3].type))
                             .background() {
                                 Diamond(size:5)
                                     .fill()
-                                    .foregroundColor(getColor(card.traits[3].type))
+                                    .foregroundColor(colorForTraitType(card.traits[3].type))
                                     //.opacity(getOpacity(card.traits[2].type))
                                     .striped(geometry: geometry)
                             }
                     } else {
                         Diamond(size:5)
                             .fill()
-                            .foregroundColor(getColor(card.traits[3].type))
+                            .foregroundColor(colorForTraitType(card.traits[3].type))
                     }
             }
         }
