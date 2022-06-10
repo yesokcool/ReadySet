@@ -17,12 +17,14 @@ struct ShapeSetView: View {
                         .rotationEffect(Angle.degrees(180))
                 } else {
                     scoreboard
-                    Divider().overlay(.blue)
+                    Divider()
+                        .overlay(.blue)
                 }
                 
                 if !game.isMultiplayer() {
                     scoreModifier
-                    Divider().overlay(.blue)
+                    Divider()
+                        .overlay(.blue)
                 }
                 
                 if game.hasCheatVision() {
@@ -40,7 +42,8 @@ struct ShapeSetView: View {
                     }
                     bottomControls
                 }
-            }.foregroundColor(.primary)
+            }
+            .foregroundColor(.primary)
         } else {
             completedGame
         }
@@ -129,12 +132,12 @@ struct ShapeSetView: View {
     
     var discardedCardPile: some View {
         ZStack {
-            ForEach(game.setsMade(), id: \.self) { aSet in
-                ForEach(aSet) { card in
+            ForEach(game.setsMade(), id: \.self) { theSet in
+                ForEach(theSet) { card in
                     CardView(card: card, isFaceUp: isFaceUp(card) )
                         .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                         .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
-                        .offset(x: cardOffset(forCardAtIndex: aSet.firstIndex(of: card)!, along: Axis.horizontal), y: cardOffset(forCardAtIndex: aSet.firstIndex(of: card)!, along: Axis.vertical))
+                        .offset(x: cardOffset(forCardAtIndex: theSet.firstIndex(of: card)!, along: Axis.horizontal), y: cardOffset(forCardAtIndex: theSet.firstIndex(of: card)!, along: Axis.vertical))
                 }
             }
         }
@@ -186,18 +189,21 @@ struct ShapeSetView: View {
             Spacer()
             pushButton(withImage: Image(systemName: "circle.hexagongrid.circle.fill"),
                               whenPressedIs: Image(systemName: "circle.hexagongrid.circle"),
+                              withImageWidth: DrawingConstants.controlButtonWidth,
                               whichDoes: game.toggleColorblindAssistance,
                               checksWith: game.isUsingColorblindAssistance,
                               color1: .blue)
             Spacer()
             pushButton(withImage: Image(systemName: "person.2.circle.fill"),
                               whenPressedIs: Image(systemName: "person.2.circle"),
+                              withImageWidth: DrawingConstants.controlButtonWidth,
                               whichDoes: game.toggleMultiplayer,
                               checksWith: game.isMultiplayer(),
                               color1: .blue)
             Spacer()
             pushButton(withImage: Image(systemName: "magnifyingglass.circle.fill"),
                               whenPressedIs: Image(systemName: "magnifyingglass.circle"),
+                              withImageWidth: DrawingConstants.controlButtonWidth,
                               whichDoes: game.toggleCheatVision,
                               checksWith: game.hasCheatVision(),
                               color1: .red, color2: .blue)
@@ -208,7 +214,7 @@ struct ShapeSetView: View {
         .foregroundColor(.blue)
     }
     
-    func pushButton(withImage buttonImage: Image, whenPressedIs buttonImageWhenPressed: Image,
+    func pushButton(withImage buttonImage: Image, whenPressedIs buttonImageWhenPressed: Image, withImageWidth width: CGFloat,
                            whichDoes function: @escaping () -> Void, checksWith conditional: Bool? = nil,
                            color1: Color, color2: Color? = nil) -> some View {
         return Button {
@@ -220,13 +226,13 @@ struct ShapeSetView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(color1)
-                    .frame(width: DrawingConstants.controlButtonWidth)
+                    .frame(width: width)
                 :
                 buttonImageWhenPressed
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(color2 ?? color1)
-                    .frame(width: DrawingConstants.controlButtonWidth)
+                    .frame(width: width)
             }
         }
     }
@@ -304,33 +310,12 @@ struct ShapeSetView: View {
                              game.highScore() != 0 ?
                              Color.orange : teamColor)
             
-            Button {
-                if forPlayerOne {
-                    game.turnToPlayerOne()
-                } else {
-                    game.turnToPlayerTwo()
-                }
-            } label: {
-                if forPlayerOne {
-                    !game.isPlayerOneTurn() ?
-                    Image(systemName: "flag.circle")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    : Image(systemName: "flag.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                } else {
-                    game.isPlayerOneTurn() ?
-                    Image(systemName: "flag.circle")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    : Image(systemName: "flag.circle.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                }
-            }
-            .foregroundColor(teamColor)
-            .frame(width: DrawingConstants.flagWidth)
+            pushButton(withImage: Image(systemName: "flag.circle"),
+                              whenPressedIs: Image(systemName: "flag.circle.fill"),
+                              withImageWidth: DrawingConstants.flagWidth,
+                              whichDoes: (forPlayerOne ? game.turnToPlayerOne : game.turnToPlayerTwo),
+                              checksWith: (forPlayerOne ? !game.isPlayerOneTurn() : game.isPlayerOneTurn()),
+                              color1: teamColor)
         }
     }
     
