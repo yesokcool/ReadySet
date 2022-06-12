@@ -23,6 +23,7 @@ struct Cardify: AnimatableModifier {
                 if card.isPartOfSet == true.intValue {
                     shape.stroke(lineWidth: DrawingConstants.selectionWidth)
                         .foregroundColor(.green)
+                        .transition(AnyTransition.scale)
                 } else if card.isPartOfSet == false.intValue {
                     shape.stroke(lineWidth: DrawingConstants.selectionWidth)
                         .foregroundColor(.red)
