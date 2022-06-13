@@ -23,12 +23,14 @@ struct Cardify: AnimatableModifier {
                 if card.isPartOfSet == true.intValue {
                     shape.stroke(lineWidth: DrawingConstants.selectionWidth)
                         .foregroundColor(.green)
-                        .transition(AnyTransition.scale)
+                        .shadow(color: .green, radius: DrawingConstants.glowRadius)
                 } else if card.isPartOfSet == false.intValue {
                     shape.stroke(lineWidth: DrawingConstants.selectionWidth)
                         .foregroundColor(.red)
+                        .shadow(color: .red, radius: DrawingConstants.glowRadius)
                 } else if card.isSelected {
                     shape.stroke(lineWidth: DrawingConstants.selectionWidth)
+                        .shadow(color: .yellow, radius: DrawingConstants.glowRadius)
                         .foregroundColor(.yellow)
                 } else {
                     shape.stroke(lineWidth: DrawingConstants.lineWidth)
@@ -47,6 +49,7 @@ struct Cardify: AnimatableModifier {
         static let cornerRadius: CGFloat = 10
         static let lineWidth: CGFloat = 3
         static let selectionWidth: CGFloat = 6
+        static let glowRadius: CGFloat = 10
     }
 }
 
