@@ -176,8 +176,8 @@ struct ShapeSetView: View {
     
     var bottomControls: some View {
         HStack() {
-            discardedCardPile
             Spacer()
+            discardedCardPile
             Button {
                 game.startNewGame()
             } label: {
@@ -186,21 +186,18 @@ struct ShapeSetView: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: DrawingConstants.controlButtonWidth)
             }
-            Spacer()
             pushButton(withImage: Image(systemName: "circle.hexagongrid.circle.fill"),
                               whenPressedIs: Image(systemName: "circle.hexagongrid.circle"),
                               withImageWidth: DrawingConstants.controlButtonWidth,
                               whichDoes: game.toggleColorblindAssistance,
                               checksWith: game.isUsingColorblindAssistance,
                               color1: .blue)
-            Spacer()
             pushButton(withImage: Image(systemName: "person.2.circle.fill"),
                               whenPressedIs: Image(systemName: "person.2.circle"),
                               withImageWidth: DrawingConstants.controlButtonWidth,
                               whichDoes: game.toggleMultiplayer,
                               checksWith: game.isMultiplayer(),
                               color1: .blue)
-            Spacer()
             pushButton(withImage: Image(systemName: "magnifyingglass.circle.fill"),
                               whenPressedIs: Image(systemName: "magnifyingglass.circle"),
                               withImageWidth: DrawingConstants.controlButtonWidth,
@@ -208,6 +205,7 @@ struct ShapeSetView: View {
                               checksWith: game.hasCheatVision(),
                               color1: .red, color2: .blue)
             deckOfCards
+            Spacer()
         }
         .padding(.horizontal, 35.0)
         .padding(.vertical, 10.0)
