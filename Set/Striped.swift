@@ -3,11 +3,11 @@ import SwiftUI
 
 struct Striped: ViewModifier {
     let geometry: GeometryProxy
+    let color: Color
     
     func body(content: Content) -> some View {
         ZStack {
-            content
-            makeStripes()
+            makeStripes().mask(content)
         }
     }
     
@@ -16,7 +16,7 @@ struct Striped: ViewModifier {
         HStack(spacing: abs(geometry.size.width) * 0.04) {
             ForEach(0 ..< Int(abs(numberOfStripes)), id: \.self) { _ in
                 Rectangle()
-                    .foregroundColor(.white)
+                    .foregroundColor(color)
                     .frame(maxWidth: abs(geometry.size.width))
             }
         }
@@ -24,7 +24,7 @@ struct Striped: ViewModifier {
 }
 
 extension View {
-    func striped(geometry: GeometryProxy) -> some View {
-        self.modifier(Striped(geometry: geometry))
+    func striped(geometry: GeometryProxy, color: Color) -> some View {
+        self.modifier(Striped(geometry: geometry, color: color))
     }
 }

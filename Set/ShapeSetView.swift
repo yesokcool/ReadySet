@@ -438,7 +438,7 @@ struct CardView: View {
                                     .fill()
                                     .foregroundColor(colorForTraitType(card.traits[3].type))
                                     //.opacity(getOpacity(card.traits[2].type))
-                                    .striped(geometry: geometry)
+                                    .striped(geometry: geometry, color: colorForTraitType(card.traits[3].type))
                                     .frame(maxHeight: abs(rectangleHeight))
                             }
                         } else {
@@ -461,7 +461,7 @@ struct CardView: View {
                                     .fill()
                                     .foregroundColor(colorForTraitType(card.traits[3].type))
                                     //.opacity(getOpacity(card.traits[2].type))
-                                    .striped(geometry: geometry)
+                                    .striped(geometry: geometry, color: colorForTraitType(card.traits[3].type))
                             }
                     } else {
                         Squiggle()
@@ -482,7 +482,7 @@ struct CardView: View {
                                     .fill()
                                     .foregroundColor(colorForTraitType(card.traits[3].type))
                                     //.opacity(getOpacity(card.traits[2].type))
-                                    .striped(geometry: geometry)
+                                    .striped(geometry: geometry, color: colorForTraitType(card.traits[3].type))
                             }
                     } else {
                         Diamond(size:5)
