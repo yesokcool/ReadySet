@@ -40,6 +40,7 @@ struct ShapeSetView: View {
                 }
                 
                 dealtOutCards
+                    .padding(.bottom, -120)
             
                 Spacer()
                 
