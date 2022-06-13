@@ -15,8 +15,9 @@ struct SillyText {
         "TURTLES LIKED",
         "GOOD HAIR DAYS",
         "ICE CREAM TUBS",
-        "idk",
-        "cats. just cats"
+        "BALLOONS",
+        "BUBBLES",
+        "Cats. Just cats"
     ]
     
     static let scoringModifier =

@@ -13,14 +13,8 @@ class ShapeSetGame: ObservableObject {
     private(set) var randomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
     private(set) var anotherRandomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
     private(set) var randomScoreModifierText = SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
-    private(set) var numberOfTraits: Int
-    private(set) var numberOfTraitTypes: Int
-    private(set) var numberOfCardsInASet: Int
     
     init(numberOfTraits: Int, numberOfTraitTypes: Int, withSetsOf numberOfCardsInASet: Int) {
-        self.numberOfTraits = numberOfTraits
-        self.numberOfTraitTypes = numberOfTraitTypes
-        self.numberOfCardsInASet = numberOfCardsInASet
         game = SetGame(numberOfTraits: numberOfTraits, numberOfTraitTypes: numberOfTraitTypes, withSetsOf: numberOfCardsInASet)
     }
     
@@ -37,7 +31,7 @@ class ShapeSetGame: ObservableObject {
     }
     
     func startNewGame() {
-        game = SetGame(numberOfTraits: numberOfTraits, numberOfTraitTypes: numberOfTraitTypes, withSetsOf: numberOfCardsInASet)
+        game.startNewGame()
         randomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
         anotherRandomScoringText = SillyText.scoringText[Int.random(in: 0 ..< SillyText.scoringText.count)]
         randomScoreModifierText = SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
