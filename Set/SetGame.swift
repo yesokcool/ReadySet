@@ -193,7 +193,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         resetIndices()
         
         createDeck(currentTrait: 0)
-        deck.shuffle()
+        //deck.shuffle()
         // debug deck.removeSubrange(3..<deck.count)
         fixedDeck = deck
         
