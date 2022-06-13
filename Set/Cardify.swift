@@ -30,8 +30,8 @@ struct Cardify: AnimatableModifier {
                         .shadow(color: .red, radius: DrawingConstants.glowRadius)
                 } else if card.isSelected {
                     shape.stroke(lineWidth: DrawingConstants.selectionWidth)
-                        .shadow(color: .yellow, radius: DrawingConstants.glowRadius)
                         .foregroundColor(.yellow)
+                        .shadow(color: .yellow, radius: DrawingConstants.glowRadius)
                 } else {
                     shape.stroke(lineWidth: DrawingConstants.lineWidth)
                 }
@@ -41,7 +41,9 @@ struct Cardify: AnimatableModifier {
             }
             content
                 .rotationEffect(Angle.degrees(card.isPartOfSet != false.none ? 360 : 0))
-                .animation(card.isPartOfSet != false.none ? Animation.linear(duration: card.isPartOfSet == true.intValue ? 0.5 : 5.0).repeatForever(autoreverses: false) : Animation.linear(duration: 0.5), value: card.isPartOfSet)
+                .animation(card.isPartOfSet != false.none ?
+                           Animation.linear(duration: card.isPartOfSet == true.intValue ? 0.5 : 5.0).repeatForever(autoreverses: false)
+                           : Animation.linear(duration: 0.5), value: card.isPartOfSet)
                 .opacity(rotation < 90 ? 1 : 0)
         }
         .rotation3DEffect(Angle.degrees(rotation), axis: (0,1,0))
@@ -51,7 +53,7 @@ struct Cardify: AnimatableModifier {
         static let cornerRadius: CGFloat = 10
         static let lineWidth: CGFloat = 3
         static let selectionWidth: CGFloat = 6
-        static let glowRadius: CGFloat = 10
+        static let glowRadius: CGFloat = 9
     }
 }
 
