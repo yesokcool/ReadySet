@@ -77,7 +77,7 @@ struct ShapeSetView: View {
     }
     
     private func dealAnimation(for card: ShapeSetGame.Card, index: Int) -> Animation {
-        let delay = Double(index + 1) * (CardConstants.totalDealDuration / Double(game.deck().count))
+        let delay = (Double(index) * 0.02) * (CardConstants.totalDealDuration)
         return Animation.easeInOut(duration: CardConstants.dealDuration).delay(delay)
     }
 
