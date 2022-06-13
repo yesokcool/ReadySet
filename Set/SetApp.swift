@@ -5,7 +5,7 @@ import SwiftUI
 struct SetApp: App {
     var body: some Scene {
         WindowGroup {
-            ShapeSetView(game: ShapeSetGame(4, 3, 3))
+            ShapeSetView(game: ShapeSetGame(numberOfTraits: 4, numberOfTraitTypes: 3, withSetsOf: 3))
         }
     }
 }

@@ -88,8 +88,7 @@ struct ShapeSetView: View {
                 CardView(card: card, colorblindMode: game.isUsingColorblindAssistance, isFaceUp: isFaceUp(card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .padding(4)
-                    .transition(AnyTransition.asymmetric(insertion: .identity, removal: .opacity))
-                    .zIndex(zIndex(of: card))
+                    .transition(AnyTransition.identity)
                     .animation(Animation.spring(), value: card.isPartOfSet)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.5)) {
@@ -152,9 +151,9 @@ struct ShapeSetView: View {
         .padding(.horizontal)
     }
 
-    private func zIndex(of card: ShapeSetGame.Card) -> Double {
+    /*private func zIndex(of card: ShapeSetGame.Card) -> Double {
         -Double(game.deck().firstIndex(where: { $0.id == card.id}) ?? 0)
-    }
+    }*/
     
     func cardOffset(forCardAtIndex index: Int, along axis: Axis) -> CGFloat {
         switch axis {
@@ -187,6 +186,8 @@ struct ShapeSetView: View {
             discardedCardPile
             Button {
                 game.startNewGame()
+                dealt = []
+                faceUp = []
             } label: {
                 Image(systemName: "arrow.counterclockwise.circle")
                     .resizable()
@@ -334,6 +335,8 @@ struct ShapeSetView: View {
                 .fontWeight(.semibold)
             Button {
                 game.startNewGame()
+                dealt = []
+                faceUp = []
             } label: {
                 VStack {
                 Text("NEW GAME?")
@@ -501,7 +504,7 @@ struct CardView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        let game = ShapeSetGame(4, 3, 3)
+        let game = ShapeSetGame(numberOfTraits: 4, numberOfTraitTypes: 3, withSetsOf: 3)
         return ShapeSetView(game: game).preferredColorScheme(.light)
     }
 }

@@ -38,7 +38,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     // Cheat
     private(set) var cheatVision: Bool = false
     
-    init(numberOfTraits: Int, numberOfTraitTypes: Int, setsOf numberOfCardsInASet: Int) {
+    init(numberOfTraits: Int, numberOfTraitTypes: Int, withSetsOf numberOfCardsInASet: Int) {
         self.numberOfTraits = numberOfTraits
         self.numberOfTraitTypes = numberOfTraitTypes
         self.deckSize = Int(pow(Double(numberOfTraitTypes), Double(numberOfTraits)))
