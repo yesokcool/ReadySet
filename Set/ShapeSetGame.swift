@@ -37,6 +37,14 @@ class ShapeSetGame: ObservableObject {
         randomScoreModifierText = SillyText.scoringModifier[Int.random(in: 0 ..< SillyText.scoringModifier.count)]
     }
     
+    func clearSelectedSet() {
+        game.clearSelectedSet()
+    }
+    
+    func selectedCards() -> [Card] {
+        game.selectedCards
+    }
+    
     func deal() {
         _ = game.deal(wasPressed: true)
     }
@@ -104,6 +112,10 @@ class ShapeSetGame: ObservableObject {
     func lookForSet() {
         game.resetIndices()
         _ = game.lookForSet(cardIndex: 0)
+    }
+    
+    func hasASetSelected() -> Bool {
+        return !game.selectedCards.isEmpty && (game.selectedCards[0].isPartOfSet == true.intValue)
     }
     
     func toggleCheatVision() {

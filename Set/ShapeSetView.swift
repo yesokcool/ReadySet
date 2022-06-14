@@ -114,14 +114,24 @@ struct ShapeSetView: View {
             // starting deal
             if game.cardsInPlay().count == 0 {
                 for i in 0..<12 {
-                    withAnimation(dealAnimation(for: game.deck()[game.deck().count - 1], index: i)) {
+                    withAnimation(dealAnimation(for: game.deck()[game.deck().count - 1], index: i) ) {
+                        game.clearSelectedSet()
                         game.deal()
                         deal(game.cardsInPlay()[game.cardsInPlay().count - 1])
                     }
                 } // normal deal 3
             } else {
+                var justMadeASet: Bool
+                if game.hasASetSelected() {
+                    justMadeASet = true
+                } else {
+                    justMadeASet = false
+                }
+                withAnimation(Animation.easeInOut) {
+                    game.clearSelectedSet()
+                }
                 for i in 0..<3 {
-                    withAnimation(dealAnimation(for: game.deck()[game.deck().count - 1], index: i)) {
+                    withAnimation(dealAnimation(for: game.deck()[game.deck().count - 1], index: i).delay(justMadeASet ? 0.5 : 0) ){
                         game.deal()
                         deal(game.cardsInPlay()[game.cardsInPlay().count - 1])
                     }

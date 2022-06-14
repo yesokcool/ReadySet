@@ -95,11 +95,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
             scoreModifier = 0
         }
         
-        // When a set is selected and Deal is pressed
-        // this will handle the selected set and
-        // remove as in the choose function.
-        clearSelectedSet()
-        
         if deck.count > 0 {
             // Deal card
             cardsInPlay.append(deck.removeFirst())
