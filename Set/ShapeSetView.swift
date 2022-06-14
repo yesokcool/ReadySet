@@ -9,6 +9,7 @@
 // player 2 score going up when not their turn
 // text shadow / glow effect, maybe the rainbow effect
 // cards should be dealt out over scroll view
+// stripes disappear at largest size
 
 import SwiftUI
 
@@ -90,9 +91,9 @@ struct ShapeSetView: View {
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .padding(4)
                     .transition(AnyTransition.identity)
-                    .animation(Animation.spring(), value: card.isPartOfSet)
+                    //.animation(Animation.spring(), value: card.isPartOfSet)
                     .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.5)) {
+                        withAnimation(.easeInOut(duration: 0.25)) {
                             game.choose(card)
                         }
                 }
@@ -139,12 +140,13 @@ struct ShapeSetView: View {
     
     var discardedCardPile: some View {
         ZStack {
-            ForEach(game.setsMade(), id: \.self) { theSet in
-                ForEach(theSet) { card in
-                    CardView(card: card, isFaceUp: isFaceUp(card) )
+            ForEach(0..<game.setsMade().count, id: \.self) { i in
+                ForEach(game.setsMade()[i]) { card in
+                    CardView(card: card, isFaceUp: isFaceUp(card))
                         .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                         .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
-                        .offset(x: cardOffset(forCardAtIndex: theSet.firstIndex(of: card)!, along: Axis.horizontal), y: cardOffset(forCardAtIndex: theSet.firstIndex(of: card)!, along: Axis.vertical))
+                        .offset(x: cardOffset(forCardAtIndex: game.setsMade()[i].firstIndex(of: card)!, along: Axis.horizontal),
+                                y: cardOffset(forCardAtIndex: game.setsMade()[i].firstIndex(of: card)!, along: Axis.vertical))
                 }
             }
         }
