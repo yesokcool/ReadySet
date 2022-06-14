@@ -140,13 +140,14 @@ struct ShapeSetView: View {
     
     var discardedCardPile: some View {
         ZStack {
-            ForEach(0..<game.setsMade().count, id: \.self) { i in
+            ForEach(0 ..< game.setsMade().count, id: \.self) { i in
                 ForEach(game.setsMade()[i]) { card in
-                    CardView(card: card, isFaceUp: isFaceUp(card))
-                        .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                        .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
-                        .offset(x: cardOffset(forCardAtIndex: game.setsMade()[i].firstIndex(of: card)!, along: Axis.horizontal),
-                                y: cardOffset(forCardAtIndex: game.setsMade()[i].firstIndex(of: card)!, along: Axis.vertical))
+                        CardView(card: card, isFaceUp: isFaceUp(card))
+                            .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                            .transition(AnyTransition.asymmetric(insertion: .identity, removal: .opacity))
+                            .offset(x: cardOffset(forCardAtIndex: game.setsMade()[i].firstIndex(of: card)!, along: Axis.horizontal),
+                                    y: cardOffset(forCardAtIndex: game.setsMade()[i].firstIndex(of: card)!, along: Axis.vertical))
+                            .opacity(i >= game.setsMade().count - 2 ? 100 : 0)
                 }
             }
         }

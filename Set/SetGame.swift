@@ -82,8 +82,9 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                  discardedSet.append(cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!))
              }
              selectedCards = []
+            setsMade.append(discardedSet)
          }
-        setsMade.append(discardedSet)
+        print(setsMade.count)
     }
     
     // TODO: Perhaps could be deal any the game wants to.
