@@ -438,12 +438,8 @@ struct CardView: View {
     
     // TODO: There may be a way to generalize these shapes more so it's easier to add in more shapes. e.g putting the shapes in an array, iterating through the array instead of literally writing shapes. Would have to make sure to add some sort of parameter for their frame maxheight though. then use ternary to check for it
     @ViewBuilder func renderTrait(with geometry: GeometryProxy) -> some View {
-        let cornerRadiusRectangle: CGFloat = geometry.size.width * 0.3
-        let rectangleHeight: CGFloat = geometry.size.height * 0.2
-        let lineWidth: CGFloat = geometry.size.width * 0.03
-        let glowRadius: CGFloat = 5.0
-        let glowOffset: CGFloat = 10.0
-        let glowOpacity: CGFloat = 0.4
+        let cornerRadiusRectangle: CGFloat = geometry.size.width * CardConstants.cornerRadiusRectangleMultiplier
+        let lineWidth: CGFloat = geometry.size.width * CardConstants.lineWidthMultiplier
         
         ForEach(0..<card.traits[0].type + 1, id: \.self) { _ in
             switch card.traits[1].type {
@@ -451,83 +447,78 @@ struct CardView: View {
                     if card.traits[2].type == 2 {
                         WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(colorForTraitType(card.traits[3].type))
-                            .frame(maxHeight: abs(rectangleHeight))
-                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                            .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                           isSelected: card.isSelected, isStriped: false, isRectangle: true)
                     } else if card.traits[2].type == 1 {
                         WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(colorForTraitType(card.traits[3].type))
-                            .frame(maxHeight: abs(rectangleHeight))
-                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                            .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                           isSelected: card.isSelected, isStriped: false, isRectangle: true)
                             .background() {
                                 WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                                     .fill()
-                                    .foregroundColor(colorForTraitType(card.traits[3].type))
-                                    //.opacity(getOpacity(card.traits[2].type))
-                                    .striped(geometry: geometry, color: colorForTraitType(card.traits[3].type))
-                                    .frame(maxHeight: abs(rectangleHeight))
-                                    .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                                    .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                                   isSelected: card.isSelected, isStriped: true, isRectangle: true)
                             }
                         } else {
                             WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                                 .fill()
-                                .foregroundColor(colorForTraitType(card.traits[3].type))
-                                .frame(maxHeight: abs(rectangleHeight))
-                                .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                                .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                               isSelected: card.isSelected, isStriped: false, isRectangle: true)
                     }
                 case 1:
                     if card.traits[2].type == 2 {
                         Squiggle()
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(colorForTraitType(card.traits[3].type))
-                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                            .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                           isSelected: card.isSelected, isStriped: false, isRectangle: false)
                     } else if card.traits[2].type == 1 {
                         Squiggle()
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(colorForTraitType(card.traits[3].type))
-                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                            .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                           isSelected: card.isSelected, isStriped: false, isRectangle: false)
                             .background() {
                                 Squiggle()
                                     .fill()
-                                    .foregroundColor(colorForTraitType(card.traits[3].type))
-                                    //.opacity(getOpacity(card.traits[2].type))
-                                    .striped(geometry: geometry, color: colorForTraitType(card.traits[3].type))
-                                    .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                                    .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                                   isSelected: card.isSelected, isStriped: true, isRectangle: false)
                             }
                     } else {
                         Squiggle()
                             .fill()
-                            .foregroundColor(colorForTraitType(card.traits[3].type))
-                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                            .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                           isSelected: card.isSelected, isStriped: false, isRectangle: false)
                     }
                 default:
                     if card.traits[2].type == 2 {
                         Diamond(size: 5)
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(colorForTraitType(card.traits[3].type))
-                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                            .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                           isSelected: card.isSelected, isStriped: false, isRectangle: false)
                     } else if card.traits[2].type == 1 {
                         Diamond(size:5)
                             .stroke(lineWidth: lineWidth)
-                            .foregroundColor(colorForTraitType(card.traits[3].type))
-                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                            .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                           isSelected: card.isSelected, isStriped: false, isRectangle: false)
                             .background() {
                                 Diamond(size:5)
                                     .fill()
-                                    .foregroundColor(colorForTraitType(card.traits[3].type))
-                                    //.opacity(getOpacity(card.traits[2].type))
-                                    .striped(geometry: geometry, color: colorForTraitType(card.traits[3].type))
-                                    .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                                    .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                                   isSelected: card.isSelected, isStriped: true, isRectangle: false)
                             }
                     } else {
                         Diamond(size:5)
                             .fill()
-                            .foregroundColor(colorForTraitType(card.traits[3].type))
-                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
+                            .traitColorize(color: colorForTraitType(card.traits[3].type), geometry: geometry,
+                                           isSelected: card.isSelected, isStriped: false, isRectangle: false)
                     }
             }
         }
+    }
+    
+    struct CardConstants {
+        static let cornerRadiusRectangleMultiplier: CGFloat = 0.3
+        static let lineWidthMultiplier: CGFloat = 0.03
     }
 }
 

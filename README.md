@@ -16,6 +16,7 @@ An educational project and game based on the card-based "Set" that supports as m
 - Auto-solving (cheat) mode
 - Color-blind accessibility
 - Randomized flavor text
+- Dark mode cards!
 
 ## Future features:
 - READY, SET mode (fun mode)
