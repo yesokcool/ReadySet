@@ -53,7 +53,6 @@ class ShapeSetGame: ObservableObject {
     // Utility
     var hasAPossibleSet: Bool { game.setIsAvailable() }
     
-    
     // ====-----------Game Management-----------==== //
     func startNewGame() {
         game.startNewGame()
@@ -66,7 +65,6 @@ class ShapeSetGame: ObservableObject {
     func deal() {
         _ = game.deal(wasPressed: true)
     }
-    
     
     func choose(_ card: Card) {
         game.choose(card)
@@ -105,7 +103,6 @@ class ShapeSetGame: ObservableObject {
     
     var hasASetSelected: Bool { return !game.selectedCards.isEmpty &&
                                        (game.selectedCards[0].isPartOfSet == true.intValue) }
-    
     
     //====-----------------Cheat-----------------====//
     func toggleCheatVision() {

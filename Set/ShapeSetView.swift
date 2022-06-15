@@ -405,7 +405,7 @@ struct CardView: View {
                 }
             }
             .padding(8.0)
-            .cardify(card: card, isFaceUp: isFaceUp)
+            .cardify(card: card, isFaceUp: isFaceUp, color: colorForTraitType(card.traits[3].type))
         }
     }
     
@@ -441,6 +441,9 @@ struct CardView: View {
         let cornerRadiusRectangle: CGFloat = geometry.size.width * 0.3
         let rectangleHeight: CGFloat = geometry.size.height * 0.2
         let lineWidth: CGFloat = geometry.size.width * 0.03
+        let glowRadius: CGFloat = 5.0
+        let glowOffset: CGFloat = 10.0
+        let glowOpacity: CGFloat = 0.4
         
         ForEach(0..<card.traits[0].type + 1, id: \.self) { _ in
             switch card.traits[1].type {
@@ -450,11 +453,13 @@ struct CardView: View {
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(colorForTraitType(card.traits[3].type))
                             .frame(maxHeight: abs(rectangleHeight))
+                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                     } else if card.traits[2].type == 1 {
                         WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(colorForTraitType(card.traits[3].type))
                             .frame(maxHeight: abs(rectangleHeight))
+                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                             .background() {
                                 WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                                     .fill()
@@ -462,54 +467,64 @@ struct CardView: View {
                                     //.opacity(getOpacity(card.traits[2].type))
                                     .striped(geometry: geometry, color: colorForTraitType(card.traits[3].type))
                                     .frame(maxHeight: abs(rectangleHeight))
+                                    .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                             }
                         } else {
                             WideRoundedRectangle(cornerRadius: cornerRadiusRectangle)
                                 .fill()
                                 .foregroundColor(colorForTraitType(card.traits[3].type))
                                 .frame(maxHeight: abs(rectangleHeight))
+                                .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                     }
                 case 1:
                     if card.traits[2].type == 2 {
                         Squiggle()
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(colorForTraitType(card.traits[3].type))
+                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                     } else if card.traits[2].type == 1 {
                         Squiggle()
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(colorForTraitType(card.traits[3].type))
+                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                             .background() {
                                 Squiggle()
                                     .fill()
                                     .foregroundColor(colorForTraitType(card.traits[3].type))
                                     //.opacity(getOpacity(card.traits[2].type))
                                     .striped(geometry: geometry, color: colorForTraitType(card.traits[3].type))
+                                    .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                             }
                     } else {
                         Squiggle()
                             .fill()
                             .foregroundColor(colorForTraitType(card.traits[3].type))
+                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                     }
                 default:
                     if card.traits[2].type == 2 {
                         Diamond(size: 5)
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(colorForTraitType(card.traits[3].type))
+                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                     } else if card.traits[2].type == 1 {
                         Diamond(size:5)
                             .stroke(lineWidth: lineWidth)
                             .foregroundColor(colorForTraitType(card.traits[3].type))
+                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                             .background() {
                                 Diamond(size:5)
                                     .fill()
                                     .foregroundColor(colorForTraitType(card.traits[3].type))
                                     //.opacity(getOpacity(card.traits[2].type))
                                     .striped(geometry: geometry, color: colorForTraitType(card.traits[3].type))
+                                    .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                             }
                     } else {
                         Diamond(size:5)
                             .fill()
                             .foregroundColor(colorForTraitType(card.traits[3].type))
+                            .shadow(color: colorForTraitType(card.traits[3].type).opacity(glowOpacity), radius: glowRadius, y: glowOffset)
                     }
             }
         }

@@ -3,6 +3,7 @@ import SwiftUI
 
 struct Cardify: AnimatableModifier {
     let card: ShapeSetGame.Card
+    let color: Color
     var rotation: Double
     
     var animatableData: Double {
@@ -10,16 +11,17 @@ struct Cardify: AnimatableModifier {
         set { rotation += newValue }
     }
     
-    init(card: ShapeSetGame.Card, isFaceUp: Bool) {
+    init(card: ShapeSetGame.Card, isFaceUp: Bool, color: Color) {
         rotation = isFaceUp ? 0 : 180
         self.card = card
+        self.color = color
     }
     
     func body(content: Content) -> some View {
         ZStack {
             let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
             if rotation < 90 {
-                shape.fill().foregroundColor(.white)
+                shape.fill().foregroundColor(Color(UIColor.systemBackground))
                 if card.isPartOfSet == true.intValue {
                     shape.stroke(lineWidth: DrawingConstants.selectionWidth)
                         .foregroundColor(.green)
@@ -34,6 +36,8 @@ struct Cardify: AnimatableModifier {
                         .shadow(color: .yellow, radius: DrawingConstants.glowRadius)
                 } else {
                     shape.stroke(lineWidth: DrawingConstants.lineWidth)
+                    .foregroundColor(color)
+                    .shadow(color: color.opacity(DrawingConstants.glowOpacity), radius: DrawingConstants.strokeGlowRadius)
                 }
             } else {
                 shape.fill()
@@ -53,12 +57,14 @@ struct Cardify: AnimatableModifier {
         static let cornerRadius: CGFloat = 10
         static let lineWidth: CGFloat = 3
         static let selectionWidth: CGFloat = 6
-        static let glowRadius: CGFloat = 9
+        static let glowRadius: CGFloat = 9.0
+        static let strokeGlowRadius: CGFloat = 5.0
+        static let glowOpacity: CGFloat = 0.6
     }
 }
 
 extension View {
-    func cardify(card: ShapeSetGame.Card, isFaceUp: Bool) -> some View {
-        self.modifier(Cardify(card: card, isFaceUp: isFaceUp))
+    func cardify(card: ShapeSetGame.Card, isFaceUp: Bool, color: Color) -> some View {
+        self.modifier(Cardify(card: card, isFaceUp: isFaceUp, color: color))
     }
 }
