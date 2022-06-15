@@ -6,12 +6,6 @@ import Foundation
 
 struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable {
     
-    // Card management
-    private(set) var deck: [CustomShapeCard] = []
-    private(set) var cardsInPlay: [CustomShapeCard] = []
-    private(set) var setsMade: [[CustomShapeCard]] = []
-    private(set) var selectedCards: [CustomShapeCard] = []
-    
     // Game definitions
     private(set) var isDone: Bool = false
     private let numberOfCardsInASet: Int
@@ -19,11 +13,11 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     private let numberOfTraitTypes: Int
     private let numberOfTraits: Int
     
-    // Utility
-    private(set) var result: [CardContent] = []
-    private(set) var setIndices: [Int] = []
-    private(set) var cheatIndices: [Int] = []
-    private(set) var id: Int = 0
+    // Card management
+    private(set) var deck: [CustomShapeCard] = []
+    private(set) var cardsInPlay: [CustomShapeCard] = []
+    private(set) var setsMade: [[CustomShapeCard]] = []
+    private(set) var selectedCards: [CustomShapeCard] = []
     
     // Scoring
     private(set) var prevDate: Date = Date()
@@ -39,6 +33,12 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     
     // Cheat
     private(set) var cheatVision: Bool = false
+    
+    // Utility
+    private(set) var result: [CardContent] = []
+    private(set) var setIndices: [Int] = []
+    private(set) var cheatIndices: [Int] = []
+    private(set) var id: Int = 0
     
     init(numberOfTraits: Int, numberOfTraitTypes: Int, withSetsOf numberOfCardsInASet: Int) {
         self.numberOfTraits = numberOfTraits
