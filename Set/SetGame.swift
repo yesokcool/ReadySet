@@ -217,11 +217,8 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         }
     }
     
-    // TODO: Currently using both isSelected and selectedCards.
-    // Perhaps possible to just need to use one of these
     // TODO: Maybe make extension more readable and replace intValue
     // for something else.
-    // TODO: Break this up into functions.
     mutating func choose(_ card: CustomShapeCard) {
         if let chosenIndex = cardsInPlay.firstIndex(of: card),
            cardsInPlay[chosenIndex].isPartOfSet != true.intValue {
@@ -230,38 +227,15 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                 if !cheatVision {
                     scoreModifier += calculateScoreModifier()
                 }
-                // Set selected is an actual set
                 if selectedCards[0].isPartOfSet == true.intValue {
-                    cardsInPlay[chosenIndex].isSelected = true
-                    // Choose new card, discard set
-                    let chosen = cardsInPlay[chosenIndex]
-                    clearSelectedSet()
-                    selectedCards.append(chosen)
-                    resetIndices()
-                    print(lookForSet(cardIndex: 0))
-                    // cheatIndices = setIndices may not be needed because moving this to the algo
-                    checkIfDone()
-                // Set selected is not an actual set
+                    chooseWithSetSelected(card, chosenIndex)
                 } else {
-                    for c in selectedCards {
-                        let i = cardsInPlay.firstIndex(of: c)!
-                        cardsInPlay[i].isSelected = false
-                        cardsInPlay[i].isPartOfSet = false.none
-                    }
-                    selectedCards = []
-                    cardsInPlay[chosenIndex].isSelected = true
-                    selectedCards.append(cardsInPlay[chosenIndex])
-                    scoreModifier = 0
+                    chooseWithMismatchSelected(card, chosenIndex)
                 }
             // Set is not selected
             } else {
-                // Deselection
                 if selectedCards.contains(cardsInPlay[chosenIndex]) {
-                    antiCheat = true
-                    let i = selectedCards.firstIndex(of: cardsInPlay[chosenIndex])!
-                    cardsInPlay[chosenIndex].isSelected = false
-                    selectedCards.remove(at: i)
-                // Selection
+                    deselectCard(card, chosenIndex)
                 } else {
                     if !cheatVision {
                         scoreModifier += calculateScoreModifier()
@@ -269,40 +243,75 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     cardsInPlay[chosenIndex].isSelected = true
                     selectedCards.append(cardsInPlay[chosenIndex])
                     if selectedCards.count >= numberOfCardsInASet {
-                        if isSet(selectedCards) {
-                            // Set is a set
-                            for (i, c) in selectedCards.enumerated() {
-                                cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = true.intValue
-                                selectedCards[i].isPartOfSet = true.intValue
-                            }
-                            
-                            if !cheatVision {
-                                if isMultiplayer {
-                                    if turnPlayerTwo {
-                                        scorePlayerTwo += scoreModifier * 5
-                                    } else {
-                                        score += scoreModifier * 5
-                                    }
-                                } else {
-                                    score += scoreModifier * 5
-                                }
-                                
-                                if score > highScore {
-                                    highScore = score
-                                }
-                            }
-                            
-                            // Last set made and game complete
-                            checkIfDone()
-                        // Set is not a set
-                        } else {
-                            for (i, c) in selectedCards.enumerated() {
-                                cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = false.intValue
-                                selectedCards[i].isPartOfSet = false.intValue
-                            }
-                        }
+                        evaluateSetSelection(card, chosenIndex)
                     }
                 }
+            }
+        }
+    }
+    
+    mutating func chooseWithSetSelected(_ card: CustomShapeCard, _ chosenIndex: Int) {
+        cardsInPlay[chosenIndex].isSelected = true
+        // Choose new card, discard set
+        let chosen = cardsInPlay[chosenIndex]
+        clearSelectedSet()
+        selectedCards.append(chosen)
+        resetIndices()
+        print(lookForSet(cardIndex: 0))
+        // cheatIndices = setIndices may not be needed because moving this to the algo
+        checkIfDone()
+    }
+    
+    mutating func chooseWithMismatchSelected(_ card: CustomShapeCard, _ chosenIndex: Int) {
+        for c in selectedCards {
+            let i = cardsInPlay.firstIndex(of: c)!
+            cardsInPlay[i].isSelected = false
+            cardsInPlay[i].isPartOfSet = false.none
+        }
+        selectedCards = []
+        cardsInPlay[chosenIndex].isSelected = true
+        selectedCards.append(cardsInPlay[chosenIndex])
+        scoreModifier = 0
+    }
+    
+    mutating func deselectCard(_ card: CustomShapeCard, _ chosenIndex: Int) {
+        antiCheat = true
+        let i = selectedCards.firstIndex(of: cardsInPlay[chosenIndex])!
+        cardsInPlay[chosenIndex].isSelected = false
+        selectedCards.remove(at: i)
+    }
+    
+    mutating func evaluateSetSelection(_ card: CustomShapeCard, _ chosenIndex: Int) {
+        if isSet(selectedCards) {
+            // Set is a set
+            for (i, c) in selectedCards.enumerated() {
+                cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = true.intValue
+                selectedCards[i].isPartOfSet = true.intValue
+            }
+            
+            if !cheatVision {
+                if isMultiplayer {
+                    if turnPlayerTwo {
+                        scorePlayerTwo += scoreModifier * 5
+                    } else {
+                        score += scoreModifier * 5
+                    }
+                } else {
+                    score += scoreModifier * 5
+                }
+                
+                if score > highScore {
+                    highScore = score
+                }
+            }
+            
+            // Last set made and game complete
+            checkIfDone()
+        // Set is not a set
+        } else {
+            for (i, c) in selectedCards.enumerated() {
+                cardsInPlay[cardsInPlay.firstIndex(of: c)!].isPartOfSet = false.intValue
+                selectedCards[i].isPartOfSet = false.intValue
             }
         }
     }
