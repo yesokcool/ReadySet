@@ -18,13 +18,26 @@ class ShapeSetGame: ObservableObject {
         game = SetGame(numberOfTraits: numberOfTraits, numberOfTraitTypes: numberOfTraitTypes, withSetsOf: numberOfCardsInASet)
     }
     
-    func cardsInPlay() -> [Card] {
-        game.cardsInPlay
-    }
+    var deck: [Card] { game.deck }
+    var cardsInPlay: [Card] { game.cardsInPlay }
+    var setsMade: [[Card]] { game.setsMade }
+    var selectedCards: [Card] { game.selectedCards }
+    var deckEmpty: Bool { game.deck.isEmpty }
     
-    func deck() -> [Card] {
-        game.deck
-    }
+    var score: Int { game.score }
+    var scoreModifier: Int { game.scoreModifier }
+    var highScore: Int { game.highScore }
+    
+    var solutions: [Int] { game.cheatIndices }
+    
+    var isDone: Bool { game.isDone }
+    
+    var isMultiplayer: Bool { game.isMultiplayer }
+    var getScorePlayerTwo: Int { game.scorePlayerTwo }
+    var isPlayerOneTurn: Bool { !game.turnPlayerTwo }
+    
+    var hasAPossibleSet: Bool { game.setIsAvailable() }
+    var hasCheatVision: Bool { game.cheatVision }
     
     func choose(_ card: Card) {
         game.choose(card)
@@ -41,52 +54,16 @@ class ShapeSetGame: ObservableObject {
         game.clearSelectedSet()
     }
     
-    func selectedCards() -> [Card] {
-        game.selectedCards
-    }
-    
     func deal() {
         _ = game.deal(wasPressed: true)
-    }
-    
-    func score() -> Int {
-        game.score
-    }
-    
-    func highScore() -> Int {
-        game.highScore
-    }
-    
-    func scoreModifier() -> Int {
-        game.scoreModifier
-    }
-    
-    func solutions() -> [Int] {
-        game.cheatIndices
     }
     
     func isSelected(_ card: Card) -> Bool {
         game.selectedCards.contains(where: { $0 == card })
     }
     
-    func deckEmpty() -> Bool {
-        game.deck.isEmpty
-    }
-    
-    func complete() -> Bool {
-        game.complete
-    }
-    
     func toggleMultiplayer() {
         game.toggleMultiplayer()
-    }
-    
-    func isMultiplayer() -> Bool {
-        game.isMultiplayer
-    }
-    
-    func getScorePlayerTwo() -> Int {
-        game.scorePlayerTwo
     }
     
     func turnToPlayerOne() {
@@ -97,16 +74,8 @@ class ShapeSetGame: ObservableObject {
         game.turnToPlayerTwo()
     }
     
-    func isPlayerOneTurn() -> Bool {
-        !game.turnPlayerTwo
-    }
-    
     func shuffle() {
         game.shuffle()
-    }
-    
-    func hasAPossibleSet() -> Bool {
-        game.setIsAvailable()
     }
     
     func lookForSet() {
@@ -114,24 +83,15 @@ class ShapeSetGame: ObservableObject {
         _ = game.lookForSet(cardIndex: 0)
     }
     
-    func hasASetSelected() -> Bool {
-        return !game.selectedCards.isEmpty && (game.selectedCards[0].isPartOfSet == true.intValue)
-    }
+    var hasASetSelected: Bool { return !game.selectedCards.isEmpty &&
+                                       (game.selectedCards[0].isPartOfSet == true.intValue) }
     
     func toggleCheatVision() {
         game.toggleCheatVision()
     }
     
-    func hasCheatVision() -> Bool {
-        game.cheatVision
-    }
-    
     func toggleColorblindAssistance() {
         isUsingColorblindAssistance.toggle()
-    }
-    
-    func setsMade() -> [[Card]] {
-        game.setsMade
     }
     
     struct Trait: Equatable, Traitable, Hashable {

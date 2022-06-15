@@ -1,17 +1,19 @@
 
 import Foundation
 
+// todo change selected card array to a set
+// add subscripting to here
+
 struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable {
     
     // Card management
     private(set) var deck: [CustomShapeCard] = []
-    private(set) var fixedDeck: [CustomShapeCard] = []
     private(set) var cardsInPlay: [CustomShapeCard] = []
     private(set) var setsMade: [[CustomShapeCard]] = []
     private(set) var selectedCards: [CustomShapeCard] = []
     
     // Game definitions
-    private(set) var complete: Bool = false
+    private(set) var isDone: Bool = false
     private let numberOfCardsInASet: Int
     private let deckSize: Int
     private let numberOfTraitTypes: Int
@@ -190,8 +192,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         
         createDeck(currentTrait: 0)
         //deck.shuffle()
-        // debug deck.removeSubrange(3..<deck.count)
-        fixedDeck = deck
         
         score = 0
         scoreModifier = 0
@@ -201,29 +201,19 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         resetIndices()
         print(lookForSet(cardIndex: 0))
         cheatIndices = setIndices
-        checkIfGameIsCompleted()
-        
-        // debug to clear out cards faster
-        /*
-        for _ in 1...20 {
-            choose(cardsInPlay[0])
-            choose(cardsInPlay[1])
-            choose(cardsInPlay[2])
-            choose(cardsInPlay[3])
-            choose(cardsInPlay[0])
-        }*/
+        checkIfDone()
         
         cheatVision = false
 
-        complete = false
+        isDone = false
     }
     
-    mutating func checkIfGameIsCompleted() {
+    mutating func checkIfDone() {
         if  deck.isEmpty && (selectedCards.count == cardsInPlay.count ||
                              cardsInPlay.count < numberOfCardsInASet ||
                              !lookForSet(cardIndex: 0)) {
             cardsInPlay = []
-            complete = true
+            isDone = true
         }
     }
     
@@ -250,7 +240,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                     resetIndices()
                     print(lookForSet(cardIndex: 0))
                     // cheatIndices = setIndices may not be needed because moving this to the algo
-                    checkIfGameIsCompleted()
+                    checkIfDone()
                 // Set selected is not an actual set
                 } else {
                     for c in selectedCards {
@@ -303,7 +293,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                             }
                             
                             // Last set made and game complete
-                            checkIfGameIsCompleted()
+                            checkIfDone()
                         // Set is not a set
                         } else {
                             for (i, c) in selectedCards.enumerated() {

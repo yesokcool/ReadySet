@@ -18,9 +18,9 @@ struct ShapeSetView: View {
     @Namespace private var dealingNamespace
     
     var body: some View {
-        if !game.complete() {
+        if !game.isDone {
             VStack {
-                if game.isMultiplayer() {
+                if game.isMultiplayer {
                     multiplayerScoreAndControls(forPlayerOne: false, havingTeamColor: .mint)
                         .rotationEffect(Angle.degrees(180))
                 } else {
@@ -29,13 +29,13 @@ struct ShapeSetView: View {
                         .overlay(.blue)
                 }
                 
-                if !game.isMultiplayer() {
+                if !game.isMultiplayer {
                     scoreModifier
                     Divider()
                         .overlay(.blue)
                 }
                 
-                if game.hasCheatVision() {
+                if game.hasCheatVision {
                     showSolutions
                         .font(DrawingConstants.smallestFontSize)
                 }
@@ -46,7 +46,7 @@ struct ShapeSetView: View {
                 Spacer()
                 
                 VStack {
-                    if game.isMultiplayer() {
+                    if game.isMultiplayer {
                         multiplayerScoreAndControls(forPlayerOne: true, havingTeamColor: .blue)
                     }
                     bottomControls
@@ -83,7 +83,7 @@ struct ShapeSetView: View {
     }
 
     var dealtOutCards: some View {
-        AspectVGrid(items: game.cardsInPlay(), aspectRatio: 2/3) { card in
+        AspectVGrid(items: game.cardsInPlay, aspectRatio: 2/3) { card in
             if isNotDealt(card) {
                 Color.clear
             } else {
@@ -104,7 +104,7 @@ struct ShapeSetView: View {
     
     var deckOfCards: some View {
         ZStack {
-            ForEach(game.deck().filter( { isNotDealt($0) } ).reversed()) { card in
+            ForEach(game.deck.filter( { isNotDealt($0) } ).reversed()) { card in
                 CardView(card: card, isFaceUp: isFaceUp(card) )
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
@@ -112,17 +112,17 @@ struct ShapeSetView: View {
         }
         .onTapGesture {
             // starting deal
-            if game.cardsInPlay().count == 0 {
+            if game.cardsInPlay.count == 0 {
                 for i in 0..<12 {
-                    withAnimation(dealAnimation(for: game.deck()[game.deck().count - 1], index: i) ) {
+                    withAnimation(dealAnimation(for: game.deck[game.deck.count - 1], index: i) ) {
                         game.clearSelectedSet()
                         game.deal()
-                        deal(game.cardsInPlay()[game.cardsInPlay().count - 1])
+                        deal(game.cardsInPlay[game.cardsInPlay.count - 1])
                     }
                 } // normal deal 3
             } else {
                 var justMadeASet: Bool
-                if game.hasASetSelected() {
+                if game.hasASetSelected {
                     justMadeASet = true
                 } else {
                     justMadeASet = false
@@ -131,13 +131,13 @@ struct ShapeSetView: View {
                     game.clearSelectedSet()
                 }
                 for i in 0..<3 {
-                    withAnimation(dealAnimation(for: game.deck()[game.deck().count - 1], index: i).delay(justMadeASet ? 0.5 : 0) ){
+                    withAnimation(dealAnimation(for: game.deck[game.deck.count - 1], index: i).delay(justMadeASet ? 0.5 : 0) ){
                         game.deal()
-                        deal(game.cardsInPlay()[game.cardsInPlay().count - 1])
+                        deal(game.cardsInPlay[game.cardsInPlay.count - 1])
                     }
                 }
             }
-            for card in game.cardsInPlay() {
+            for card in game.cardsInPlay {
                 withAnimation(Animation.easeInOut(duration: CardConstants.dealDuration).delay(0.5)) {
                     turnFaceUp(card)
                 }
@@ -150,14 +150,14 @@ struct ShapeSetView: View {
     
     var discardedCardPile: some View {
         ZStack {
-            ForEach(0 ..< game.setsMade().count, id: \.self) { i in
-                ForEach(game.setsMade()[i]) { card in
+            ForEach(0 ..< game.setsMade.count, id: \.self) { i in
+                ForEach(game.setsMade[i]) { card in
                         CardView(card: card, isFaceUp: isFaceUp(card))
                             .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                             .transition(AnyTransition.asymmetric(insertion: .identity, removal: .opacity))
-                            .offset(x: cardOffset(forCardAtIndex: game.setsMade()[i].firstIndex(of: card)!, along: Axis.horizontal),
-                                    y: cardOffset(forCardAtIndex: game.setsMade()[i].firstIndex(of: card)!, along: Axis.vertical))
-                            .opacity(i >= game.setsMade().count - 2 ? 100 : 0)
+                            .offset(x: cardOffset(forCardAtIndex: game.setsMade[i].firstIndex(of: card)!, along: Axis.horizontal),
+                                    y: cardOffset(forCardAtIndex: game.setsMade[i].firstIndex(of: card)!, along: Axis.vertical))
+                            .opacity(i >= game.setsMade.count - 2 ? 100 : 0)
                 }
             }
         }
@@ -218,13 +218,13 @@ struct ShapeSetView: View {
                               whenPressedIs: Image(systemName: "person.2.circle"),
                               withImageWidth: DrawingConstants.controlButtonWidth,
                               whichDoes: game.toggleMultiplayer,
-                              checksWith: game.isMultiplayer(),
+                              checksWith: game.isMultiplayer,
                               color1: .blue)
             pushButton(withImage: Image(systemName: "magnifyingglass.circle.fill"),
                               whenPressedIs: Image(systemName: "magnifyingglass.circle"),
                               withImageWidth: DrawingConstants.controlButtonWidth,
                               whichDoes: game.toggleCheatVision,
-                              checksWith: game.hasCheatVision(),
+                              checksWith: game.hasCheatVision,
                               color1: .red, color2: .blue)
             deckOfCards
             Spacer()
@@ -263,13 +263,13 @@ struct ShapeSetView: View {
                     Text("HIGH SCORE")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.semibold)
-                    Text("\(game.highScore()) \n\(game.anotherRandomScoringText)")
+                    Text("\(game.highScore) \n\(game.anotherRandomScoringText)")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
                         .fixedSize()
                 }
-                .foregroundColor(game.highScore() == game.score() &&
-                                 game.highScore() != 0 ?
+                .foregroundColor(game.highScore == game.score &&
+                                 game.highScore != 0 ?
                                  Color.orange : Color.blue)
                 .multilineTextAlignment(.center)
                 
@@ -279,14 +279,14 @@ struct ShapeSetView: View {
                     Text("SCORE")
                             .font(DrawingConstants.scoreFontSize)
                             .fontWeight(.semibold)
-                        Text("\(game.score()) \n\(game.randomScoringText)")
+                        Text("\(game.score) \n\(game.randomScoringText)")
                         .font(DrawingConstants.scoreFontSize)
                         .fontWeight(.heavy)
                         .multilineTextAlignment(.center)
                         .fixedSize()
                 }
-                .foregroundColor(game.highScore() == game.score() &&
-                                 game.highScore() != 0 ?
+                .foregroundColor(game.highScore == game.score &&
+                                 game.highScore != 0 ?
                                  Color.orange : Color.blue)
                 
             }
@@ -296,7 +296,7 @@ struct ShapeSetView: View {
     }
     
     var scoreModifier: some View {
-        Text("\(game.scoreModifier()) \(game.randomScoreModifierText)")
+        Text("\(game.scoreModifier) \(game.randomScoreModifierText)")
             .font(DrawingConstants.scoreFontSize)
             .fontWeight(.bold)
             .foregroundColor(.blue)
@@ -305,8 +305,8 @@ struct ShapeSetView: View {
     }
     
     var showSolutions: some View {
-        if game.hasAPossibleSet() {
-            return Text("\(game.solutions().description)")
+        if game.hasAPossibleSet {
+            return Text("\(game.solutions.description)")
 
         }
         return Text("No sets!")
@@ -320,21 +320,21 @@ struct ShapeSetView: View {
                     .font(DrawingConstants.scoreFontSize)
                     .fontWeight(.heavy)
                 Text(forPlayerOne ?
-                     "\(game.score()) \(game.randomScoringText)"
-                     : "\(game.score()) \(game.anotherRandomScoringText)" )
+                     "\(game.score) \(game.randomScoringText)"
+                     : "\(game.score) \(game.anotherRandomScoringText)" )
                     .font(DrawingConstants.scoreFontSize)
                     .fontWeight(.semibold)
                     .fixedSize()
             }
-            .foregroundColor(game.highScore() == game.score() &&
-                             game.highScore() != 0 ?
+            .foregroundColor(game.highScore == game.score &&
+                             game.highScore != 0 ?
                              Color.orange : teamColor)
             
             pushButton(withImage: Image(systemName: "flag.circle"),
                               whenPressedIs: Image(systemName: "flag.circle.fill"),
                               withImageWidth: DrawingConstants.flagWidth,
                               whichDoes: (forPlayerOne ? game.turnToPlayerOne : game.turnToPlayerTwo),
-                              checksWith: (forPlayerOne ? !game.isPlayerOneTurn() : game.isPlayerOneTurn()),
+                              checksWith: (forPlayerOne ? !game.isPlayerOneTurn : game.isPlayerOneTurn),
                               color1: teamColor)
         }
     }
@@ -344,7 +344,7 @@ struct ShapeSetView: View {
             Text("GAME COMPLETE!")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-            Text("FINAL SCORE: \(game.score())")
+            Text("FINAL SCORE: \(game.score)")
                 .font(.title2)
                 .fontWeight(.semibold)
             Button {
