@@ -152,7 +152,7 @@ struct ShapeSetView: View {
         ZStack {
             ForEach(0 ..< game.setsMade.count, id: \.self) { i in
                 ForEach(game.setsMade[i]) { card in
-                        CardView(card: card, isFaceUp: isFaceUp(card))
+                        CardView(card: card, colorblindMode: game.isUsingColorblindAssistance, isFaceUp: isFaceUp(card))
                             .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                             .transition(AnyTransition.asymmetric(insertion: .identity, removal: .opacity))
                             .offset(x: cardOffset(forCardAtIndex: game.setsMade[i].firstIndex(of: card)!, along: Axis.horizontal),
