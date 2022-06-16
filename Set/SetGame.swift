@@ -1,9 +1,6 @@
 
 import Foundation
 
-// todo change selected card array to a set
-// add subscripting to here
-
 struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable {
     
     // Game definitions

@@ -1,7 +1,4 @@
 
-// TODO: Make many traits or shapes, randomize which ones are chosen each new game.
-// TODO: As proof of concept, add another type to all traits in the game so you can play Set 4, and make it have 4 traits if possible
-
 import Foundation
 import SwiftUI
 

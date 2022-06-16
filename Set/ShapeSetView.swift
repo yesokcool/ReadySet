@@ -1,16 +1,4 @@
 
-// TODO: Add some ways to speed up the game. Like if you match multiple sets quickly, you get a special vision that shows you sets to match and matching them has an intense POWERFUL-feeling animation, screen shake, pop up text saying quake-like stuff like unstoppable, particles of randomized emojis like cows etc. And if you keep matching fast, it keeps the mode going. Call this READY, SET, and have it flash on screen, kind of like Super Hot.
-// TODO: Add animation when breaking high score
-// TODO: Add shuffle button for fun?
-// colorblind mode in discard pile
-// larger control buttons
-// more definition on deck maybe an offset for 3 cards on top
-// deck of cards a bit larger to match discard pile, only do this after trying offset
-// player 2 score going up when not their turn
-// text shadow / glow effect, maybe the rainbow effect
-// cards should be dealt out over scroll view
-// stripes disappear at largest size
-
 import SwiftUI
 
 struct ShapeSetView: View {
@@ -191,8 +179,6 @@ struct ShapeSetView: View {
             }
         }
     }
-    
-    // TODO: Make function for filling the buttons
     
     var bottomControls: some View {
         HStack() {
@@ -435,8 +421,7 @@ struct CardView: View {
             }
         }
     }
-    
-    // TODO: There may be a way to generalize these shapes more so it's easier to add in more shapes. e.g putting the shapes in an array, iterating through the array instead of literally writing shapes. Would have to make sure to add some sort of parameter for their frame maxheight though. then use ternary to check for it
+
     @ViewBuilder func renderTrait(with geometry: GeometryProxy) -> some View {
         let cornerRadiusRectangle: CGFloat = geometry.size.width * CardConstants.cornerRadiusRectangleMultiplier
         let lineWidth: CGFloat = geometry.size.width * CardConstants.lineWidthMultiplier
