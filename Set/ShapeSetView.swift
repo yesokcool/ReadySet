@@ -83,6 +83,7 @@ struct ShapeSetView: View {
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             game.choose(card)
+                            UIConstants.chooseCardHaptic.impactOccurred()
                         }
                 }
             }
@@ -351,7 +352,7 @@ struct ShapeSetView: View {
         }
     }
     
-    struct DrawingConstants {
+    private struct DrawingConstants {
         static let flagWidth: CGFloat = 80.0
         static let controlButtonWidth: CGFloat = 35.0
         static let controlSpacing: CGFloat = 8.0
@@ -370,6 +371,9 @@ struct ShapeSetView: View {
         static let stackYOffset = 6.0
      }
 
+    struct UIConstants {
+        static let chooseCardHaptic = UIImpactFeedbackGenerator(style: .light)
+    }
 }
 
 struct CardView: View {
