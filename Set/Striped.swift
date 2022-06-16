@@ -12,7 +12,7 @@ struct Striped: ViewModifier {
     }
     
     @ViewBuilder func makeStripes() -> some View {
-        let numberOfStripes = abs(geometry.size.width * 0.16)
+        let numberOfStripes = min(abs(geometry.size.width * 0.16), 10)
         HStack(spacing: abs(geometry.size.width) * 0.04) {
             ForEach(0 ..< Int(abs(numberOfStripes)), id: \.self) { _ in
                 Rectangle()
