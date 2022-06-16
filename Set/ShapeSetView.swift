@@ -29,7 +29,7 @@ struct ShapeSetView: View {
                 }
                 
                 dealtOutCards
-                    .padding(.bottom, -120)
+                    .padding(.bottom, game.isMultiplayer ? -250 : -120)
             
                 Spacer()
                 

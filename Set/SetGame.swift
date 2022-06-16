@@ -47,8 +47,7 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         }
         startNewGame()
     }
-    
-    // TODO: Void function just returning? Better way to do this?
+
     // Recursively iterate through a multi-dimensional array of unknown size.
     private mutating func createDeck(currentTrait dimension: Int) {
         if deck.count > deckSize {
@@ -77,20 +76,19 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
     mutating func clearSelectedSet() {
         var discardedSet: [CustomShapeCard] = []
         if !selectedCards.isEmpty && selectedCards[0].isPartOfSet == true.intValue {
-             for c in selectedCards {
-                 discardedSet.append(cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!))
-             }
-             selectedCards = []
+            for c in selectedCards {
+                discardedSet.append(cardsInPlay.remove(at: cardsInPlay.firstIndex(of: c)!))
+            }
+            selectedCards = []
             setsMade.append(discardedSet)
-         }
+        }
         print(setsMade.count)
     }
     
-    // TODO: Perhaps could be deal any the game wants to.
-    
     // Deals 1 card from the deck.
     mutating func deal(wasPressed: Bool = false) -> Bool {
-        if setIsAvailable() && wasPressed {
+        if setIsAvailable() && wasPressed &&
+            cardsInPlay.count >= numberOfCardsInASet {
             scoreModifier = 0
         }
         
@@ -214,8 +212,6 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
         }
     }
     
-    // TODO: Maybe make extension more readable and replace intValue
-    // for something else.
     mutating func choose(_ card: CustomShapeCard) {
         if let chosenIndex = cardsInPlay.firstIndex(of: card),
            cardsInPlay[chosenIndex].isPartOfSet != true.intValue {
