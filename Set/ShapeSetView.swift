@@ -308,14 +308,18 @@ struct ShapeSetView: View {
                     .fontWeight(.heavy)
                 Text(forPlayerOne ?
                      "\(game.score) \(game.randomScoringText)"
-                     : "\(game.score) \(game.anotherRandomScoringText)" )
+                     : "\(game.scorePlayerTwo) \(game.anotherRandomScoringText)" )
                     .font(DrawingConstants.scoreFontSize)
                     .fontWeight(.semibold)
                     .fixedSize()
             }
-            .foregroundColor(game.highScore == game.score &&
+            .foregroundColor(forPlayerOne ?
+                             (game.highScore == game.score &&
                              game.highScore != 0 ?
-                             Color.orange : teamColor)
+                              Color.orange : teamColor) :
+                            (game.highScore == game.scorePlayerTwo &&
+                            game.highScore != 0 ?
+                             Color.orange : teamColor))
             
             pushButton(withImage: Image(systemName: "flag.circle"),
                               whenPressedIs: Image(systemName: "flag.circle.fill"),

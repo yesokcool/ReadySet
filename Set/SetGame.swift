@@ -299,6 +299,8 @@ struct SetGame<CardContent> where CardContent: Equatable & Traitable & Hashable 
                 
                 if score > highScore {
                     highScore = score
+                } else if scorePlayerTwo > score {
+                    highScore = scorePlayerTwo
                 }
             }
             

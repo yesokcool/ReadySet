@@ -40,7 +40,7 @@ class ShapeSetGame: ObservableObject {
     
     // Multiplayer
     var isMultiplayer: Bool { game.isMultiplayer }
-    var getScorePlayerTwo: Int { game.scorePlayerTwo }
+    var scorePlayerTwo: Int { game.scorePlayerTwo }
     var isPlayerOneTurn: Bool { !game.turnPlayerTwo }
     
     // Cheat
