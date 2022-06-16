@@ -79,7 +79,6 @@ struct ShapeSetView: View {
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .padding(4)
                     .transition(AnyTransition.identity)
-                    //.animation(Animation.spring(), value: card.isPartOfSet)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             game.choose(card)
@@ -154,10 +153,6 @@ struct ShapeSetView: View {
         .padding(.horizontal)
     }
 
-    /*private func zIndex(of card: ShapeSetGame.Card) -> Double {
-        -Double(game.deck().firstIndex(where: { $0.id == card.id}) ?? 0)
-    }*/
-    
     func cardOffset(forCardAtIndex index: Int, along axis: Axis) -> CGFloat {
         switch axis {
         case Axis.horizontal:
